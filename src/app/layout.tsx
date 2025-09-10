@@ -5,6 +5,9 @@ import { ThemeProvider } from '@/components/theme-provider';
 export const metadata: Metadata = {
   title: 'Mentra BU',
   description: 'Mentra BU',
+  icons: {
+    icon: '/logo.svg',
+  },
 };
 
 export default function RootLayout({
@@ -14,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className={`antialiased`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
