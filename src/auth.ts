@@ -16,6 +16,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
+  callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== 'credentials') return true;
+      const existingUser = await getUserByEmail(user.email!);
+      if (!existingUser?.emailVerified) return false;
+      return true;
+    },
+  },
   providers: [
     Credentials({
       authorize: async (credentials) => {

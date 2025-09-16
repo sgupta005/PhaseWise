@@ -7,8 +7,13 @@ import {
   SignupSchema,
   signupSchema,
 } from '@/schemas/auth.schema';
-import { createUser as createUserDb } from '@/db/auth.db';
+import {
+  createUser as createUserDb,
+  createVerificationToken,
+  getUserByEmail,
+} from '@/db/auth.db';
 import { signIn } from '@/auth';
+import { sendVerificationEmail } from '@/lib/mail';
 
 export async function login(data: LoginSchema) {
   try {
@@ -22,6 +27,23 @@ export async function login(data: LoginSchema) {
     }
 
     const { email, password } = validatedFields.data;
+
+    const existingUser = await getUserByEmail(email);
+    if (!existingUser || !existingUser.password || !existingUser.email) {
+      return {
+        error: 'Invalid email or password.',
+      };
+    }
+
+    if (!existingUser.emailVerified) {
+      const verificationToken = await createVerificationToken(
+        existingUser.email
+      );
+      sendVerificationEmail(verificationToken.email, verificationToken.token);
+      return {
+        success: 'Verification Email Sent. Please check your inbox.',
+      };
+    }
 
     await signIn('credentials', { email, password, redirect: false });
 
@@ -56,7 +78,10 @@ export async function createAccount(data: SignupSchema) {
       role: 'student',
     });
 
-    return { success: 'Email sent successfully. Please check your inbox.' };
+    const verificationToken = await createVerificationToken(email);
+    sendVerificationEmail(verificationToken.email, verificationToken.token);
+
+    return { success: 'Verification Email Sent. Please check your inbox.' };
   } catch (error) {
     console.error('Create account error:', error);
     return {

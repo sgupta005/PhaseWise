@@ -1,5 +1,6 @@
 import client from '@/lib/mongodb';
 import { type User, type UserResponse } from '@/types/auth.types';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function getUserByEmail(email: string) {
   try {
@@ -71,5 +72,60 @@ export async function createUser(userData: {
   } catch (error) {
     console.error('Error creating user:', error);
     throw new Error('Error creating user');
+  }
+}
+
+export async function getVerificationTokenByEmail(email: string) {
+  try {
+    await client.connect();
+    const db = client.db(process.env.DB_NAME);
+    const tokens = db.collection('verificationTokens');
+
+    const token = await tokens.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (!token) {
+      return null;
+    }
+
+    return token;
+  } catch (error) {
+    console.error('Error getting verification token:', error);
+    return null;
+  }
+}
+
+export async function createVerificationToken(email: string) {
+  try {
+    await client.connect();
+    const db = client.db(process.env.DB_NAME);
+    const tokens = db.collection('verificationTokens');
+
+    const token = uuidv4();
+    const expires = new Date(new Date().getTime() + 3600 * 1000);
+
+    const existingToken = await getVerificationTokenByEmail(email);
+
+    if (existingToken) {
+      await tokens.deleteOne({ _id: existingToken._id });
+    }
+
+    const newToken = {
+      email: email.toLowerCase(),
+      token,
+      expires,
+    };
+
+    const result = await tokens.insertOne(newToken);
+
+    if (!result.insertedId) {
+      throw new Error('Failed to create verification token.');
+    }
+
+    return newToken;
+  } catch (error) {
+    console.error('Error creating verification token:', error);
+    throw new Error('Error creating verification token');
   }
 }
