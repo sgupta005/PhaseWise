@@ -12,8 +12,6 @@ function Projects() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--bg-default)] text-[var(--text-default)]">
-      {/* Smooth animated cursor */}
-      <SmoothCursor />
 
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
