@@ -89,5 +89,5 @@ body {
     mix-blend-mode: normal;
 }
 *{
-  cursor: none;
+  /* cursor: none; */
 }

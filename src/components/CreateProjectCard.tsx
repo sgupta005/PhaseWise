@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 function CreateProjectCard() {
@@ -8,7 +9,7 @@ function CreateProjectCard() {
       <div className="absolute inset-0 rounded-xl border border-[var(--border-default)] bg-[var(--bg-muted)]/30 backdrop-blur-md shadow-md"></div>
 
       {/* Card content */}
-      <div className="relative h-full w-full rounded-xl flex flex-col items-center justify-center gap-4 transition-all duration-300">
+      <Link href='/create-project' className="relative h-full w-full rounded-xl flex flex-col items-center justify-center gap-4 transition-all duration-300">
         <Plus
           className="border border-[var(--border-default)] rounded-full p-6 text-[var(--accent)] hover:scale-105 transition-transform duration-300"
           size={80}
@@ -16,7 +17,7 @@ function CreateProjectCard() {
         <p className="text-lg font-medium text-[var(--text-default)]">
           Create Project
         </p>
-      </div>
+      </Link>
     </div>
   );
 }

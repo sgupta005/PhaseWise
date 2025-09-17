@@ -45,7 +45,7 @@ function Projects() {
             } transition-all duration-500 ease-in-out mb-10`}
           >
             <div className="flex h-48 items-center justify-center text-center">
-              <h2 className="text-2xl font-bold text-[#aaaaaa]">
+              <h2 className="text-2xl font-bold text-[#aaaaaa] dark:text-white">
                 Create and Manage Your Projects
               </h2>
             </div>
