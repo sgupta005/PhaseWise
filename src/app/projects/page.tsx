@@ -11,8 +11,7 @@ function Projects() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--bg-default)] text-[var(--text-default)]">
-
+    <div className="flex h-screen overflow-hidden bg-background text-foreground">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
@@ -23,16 +22,14 @@ function Projects() {
         }`}
       >
         {/* Topbar (desktop only toggle button) */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-default)] bg-[var(--bg-default)] lg:justify-start lg:gap-6">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-background lg:justify-start lg:gap-6">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg hover:bg-[var(--bg-muted)] transition-colors"
+            className="p-2 rounded-lg hover:bg-muted transition-colors"
           >
             {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <h1 className="text-lg font-semibold tracking-tight">
-            Projects
-          </h1>
+          <h1 className="text-lg font-semibold tracking-tight">Projects</h1>
         </div>
 
         {/* GridBeams content */}
@@ -43,14 +40,13 @@ function Projects() {
             } transition-all duration-500 ease-in-out mb-10`}
           >
             <div className="flex h-48 items-center justify-center text-center">
-              <h2 className="text-2xl font-bold text-[#aaaaaa] dark:text-white">
+              <h2 className="text-2xl font-bold text-muted-foreground">
                 Create and Manage Your Projects
               </h2>
             </div>
           </GridBeams>
-          <CreateProjectCard/>
+          <CreateProjectCard />
         </div>
-        
       </div>
     </div>
   );

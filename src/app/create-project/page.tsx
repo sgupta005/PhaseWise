@@ -4,7 +4,7 @@ import Phase from "@/components/Phase";
 import { TrainFront } from "lucide-react";
 
 export default function CreateProjectPage() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -51,13 +51,13 @@ export default function CreateProjectPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
       <div className="w-full max-w-3xl space-y-6 p-6">
-        <h1 className="text-center text-3xl text-muted font-bold">
+        <h1 className="text-center text-3xl text-foreground font-bold">
           Create New Project!!!
         </h1>
 
         {/* Step 1 - Form */}
         {step === 1 && (
-          <div className="w-full mx-auto p-6 space-y-4 border-2 rounded-2xl">
+          <div className="w-full mx-auto p-6 space-y-4 border-2 rounded-2xl shadow-xl">
             <div>
               <input
                 name="title"
@@ -163,7 +163,7 @@ export default function CreateProjectPage() {
 
         {/* Step 2 - Phases */}
         {step === 2 && (
-          <div className="space-y-4 border-2 rounded-2xl p-6">
+          <div className="space-y-4 border-2 shadow-xl rounded-2xl p-6">
             {phases.map((num) => (
               <Phase key={num} number={num} />
             ))}
@@ -187,7 +187,7 @@ export default function CreateProjectPage() {
           </div>
         )}
         <div className="flex justify-end">
-          <button className="btn bg-green-800 cursor-pointer hover:bg-green-900 duration-300">
+          <button className="btn bg-destructive text-popover cursor-pointer hover:bg-green-900 duration-300">
             <TrainFront />
             Ask to Ai
           </button>

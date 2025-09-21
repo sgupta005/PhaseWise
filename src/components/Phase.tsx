@@ -73,7 +73,7 @@ function Phase({ number }: PhaseProps) {
       defaultValue="phase"
       type="single"
       collapsible
-      className="w-full border-b"
+      className="w-full border rounded-xl "
     >
       <AccordionItem value="phase" className="p-4">
         <AccordionTrigger className="text-lg font-semibold">
