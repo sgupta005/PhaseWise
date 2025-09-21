@@ -10,7 +10,7 @@ type props = {
 };
 
 export const AnimatedThemeToggler = ({ className }: props) => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const changeTheme = async () => {
     if (!buttonRef.current) return;
@@ -47,7 +47,7 @@ export const AnimatedThemeToggler = ({ className }: props) => {
   };
   return (
     <button ref={buttonRef} onClick={changeTheme} className={cn(className)}>
-      {isDarkMode ? <SunDim /> : <Moon />}
+      {isDarkMode ? <Moon />:<SunDim /> }
     </button>
   );
 };

@@ -61,6 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           <h1 className="text-xl font-semibold text-[var(--text-default)] tracking-tight">
             Project Tracker
           </h1>
+          <AnimatedThemeToggler />
         </div>
 
         {/* Navigation */}
@@ -96,12 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           ))}
         </nav>
 
-        {/* Theme Toggle */}
-        <div className="absolute bottom-8 left-6 right-6">
-          <div className="flex items-center justify-center p-3 bg-[var(--bg-muted)] rounded-lg border border-[var(--border-default)]">
-            <AnimatedThemeToggler />
-          </div>
-        </div>
+        
       </motion.div>
     </>
   );
