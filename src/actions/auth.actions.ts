@@ -7,13 +7,8 @@ import {
   SignupSchema,
   signupSchema,
 } from '@/schemas/auth.schema';
-import {
-  createUser as createUserDb,
-  createVerificationToken,
-  getUserByEmail,
-} from '@/db/auth.db';
+import { createUser as createUserDb, getUserByEmail } from '@/db/auth.db';
 import { signIn } from '@/auth';
-import { sendVerificationEmail } from '@/lib/mail';
 
 export async function login(data: LoginSchema) {
   try {
@@ -35,15 +30,15 @@ export async function login(data: LoginSchema) {
       };
     }
 
-    if (!existingUser.emailVerified) {
-      const verificationToken = await createVerificationToken(
-        existingUser.email
-      );
-      sendVerificationEmail(verificationToken.email, verificationToken.token);
-      return {
-        success: 'Verification Email Sent. Please check your inbox.',
-      };
-    }
+    // if (!existingUser.emailVerified) {
+    //   const verificationToken = await createVerificationToken(
+    //     existingUser.email
+    //   );
+    //   sendVerificationEmail(verificationToken.email, verificationToken.token);
+    //   return {
+    //     success: 'Verification Email Sent. Please check your inbox.',
+    //   };
+    // }
 
     await signIn('credentials', { email, password, redirect: false });
 
@@ -78,8 +73,8 @@ export async function createAccount(data: SignupSchema) {
       role: 'student',
     });
 
-    const verificationToken = await createVerificationToken(email);
-    sendVerificationEmail(verificationToken.email, verificationToken.token);
+    // const verificationToken = await createVerificationToken(email);
+    // sendVerificationEmail(verificationToken.email, verificationToken.token);
 
     return { success: 'Verification Email Sent. Please check your inbox.' };
   } catch (error) {
