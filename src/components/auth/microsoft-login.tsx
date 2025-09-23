@@ -10,7 +10,7 @@ export function MicrosoftLogin() {
       variant="outline"
       type="button"
       className="w-full"
-      onClick={() => signIn('microsoft-entra-id')}
+      onClick={() => signIn('microsoft-entra-id', { callbackUrl: '/projects' })}
     >
       <Image
         src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"

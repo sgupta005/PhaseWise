@@ -24,11 +24,13 @@ import { useTransition } from 'react';
 import { toast } from 'sonner';
 import { Spinner } from '../ui/spinner';
 import { login } from '@/actions/auth.actions';
+import { useRouter } from 'next/navigation';
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<LoginSchema>({
@@ -43,6 +45,7 @@ export function LoginForm({
           toast.error(res.error);
         } else if (res.success) {
           toast.success(res.success);
+          router.push('/projects');
         }
       });
     });

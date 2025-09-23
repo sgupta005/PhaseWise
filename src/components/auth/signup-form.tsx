@@ -23,11 +23,13 @@ import { createAccount } from '@/actions/auth.actions';
 import { useTransition } from 'react';
 import { Spinner } from '../ui/spinner';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<SignupSchema>({
@@ -46,6 +48,7 @@ export function SignupForm({
           toast.error(res.error);
         } else if (res.success) {
           toast.success(res.success);
+          router.replace('/projects');
         }
       });
     });

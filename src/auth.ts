@@ -18,10 +18,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt',
   },
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ account }) {
       if (account?.provider !== 'credentials') return true;
-      const existingUser = await getUserByEmail(user.email!);
-      if (!existingUser?.emailVerified) return false;
+      // For now, allow credentials login without email verification
+      // when email verification is implemented, return false if not verified
       return true;
     },
   },

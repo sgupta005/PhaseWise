@@ -47,7 +47,9 @@ export async function createUser(userData: {
       password: userData.password, // Should be hashed before calling this function
       role: userData.role || 'student',
       phoneNo: null,
-      emailVerified: null,
+      // to allow users to login without email verification for now
+      // set this to null when email verification is implemented
+      emailVerified: now,
       image: null,
       createdAt: now,
       updatedAt: now,
