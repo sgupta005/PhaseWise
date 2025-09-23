@@ -9,6 +9,7 @@ import {
 } from '@/schemas/auth.schema';
 import { createUser as createUserDb, getUserByEmail } from '@/db/auth.db';
 import { signIn } from '@/auth';
+import { isStudentEmail } from '@/lib/utils';
 
 export async function login(data: LoginSchema) {
   try {
@@ -64,19 +65,21 @@ export async function createAccount(data: SignupSchema) {
 
     const { fullName, email, password } = validatedFields.data;
 
+    const isStudent = isStudentEmail(email);
+
     const hashedPassword = await saltAndHashPassword(password);
 
     await createUserDb({
       name: fullName,
       email,
       password: hashedPassword,
-      role: 'student',
+      role: isStudent ? 'student' : 'faculty',
     });
 
     // const verificationToken = await createVerificationToken(email);
     // sendVerificationEmail(verificationToken.email, verificationToken.token);
 
-    return { success: 'Verification Email Sent. Please check your inbox.' };
+    return { success: 'Account Created Successfully.' };
   } catch (error) {
     console.error('Create account error:', error);
     return {
