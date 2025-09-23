@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from 'sonner';
-import Sidebar from '@/components/Sidebar';
 
 export const metadata: Metadata = {
   title: 'Mentra BU',

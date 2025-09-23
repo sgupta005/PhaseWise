@@ -1,11 +1,10 @@
-"use client";
+'use client';
 
-import CreateProjectCard from "@/components/CreateProjectCard";
-import Sidebar from "@/components/Sidebar";
-import { GridBeams } from "@/components/ui/grid-beams";
-import { SmoothCursor } from "@/components/ui/smooth-cursor";
-import { Menu, X } from "lucide-react";
-import React, { useState } from "react";
+import CreateProjectCard from '@/components/CreateProjectCard';
+import Sidebar from '@/components/Sidebar';
+import { GridBeams } from '@/components/ui/grid-beams';
+import { Menu, X } from 'lucide-react';
+import React, { useState } from 'react';
 
 function Projects() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -18,7 +17,7 @@ function Projects() {
       {/* Main content area */}
       <div
         className={`flex-1 transition-all duration-500 ease-in-out ${
-          sidebarOpen ? "lg:ml-72" : "lg:ml-0"
+          sidebarOpen ? 'lg:ml-72' : 'lg:ml-0'
         }`}
       >
         {/* Topbar (desktop only toggle button) */}
@@ -36,7 +35,7 @@ function Projects() {
         <div className="p-6 lg:p-10 transition-all duration-500 ease-in-out">
           <GridBeams
             className={`rounded-xl shadow-2xl p-8 ${
-              sidebarOpen ? "lg:ml-0" : "lg:w-full"
+              sidebarOpen ? 'lg:ml-0' : 'lg:w-full'
             } transition-all duration-500 ease-in-out mb-10`}
           >
             <div className="flex h-48 items-center justify-center text-center">
