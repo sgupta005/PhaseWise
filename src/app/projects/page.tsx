@@ -1,13 +1,21 @@
 'use client';
 
 import CreateProjectCard from '@/components/CreateProjectCard';
+import ProjectCard from '@/components/ProjectCard';
 import Sidebar from '@/components/Sidebar';
 import { GridBeams } from '@/components/ui/grid-beams';
 import { Menu, X } from 'lucide-react';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 function Projects() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const projects = [
+    { name: "Ecommerce", slug: "ecommerce" },
+    { name: "Social Media", slug: "social-media" },
+    { name: "Project Name", slug: "projectname" },
+  ];
 
   return (
     <div className="flex h-screen overflow-hidden bg-background text-foreground">
@@ -20,7 +28,7 @@ function Projects() {
           sidebarOpen ? 'lg:ml-72' : 'lg:ml-0'
         }`}
       >
-        {/* Topbar (desktop only toggle button) */}
+        {/* Topbar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-background lg:justify-start lg:gap-6">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -31,7 +39,7 @@ function Projects() {
           <h1 className="text-lg font-semibold tracking-tight">Projects</h1>
         </div>
 
-        {/* GridBeams content */}
+        {/* Main content */}
         <div className="p-6 lg:p-10 transition-all duration-500 ease-in-out">
           <GridBeams
             className={`rounded-xl shadow-2xl p-8 ${
@@ -44,7 +52,23 @@ function Projects() {
               </h2>
             </div>
           </GridBeams>
-          <CreateProjectCard />
+
+          {/* Project Cards */}
+          <div className="flex flex-wrap gap-6 w-full">
+            {/* Create new project card */}
+            <CreateProjectCard />
+
+            {/* Existing projects */}
+            {projects.map((project) => (
+              <Link
+                key={project.slug}
+                href={`/projects/${project.slug}`}
+                className='flex gap-6'
+              >
+                <ProjectCard title={project.name} />
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
