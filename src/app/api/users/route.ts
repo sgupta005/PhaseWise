@@ -1,12 +1,11 @@
 import { connectDb } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user.model";
-import { success } from "zod";
+
 connectDb();
 
 
 export async function GET(request: NextRequest) {
-    console.log('Hi')
     const { searchParams } = new URL(request.url);
     const role = searchParams.get("role");
     const name = searchParams.get("name") || "";
