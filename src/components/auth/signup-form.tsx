@@ -66,15 +66,15 @@ export function SignupForm({
                 <div className="flex size-10 items-center justify-center rounded-md">
                   <Image
                     src="/logo.svg"
-                    alt="Mentra BU Logo"
+                    alt="PhaseWise Logo"
                     width={100}
                     height={100}
                   />
                 </div>
-                <span className="sr-only">Mentra BU</span>
+                <span className="sr-only">PhaseWise</span>
               </a>
               <h1 className="text-xl font-bold">
-                Welcome to <span className="text-primary"> Mentra BU</span>
+                Welcome to <span className="text-primary"> PhaseWise</span>
               </h1>
               <div className="text-center text-sm">
                 Already have an account?{' '}

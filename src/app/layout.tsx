@@ -4,8 +4,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: 'Mentra BU',
-  description: 'Mentra BU',
+  title: 'PhaseWise',
+  description: 'PhaseWise Project Tracker',
   icons: {
     icon: '/logo.svg',
   },

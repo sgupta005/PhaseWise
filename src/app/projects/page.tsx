@@ -3,8 +3,8 @@
 import CreateProjectCard from '@/components/CreateProjectCard';
 import ProjectCard from '@/components/ProjectCard';
 import Sidebar from '@/components/Sidebar';
+import Topbar from '@/components/Topbar';
 import { GridBeams } from '@/components/ui/grid-beams';
-import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
@@ -12,9 +12,9 @@ function Projects() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const projects = [
-    { name: "Ecommerce", slug: "ecommerce" },
-    { name: "Social Media", slug: "social-media" },
-    { name: "Project Name", slug: "projectname" },
+    { name: 'Ecommerce', slug: 'ecommerce' },
+    { name: 'Social Media', slug: 'social-media' },
+    { name: 'Project Name', slug: 'projectname' },
   ];
 
   return (
@@ -29,15 +29,11 @@ function Projects() {
         }`}
       >
         {/* Topbar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-background lg:justify-start lg:gap-6">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
-          >
-            {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-          <h1 className="text-lg font-semibold tracking-tight">Projects</h1>
-        </div>
+        <Topbar
+          heading="Projects"
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+        />
 
         {/* Main content */}
         <div className="p-6 lg:p-10 transition-all duration-500 ease-in-out">
@@ -63,7 +59,7 @@ function Projects() {
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className='flex gap-6'
+                className="flex gap-6"
               >
                 <ProjectCard title={project.name} />
               </Link>
