@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard,
@@ -11,33 +11,44 @@ import {
   PanelLeftClose,
 } from 'lucide-react';
 import Image from 'next/image';
-
-interface SidebarProps {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-}
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useSidebar } from '@/contexts/sidebar-context';
 
 interface NavItem {
   name: string;
   icon: React.ReactElement<LucideIcon>;
+  href: string;
 }
 
 const navItems: NavItem[] = [
-  { name: 'Dashboard', icon: <LayoutDashboard size={18} /> },
-  { name: 'Projects', icon: <FolderKanban size={18} /> },
-  { name: 'Settings', icon: <Settings size={18} /> },
-  { name: 'Profile', icon: <User size={18} /> },
+  {
+    name: 'Dashboard',
+    icon: <LayoutDashboard size={18} />,
+    href: '/dashboard',
+  },
+  { name: 'Projects', icon: <FolderKanban size={18} />, href: '/projects' },
+  { name: 'Settings', icon: <Settings size={18} />, href: '/settings' },
+  { name: 'Profile', icon: <User size={18} />, href: '/profile' },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
-  const [activeItem, setActiveItem] = React.useState<string>('Dashboard');
+const Sidebar: React.FC = () => {
+  const pathname = usePathname();
+  const { sidebarOpen, setSidebarOpen } = useSidebar();
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
+  // Determine if a nav item is active based on current pathname
+  const isActive = (href: string) => {
+    if (href === '/dashboard') {
+      return pathname === '/dashboard';
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <>
       {/* Overlay for mobile */}
-      {isOpen && (
+      {sidebarOpen && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -50,7 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       {/* Sidebar */}
       <motion.div
         initial={{ x: -288, opacity: 0 }}
-        animate={{ x: isOpen ? 0 : -288, opacity: isOpen ? 1 : 0 }}
+        animate={{ x: sidebarOpen ? 0 : -288, opacity: sidebarOpen ? 1 : 0 }}
         transition={{
           duration: 0.4,
           ease: [0.25, 0.46, 0.45, 0.94],
@@ -81,35 +92,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         {/* Navigation */}
 
         <nav className="flex flex-col gap-1 px-6 mt-2">
-          {navItems.map((item, idx) => (
-            <motion.button
-              key={idx}
-              onClick={() => setActiveItem(item.name)}
-              whileHover={{ x: 4 }}
-              whileTap={{ scale: 0.98 }}
-              className={`
-                flex items-center gap-4 px-4 py-3.5 rounded-lg text-left transition-all duration-300
-                ${
-                  activeItem === item.name
-                    ? 'bg-accent text-accent-foreground shadow-lg'
-                    : 'hover:bg-muted'
-                }
-              `}
-            >
-              <span
-                className={`${
-                  activeItem === item.name
-                    ? 'text-accent-foreground'
-                    : 'text-muted-foreground'
-                } transition-colors duration-300`}
-              >
-                {item.icon}
-              </span>
-              <span className="font-medium text-sm tracking-wide">
-                {item.name}
-              </span>
-            </motion.button>
-          ))}
+          {navItems.map((item, idx) => {
+            const active = isActive(item.href);
+            return (
+              <Link key={idx} href={item.href}>
+                <motion.div
+                  transition={{ duration: 0.15 }}
+                  className={`
+                    flex items-center gap-4 px-4 py-3.5 rounded-lg text-left transition-all duration-150 cursor-pointer
+                    ${
+                      active
+                        ? 'bg-accent text-accent-foreground shadow-lg'
+                        : 'hover:bg-muted'
+                    }
+                  `}
+                >
+                  <span
+                    className={`${
+                      active
+                        ? 'text-accent-foreground'
+                        : 'text-muted-foreground'
+                    } transition-colors duration-150`}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="font-medium text-sm tracking-wide">
+                    {item.name}
+                  </span>
+                </motion.div>
+              </Link>
+            );
+          })}
         </nav>
       </motion.div>
     </>

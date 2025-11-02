@@ -3,14 +3,15 @@
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 import { PanelLeftOpen } from 'lucide-react';
 import React from 'react';
+import { usePathname } from 'next/navigation';
+import { useSidebar } from '@/contexts/sidebar-context';
+import { getPageTitle } from '@/lib/route-config';
 
-interface TopbarProps {
-  heading: string;
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
-}
+function Header() {
+  const pathname = usePathname();
+  const { sidebarOpen, setSidebarOpen } = useSidebar();
+  const heading = getPageTitle(pathname);
 
-function Topbar({ heading, sidebarOpen, setSidebarOpen }: TopbarProps) {
   return (
     <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-background h-[72px]">
       <div className="flex items-center gap-4">
@@ -30,4 +31,4 @@ function Topbar({ heading, sidebarOpen, setSidebarOpen }: TopbarProps) {
   );
 }
 
-export default Topbar;
+export default Header;
