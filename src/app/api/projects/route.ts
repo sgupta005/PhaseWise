@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     // Basic field validations
     if (
       !title ||
-      !githubLink ||
+      // !githubLink ||
       !techStack?.length ||
       !teamMember?.length ||
       !faculty ||
@@ -37,18 +37,6 @@ export async function POST(req: Request) {
     ) {
       return NextResponse.json(
         { success: false, message: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-
-    // Check for duplicate GitHub link
-    const existingProject = await Project.findOne({ githubLink });
-    if (existingProject) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Project with this GitHub link already exists',
-        },
         { status: 400 }
       );
     }

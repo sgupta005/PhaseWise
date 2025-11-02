@@ -29,7 +29,7 @@ export interface IProject {
   _id?: string;
   title: string;
   description?: string;
-  githubLink: string;
+  githubLink?: string;
   projectUrl?: string;
   techStack: string[];
   isPublic: boolean;
