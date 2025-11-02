@@ -49,13 +49,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
       {/* Sidebar */}
       <motion.div
-        initial={{ x: -280 }}
-        animate={{ x: isOpen ? 0 : -280 }}
+        initial={{ x: -288, opacity: 0 }}
+        animate={{ x: isOpen ? 0 : -288, opacity: isOpen ? 1 : 0 }}
         transition={{
           duration: 0.4,
           ease: [0.25, 0.46, 0.45, 0.94],
         }}
-        className="fixed top-0 left-0 h-screen w-72  backdrop-blur-xl  shadow-xl border-r  z-50"
+        className="fixed top-0 left-0 h-screen w-72  backdrop-blur-xl shadow-xl border-r z-50 bg-background"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6">

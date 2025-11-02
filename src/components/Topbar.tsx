@@ -20,7 +20,7 @@ function Topbar({ heading, sidebarOpen, setSidebarOpen }: TopbarProps) {
             className="p-2 rounded-lg hover:bg-muted transition-colors"
             aria-label="Open sidebar"
           >
-            <PanelLeftOpen size={24} />
+            <PanelLeftOpen size={20} className="text-muted-foreground" />
           </button>
         )}
         <h1 className="text-lg font-semibold tracking-tight">{heading}</h1>
