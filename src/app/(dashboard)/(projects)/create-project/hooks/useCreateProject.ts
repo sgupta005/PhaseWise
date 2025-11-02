@@ -38,7 +38,6 @@ export function useCreateProject() {
   // Project form handlers
   const handleProjectFormChange = (
     field: keyof ProjectFormData,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any
   ) => {
     setProjectFormData((prev) => ({ ...prev, [field]: value }));
