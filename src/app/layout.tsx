@@ -28,7 +28,6 @@ export default function RootLayout({
         >
           <SessionProvider>
             <Toaster />
-            {/* <Sidebar isOpen={true}/> */}
             {children}
           </SessionProvider>
         </ThemeProvider>

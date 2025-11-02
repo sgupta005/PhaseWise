@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,6 +21,14 @@ interface AIGenerateButtonProps {
   disabled?: boolean;
 }
 
+const LOADING_MESSAGES = [
+  '✨ Analyzing your tech stack',
+  '📋 Creating phases based on SDLC',
+  '✅ Generating tasks for each phase',
+  '🔄 Optimizing project timeline',
+  '🎯 Assigning task priorities',
+];
+
 export function AIGenerateButton({
   projectTitle,
   projectDescription,
@@ -30,6 +38,18 @@ export function AIGenerateButton({
 }: AIGenerateButtonProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+
+  // Cycle through loading messages
+  useEffect(() => {
+    if (!isGenerating) return;
+
+    const interval = setInterval(() => {
+      setCurrentMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 2000); // Change message every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [isGenerating]);
 
   const handleGenerate = async () => {
     // Validate inputs
@@ -45,6 +65,7 @@ export function AIGenerateButton({
 
     setIsGenerating(true);
     setShowDialog(true);
+    setCurrentMessageIndex(0); // Reset to first message
 
     try {
       const response = await fetch('/api/ai/generate-phases', {
@@ -124,15 +145,18 @@ export function AIGenerateButton({
             <div className="text-center space-y-2">
               <p className="text-sm font-medium">Please wait</p>
               <p className="text-xs text-muted-foreground">
-                This usually takes 10-15 seconds
+                This usually takes 20-30 seconds
               </p>
             </div>
           </div>
 
-          <div className="space-y-2 text-xs text-muted-foreground">
-            <p>✨ Analyzing your tech stack</p>
-            <p>📋 Creating phases based on SDLC</p>
-            <p>✅ Generating tasks for each phase</p>
+          <div className="text-center">
+            <p
+              key={currentMessageIndex}
+              className="text-sm text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+            >
+              {LOADING_MESSAGES[currentMessageIndex]}
+            </p>
           </div>
         </DialogContent>
       </Dialog>
