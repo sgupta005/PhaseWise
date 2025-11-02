@@ -1,3 +1,6 @@
 - [ ] Add Profile Icon at the bottom of sidebar
 - [ ] In tech stack use predefined items instead of letting users add random shit
 - [ ] Save create project form data in local storage so page refresh dosen't erase it
+- [ ] why is the theme always dark on auth pages
+- [ ] take system prompt while creating phases
+- [ ] improve phase creation loading

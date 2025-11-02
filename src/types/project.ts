@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 // ==================== Base Types ====================
 
@@ -6,7 +6,7 @@ export interface IUser {
   _id: string;
   name: string;
   email: string;
-  role: "student" | "faculty" | "admin";
+  role: 'student' | 'faculty' | 'admin';
   image?: string | null;
 }
 
@@ -14,7 +14,7 @@ export interface ITask {
   _id?: string;
   task: string;
   assignedTo: string[]; // Array of user IDs
-  priority: "Low Priority" | "Medium Priority" | "High Priority" | "Urgent";
+  priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
 }
 
 export interface IPhase {
@@ -43,15 +43,16 @@ export interface IProject {
 
 // ==================== Populated Types (for displaying data) ====================
 
-export interface ITaskPopulated extends Omit<ITask, "assignedTo"> {
+export interface ITaskPopulated extends Omit<ITask, 'assignedTo'> {
   assignedTo: IUser[];
 }
 
-export interface IPhasePopulated extends Omit<IPhase, "tasks"> {
+export interface IPhasePopulated extends Omit<IPhase, 'tasks'> {
   tasks: ITaskPopulated[];
 }
 
-export interface IProjectPopulated extends Omit<IProject, "phases" | "teamMember" | "faculty" | "createdBy"> {
+export interface IProjectPopulated
+  extends Omit<IProject, 'phases' | 'teamMember' | 'faculty' | 'createdBy'> {
   phases: IPhasePopulated[];
   teamMember: IUser[];
   faculty: IUser;
@@ -74,7 +75,7 @@ export interface TaskFormData {
   id: string; // Temporary ID for form management (using Date.now() or uuid)
   task: string;
   assignedTo: string[]; // Array of selected user IDs from team
-  priority: "Low Priority" | "Medium Priority" | "High Priority" | "Urgent";
+  priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
 }
 
 export interface PhaseFormData {
@@ -87,7 +88,7 @@ export interface PhaseFormData {
 export interface CreateProjectPayload {
   title: string;
   description?: string;
-  githubLink: string;
+  githubLink?: string;
   projectUrl?: string;
   techStack: string[];
   isPublic: boolean;
@@ -125,7 +126,7 @@ export interface ProjectApiResponse {
 
 export interface AIGeneratedTask {
   task: string;
-  priority: "Low Priority" | "Medium Priority" | "High Priority" | "Urgent";
+  priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
 }
 
 export interface AIGeneratedPhase {
@@ -145,4 +146,3 @@ export interface AIGenerateResponse {
   phases?: AIGeneratedPhase[];
   error?: string;
 }
-

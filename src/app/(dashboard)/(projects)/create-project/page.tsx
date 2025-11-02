@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ProjectDetailsForm } from './components/ProjectDetailsForm';
@@ -62,14 +62,14 @@ export default function CreateProjectPage() {
     if (!projectFormData.techStack.trim()) {
       errors.techStack = 'Tech stack is required';
     }
-    if (!projectFormData.githubLink.trim()) {
-      errors.githubLink = 'GitHub repository URL is required';
-    } else if (
-      !projectFormData.githubLink.startsWith('http://') &&
-      !projectFormData.githubLink.startsWith('https://')
-    ) {
-      errors.githubLink = 'Please enter a valid URL';
-    }
+    // if (!projectFormData.githubLink.trim()) {
+    //   errors.githubLink = 'GitHub repository URL is required';
+    // } else if (
+    //   !projectFormData.githubLink.startsWith('http://') &&
+    //   !projectFormData.githubLink.startsWith('https://')
+    // ) {
+    //   errors.githubLink = 'Please enter a valid URL';
+    // }
     if (!projectFormData.faculty) {
       errors.faculty = 'Please select a faculty mentor';
     }
@@ -108,6 +108,11 @@ export default function CreateProjectPage() {
 
   const handleRemovePhase = (index: number) => {
     setPhases(phases.filter((_, idx) => idx !== index));
+  };
+
+  const handlePhasesGenerated = (generatedPhases: PhaseFormData[]) => {
+    setPhases(generatedPhases);
+    toast.success('Phases generated! You can edit them before saving.');
   };
 
   const handleBack = () => {
@@ -158,12 +163,12 @@ export default function CreateProjectPage() {
   // Calculate progress for Step 1 (Project Details)
   const calculateStep1Progress = (): number => {
     let filledFields = 0;
-    const totalRequiredFields = 6;
+    const totalRequiredFields = 5;
 
     if (projectFormData.title.trim()) filledFields++;
     if (projectFormData.description.trim()) filledFields++;
     if (projectFormData.techStack.trim()) filledFields++;
-    if (projectFormData.githubLink.trim()) filledFields++;
+    // if (projectFormData.githubLink.trim()) filledFields++;
     if (projectFormData.faculty) filledFields++;
     if (projectFormData.teamMembers.length > 0) filledFields++;
 
@@ -207,7 +212,7 @@ export default function CreateProjectPage() {
       const payload: CreateProjectPayload = {
         title: projectFormData.title,
         description: projectFormData.description,
-        githubLink: projectFormData.githubLink,
+        githubLink: projectFormData.githubLink || undefined,
         projectUrl: projectFormData.projectUrl || undefined,
         techStack: techStackArray,
         isPublic: true,
@@ -294,9 +299,16 @@ export default function CreateProjectPage() {
           <PhasesForm
             phases={phases}
             teamMembers={projectFormData.teamMembers}
+            projectTitle={projectFormData.title}
+            projectDescription={projectFormData.description}
+            techStack={projectFormData.techStack
+              .split(',')
+              .map((tech) => tech.trim())
+              .filter(Boolean)}
             onAddPhase={handleAddPhase}
             onUpdatePhase={handleUpdatePhase}
             onRemovePhase={handleRemovePhase}
+            onPhasesGenerated={handlePhasesGenerated}
             onBack={handleBack}
             onSave={handleSave}
             isSaving={isSaving}

@@ -81,7 +81,8 @@ export function ProjectDetailsForm({
         {/* GitHub Link */}
         <div className="space-y-2">
           <Label htmlFor="githubLink">
-            GitHub Repository <span className="text-destructive">*</span>
+            GitHub Repository
+            {/* <span className="text-destructive">*</span> */}
           </Label>
           <Input
             id="githubLink"
@@ -90,9 +91,9 @@ export function ProjectDetailsForm({
             value={formData.githubLink}
             onChange={(e) => onChange('githubLink', e.target.value)}
           />
-          {errors.githubLink && (
+          {/* {errors.githubLink && (
             <p className="text-sm text-destructive">{errors.githubLink}</p>
-          )}
+          )} */}
         </div>
 
         {/* Project URL (Optional) */}
@@ -149,4 +150,3 @@ export function ProjectDetailsForm({
     </Card>
   );
 }
-

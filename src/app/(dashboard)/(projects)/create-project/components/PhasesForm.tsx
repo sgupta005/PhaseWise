@@ -4,14 +4,19 @@ import { Plus, ArrowLeft, Save, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { PhaseCard } from './PhaseCard';
+import { AIGenerateButton } from './AIGenerateButton';
 import { PhaseFormData, IUser } from '@/types/project';
 
 interface PhasesFormProps {
   phases: PhaseFormData[];
   teamMembers: IUser[];
+  projectTitle: string;
+  projectDescription: string;
+  techStack: string[];
   onAddPhase: () => void;
   onUpdatePhase: (index: number, phase: PhaseFormData) => void;
   onRemovePhase: (index: number) => void;
+  onPhasesGenerated: (phases: PhaseFormData[]) => void;
   onBack: () => void;
   onSave: () => void;
   isSaving: boolean;
@@ -21,9 +26,13 @@ interface PhasesFormProps {
 export function PhasesForm({
   phases,
   teamMembers,
+  projectTitle,
+  projectDescription,
+  techStack,
   onAddPhase,
   onUpdatePhase,
   onRemovePhase,
+  onPhasesGenerated,
   onBack,
   onSave,
   isSaving,
@@ -40,15 +49,24 @@ export function PhasesForm({
               Break down your project into phases with tasks
             </p>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onAddPhase}
-            disabled={isSaving}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Phase
-          </Button>
+          <div className="flex gap-2">
+            <AIGenerateButton
+              projectTitle={projectTitle}
+              projectDescription={projectDescription}
+              techStack={techStack}
+              onPhasesGenerated={onPhasesGenerated}
+              disabled={isSaving}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onAddPhase}
+              disabled={isSaving}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Phase
+            </Button>
+          </div>
         </div>
 
         {/* General Errors */}
@@ -92,8 +110,9 @@ export function PhasesForm({
             variant="outline"
             onClick={onBack}
             disabled={isSaving}
+            className="flex items-center gap-2"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
 
@@ -120,4 +139,3 @@ export function PhasesForm({
     </Card>
   );
 }
-
