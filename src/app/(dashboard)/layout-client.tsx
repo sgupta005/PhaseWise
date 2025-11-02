@@ -15,16 +15,15 @@ export default function DashboardLayoutClient({
     <div className="flex h-screen overflow-hidden bg-background text-foreground">
       <Sidebar />
 
-      {/* Main content area */}
       <div
-        className={`flex-1 transition-all duration-500 ease-in-out ${
+        className={`flex-1 flex flex-col transition-all duration-500 ease-in-out ${
           sidebarOpen ? 'lg:ml-72' : 'lg:ml-0'
         }`}
       >
         <Header />
 
-        {/* Page content */}
-        {children}
+        {/* Scrollable page content */}
+        <div className="flex-1 overflow-y-auto">{children}</div>
       </div>
     </div>
   );

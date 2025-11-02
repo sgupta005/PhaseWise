@@ -24,6 +24,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // when email verification is implemented, return false if not verified
       return true;
     },
+    async jwt({ token, user }) {
+      // Add user id to token when user is available (on sign in)
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      // Add user id from token to session
+      if (token.id && session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
   },
   providers: [
     Credentials({
@@ -35,7 +49,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (!user || !user.password) return null;
 
           const isPasswordValid = await verifyPassword(password, user.password);
-          if (isPasswordValid) return user;
+          if (isPasswordValid) {
+            // Convert MongoDB _id to id string for Auth.js
+            return {
+              id: user._id?.toString() || '',
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              emailVerified: user.emailVerified,
+              role: user.role,
+              phoneNo: user.phoneNo,
+            };
+          }
         }
         return null;
       },
@@ -52,7 +77,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const role = isStudentId ? 'student' : 'faculty';
         return {
           id: profile.sub,
-          FullName: profile.name,
+          name: profile.name,
           email: profile.email,
           image: null,
           emailVerified: null,

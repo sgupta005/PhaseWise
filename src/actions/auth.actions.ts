@@ -63,14 +63,14 @@ export async function createAccount(data: SignupSchema) {
       };
     }
 
-    const { fullName, email, password } = validatedFields.data;
+    const { name, email, password } = validatedFields.data;
 
     const isStudent = isStudentEmail(email);
 
     const hashedPassword = await saltAndHashPassword(password);
 
     await createUserDb({
-      name: fullName,
+      name,
       email,
       password: hashedPassword,
       role: isStudent ? 'student' : 'faculty',

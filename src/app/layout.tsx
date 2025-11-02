@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from 'sonner';
+import { SessionProvider } from 'next-auth/react';
 
 export const metadata: Metadata = {
   title: 'PhaseWise',
@@ -25,9 +26,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster />
-          {/* <Sidebar isOpen={true}/> */}
-          {children}
+          <SessionProvider>
+            <Toaster />
+            {/* <Sidebar isOpen={true}/> */}
+            {children}
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

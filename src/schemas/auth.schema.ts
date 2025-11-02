@@ -13,7 +13,7 @@ export const loginSchema = z.object({
 });
 
 export const signupSchema = z.object({
-  fullName: z
+  name: z
     .string('Name is required')
     .min(1, 'Name is required')
     .max(50, 'Name must be less than 50 characters'),
