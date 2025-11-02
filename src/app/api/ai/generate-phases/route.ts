@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
-import {
-  generateProjectPhases,
-  parseRelativeDeadline,
-} from '@/lib/gemini';
-import { AIGenerateRequest } from '@/types/project';
+import { generateProjectPhases, parseRelativeDeadline } from '@/lib/gemini';
+import { AIGenerateRequest } from '@/types/project.types';
 
 export async function POST(req: Request) {
   try {
@@ -56,4 +53,3 @@ export async function POST(req: Request) {
     );
   }
 }
-

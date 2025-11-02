@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 // ==================== Base Types ====================
 
 export interface IUser {

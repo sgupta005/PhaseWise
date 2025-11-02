@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
-import { IUser } from '@/types/project';
+import { IUser } from '@/types/project.types';
 
 interface TeamMemberSelectorProps {
   value: IUser[];
@@ -200,4 +200,3 @@ export function TeamMemberSelector({
     </div>
   );
 }
-

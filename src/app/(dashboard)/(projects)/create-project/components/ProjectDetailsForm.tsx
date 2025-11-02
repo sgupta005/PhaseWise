@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FacultySelector } from '@/components/selectors/FacultySelector';
 import { TeamMemberSelector } from '@/components/selectors/TeamMemberSelector';
-import { ProjectFormData } from '@/types/project';
+import { ProjectFormData } from '@/types/project.types';
 import { ArrowRight } from 'lucide-react';
 
 interface ProjectDetailsFormProps {

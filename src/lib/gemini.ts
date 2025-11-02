@@ -3,7 +3,7 @@ import {
   AIResponseSchema,
   geminiResponseSchema,
 } from '@/schemas/gemini.schema';
-import { AIGeneratedPhase, AIGenerateRequest } from '@/types/project';
+import { AIGeneratedPhase, AIGenerateRequest } from '@/types/project.types';
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');

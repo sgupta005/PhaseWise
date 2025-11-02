@@ -12,10 +12,12 @@ const projectSchema = new Schema({
   githubLink: {
     type: String,
     unique: true,
+    sparse: true,
   },
   projectUrl: {
     type: String,
     unique: true,
+    sparse: true,
   },
   techStack: [
     {

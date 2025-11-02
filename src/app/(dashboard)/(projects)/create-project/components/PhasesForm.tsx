@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { PhaseCard } from './PhaseCard';
 import { AIGenerateButton } from './AIGenerateButton';
-import { PhaseFormData, IUser } from '@/types/project';
+import { PhaseFormData, IUser } from '@/types/project.types';
 
 interface PhasesFormProps {
   phases: PhaseFormData[];

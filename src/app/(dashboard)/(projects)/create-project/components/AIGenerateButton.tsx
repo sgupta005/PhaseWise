@@ -11,7 +11,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { AIGeneratedPhase, PhaseFormData, TaskFormData } from '@/types/project';
+import {
+  AIGeneratedPhase,
+  PhaseFormData,
+  TaskFormData,
+} from '@/types/project.types';
 
 interface AIGenerateButtonProps {
   projectTitle: string;

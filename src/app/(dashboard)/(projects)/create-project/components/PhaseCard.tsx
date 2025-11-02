@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { PhaseFormData, TaskFormData, IUser } from '@/types/project';
+import { PhaseFormData, TaskFormData, IUser } from '@/types/project.types';
 
 interface PhaseCardProps {
   phase: PhaseFormData;
@@ -143,7 +143,7 @@ export function PhaseCard({
 
             {phase.tasks.length === 0 ? (
               <div className="text-center py-8 text-sm text-muted-foreground border border-dashed rounded-lg">
-                No tasks yet. Click "Add Task" to create one.
+                No tasks yet. Click &quot;Add Task&quot; to create one.
               </div>
             ) : (
               <div className="space-y-3">
@@ -207,14 +207,13 @@ export function PhaseCard({
                               </p>
                             ) : (
                               teamMembers.map((member) => {
-                                const isAssigned =
-                                  task.assignedTo.includes(member._id);
+                                const isAssigned = task.assignedTo.includes(
+                                  member._id
+                                );
                                 return (
                                   <Badge
                                     key={member._id}
-                                    variant={
-                                      isAssigned ? 'default' : 'outline'
-                                    }
+                                    variant={isAssigned ? 'default' : 'outline'}
                                     className="cursor-pointer"
                                     onClick={() =>
                                       toggleTaskAssignment(
@@ -252,4 +251,3 @@ export function PhaseCard({
     </Accordion>
   );
 }
-

@@ -17,7 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { IUser } from '@/types/project';
+import { IUser } from '@/types/project.types';
 
 interface FacultySelectorProps {
   value: IUser | null;
@@ -163,4 +163,3 @@ export function FacultySelector({
     </Popover>
   );
 }
-
