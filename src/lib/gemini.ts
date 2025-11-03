@@ -1,8 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import {
-  AIResponseSchema,
-  geminiResponseSchema,
-} from '@/schemas/gemini.schema';
+import { AIResponseSchema, geminiResponseSchema } from '@/schemas/ai.schema';
 import { AIGeneratedPhase, AIGenerateRequest } from '@/types/project.types';
 
 // Initialize Gemini AI

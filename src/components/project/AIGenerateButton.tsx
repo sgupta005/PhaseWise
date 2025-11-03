@@ -147,20 +147,16 @@ export function AIGenerateButton({
           <div className="flex flex-col items-center justify-center py-8 space-y-4">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
             <div className="text-center space-y-2">
-              <p className="text-sm font-medium">Please wait</p>
+              <p
+                key={currentMessageIndex}
+                className="text-sm text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+              >
+                {LOADING_MESSAGES[currentMessageIndex]}
+              </p>
               <p className="text-xs text-muted-foreground">
                 This usually takes 20-30 seconds
               </p>
             </div>
-          </div>
-
-          <div className="text-center">
-            <p
-              key={currentMessageIndex}
-              className="text-sm text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
-            >
-              {LOADING_MESSAGES[currentMessageIndex]}
-            </p>
           </div>
         </DialogContent>
       </Dialog>

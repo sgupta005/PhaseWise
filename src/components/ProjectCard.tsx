@@ -1,8 +1,23 @@
-import Image from "next/image";
-import React from "react";
-import logo from "../../public/logo.svg";
+import Image from 'next/image';
+import React from 'react';
+import logo from '../../public/logo.svg';
+import { Badge } from '@/components/ui/badge';
+import { IUser } from '@/types/project.types';
 
-function ProjectCard(title) {
+interface ProjectCardProps {
+  id: string;
+  title: string;
+  description?: string;
+  techStack: string[];
+  faculty: IUser | { name: string; email?: string };
+}
+
+function ProjectCard({
+  title,
+  description,
+  techStack,
+  faculty,
+}: ProjectCardProps) {
   return (
     <div className="relative w-[20%] min-w-[250px] h-[40vh] p-[1px] rounded-2xl group hover:scale-[1.03] transition-transform duration-300 ease-out">
       {/* Outer border with blur and subtle gradient */}
@@ -22,32 +37,32 @@ function ProjectCard(title) {
         </div>
 
         {/* Project Info */}
-        <div className="flex flex-col gap-2 ">
-          <h1 className="text-lg font-semibold tracking-wide text-foreground">
-            Project Title
+        <div className="flex flex-col gap-2 flex-1">
+          <h1 className="text-lg font-semibold tracking-wide text-foreground line-clamp-1">
+            {title}
           </h1>
-          <p className="text-xs text-muted-foreground line-clamp-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat et
-            cum doloremque excepturi perspiciatis aspernatur ullam ut doloribus
-            voluptatibus vero.
+          <p className="text-xs text-muted-foreground line-clamp-2 flex-1">
+            {description || 'No description provided'}
           </p>
         </div>
 
         {/* Tags */}
-        <ul className="flex flex-wrap gap-2 mt-3">
-          {["JavaScript", "HTML", "CSS"].map((tag, i) => (
-            <li
-              key={i}
-              className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary"
-            >
+        <div className="flex flex-wrap gap-2 mt-3 max-h-16 overflow-hidden">
+          {techStack.slice(0, 3).map((tag, i) => (
+            <Badge key={i} variant="secondary" className="text-xs font-medium">
               {tag}
-            </li>
+            </Badge>
           ))}
-        </ul>
+          {techStack.length > 3 && (
+            <Badge variant="outline" className="text-xs">
+              +{techStack.length - 3}
+            </Badge>
+          )}
+        </div>
 
         {/* Footer */}
-        <p className="text-xs text-muted-foreground mt-4 italic">
-          Faculty: Ravikant
+        <p className="text-xs text-muted-foreground mt-4 italic truncate">
+          Faculty: {faculty.name}
         </p>
       </div>
     </div>

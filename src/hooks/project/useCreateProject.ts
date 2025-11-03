@@ -5,8 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { ProjectFormData, PhaseFormData } from '@/types/project.types';
-import { validateProjectDetails, validatePhases } from '../utils/validation';
-import { buildProjectPayload } from '../utils/payload-builder';
+import {
+  validateProjectDetails,
+  validatePhases,
+} from '@/lib/project/validation';
+import { buildProjectPayload } from '@/lib/project/payload-builder';
 
 export function useCreateProject() {
   const router = useRouter();

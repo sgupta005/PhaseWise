@@ -150,3 +150,4 @@ export function ProjectDetailsForm({
     </Card>
   );
 }
+

@@ -1,14 +1,14 @@
 'use client';
 
-import { ProjectDetailsForm } from './components/ProjectDetailsForm';
-import { PhasesForm } from './components/PhasesForm';
-import { StepHeader } from './components/StepHeader';
-import { ProgressIndicator } from './components/ProgressIndicator';
-import { useCreateProject } from './hooks/useCreateProject';
+import { ProjectDetailsForm } from '@/components/project/ProjectDetailsForm';
+import { PhasesForm } from '@/components/project/PhasesForm';
+import { StepHeader } from '@/components/project/StepHeader';
+import { ProgressIndicator } from '@/components/project/ProgressIndicator';
+import { useCreateProject } from '@/hooks/project/useCreateProject';
 import {
   calculateStep1Progress,
   calculateStep2Progress,
-} from './utils/progress-calculator';
+} from '@/lib/project/progress-calculator';
 
 export default function CreateProjectPage() {
   const {
