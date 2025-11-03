@@ -22,9 +22,11 @@ export async function getUserProjects(): Promise<IProject[]> {
     })
       .populate('faculty', 'name email')
       .populate('teamMember', 'name email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean(); // Convert to plain JavaScript objects
 
-    return projects;
+    // Serialize the data properly for Next.js
+    return JSON.parse(JSON.stringify(projects)) as IProject[];
   } catch (error) {
     console.error('Error fetching projects:', error);
     return [];

@@ -3,3 +3,5 @@
 - [ ] Save create project form data in local storage so page refresh dosen't erase it
 - [ ] why is the theme always dark on auth pages
 - [x] improve phase creation loading
+- [ ] Refactor create-project form to use react-hook-form
+- [ ] fix the type error in ProjectCard.tsx
