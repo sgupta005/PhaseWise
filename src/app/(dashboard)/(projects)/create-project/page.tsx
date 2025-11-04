@@ -29,7 +29,7 @@ export default function CreateProjectPage() {
   } = useCreateProject();
 
   return (
-    <div className="min-h-screen bg-background p-6 lg:p-10">
+    <div className="min-h-screen bg-background p-6 ">
       <div className="max-w-4xl mx-auto space-y-8">
         <StepHeader currentStep={currentStep} />
         <ProgressIndicator

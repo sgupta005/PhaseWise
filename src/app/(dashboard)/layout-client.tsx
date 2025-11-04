@@ -13,6 +13,15 @@ export default function DashboardLayoutClient({
 }) {
   const pathname = usePathname();
 
+  // Check if we're in a project detail route pattern: /projects/[projectId]/*
+  // This regex matches: /projects/{anything-except-slash}/{optional-subpath}
+  const isProjectDetailRoute = /^\/projects\/[^/]+/.test(pathname);
+
+  // If we're in a project detail route, let the nested layout handle sidebar/header
+  if (isProjectDetailRoute) {
+    return <>{children}</>;
+  }
+
   const lastSegment = pathname.split('/').filter(Boolean).pop();
   const pageName = lastSegment
     ? lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1)

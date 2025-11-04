@@ -1,7 +1,17 @@
 'use client';
 
 import type * as React from 'react';
-import { Home, Settings, FolderOpen, User } from 'lucide-react';
+import {
+  Home,
+  Settings,
+  FolderOpen,
+  User,
+  LayoutDashboard,
+  Users,
+  ListTodo,
+  ArrowLeft,
+  GalleryVerticalEnd,
+} from 'lucide-react';
 import Link from 'next/link';
 
 import { NavUser } from '@/components/NavUser';
@@ -15,48 +25,72 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import { IProject } from '@/types/project.types';
+import { ProjectSwitcher } from './ProjectSwitcher';
 
-const data = {
-  navMain: [
+function getProjectNavItems(projectId: string) {
+  return [
     {
-      title: 'Dashboard',
-      url: '/dashboard',
-      icon: Home,
+      title: 'Overview',
+      url: `/projects/${projectId}`,
+      icon: LayoutDashboard,
     },
     {
-      title: 'Projects',
-      url: '/projects',
+      title: 'Tasks',
+      url: `/projects/${projectId}/tasks`,
+      icon: ListTodo,
+    },
+    {
+      title: 'Files',
+      url: `/projects/${projectId}/files`,
       icon: FolderOpen,
     },
     {
+      title: 'Team',
+      url: `/projects/${projectId}/team`,
+      icon: Users,
+    },
+    {
       title: 'Settings',
-      url: '/settings',
+      url: `/projects/${projectId}/settings`,
       icon: Settings,
     },
-  ],
-};
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  ];
+}
+export function ProjectSidebar({
+  projectId,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  projectId: string;
+}) {
   const pathname = usePathname();
+  const projectNavItems = getProjectNavItems(projectId);
+
   function isActive(url: string) {
-    return pathname.startsWith(url);
+    return pathname.endsWith(url);
   }
   return (
     <Sidebar collapsible="icon" {...props} className="dark:shadow-sm">
       <SidebarHeader>
-        <div className="flex items-center gap-2 group-data-[state=expanded]:p-2  transition-all ">
-          <Image src="/logo.svg" alt="PhaseWise" width={32} height={32} />
-          <span className="text-sm font-semibold group-data-[collapsible=icon]:hidden">
-            PhaseWise
-          </span>
-        </div>
+        <ProjectSwitcher />
       </SidebarHeader>
       <SidebarContent>
+        <SidebarMenu className="group-data-[state=collapsed]:hidden">
+          <Button
+            className="w-max text-muted-foreground hover:text-foreground hover:bg-transparent bg-transparetn shadow-none"
+            asChild
+          >
+            <Link href="/dashboard">
+              <ArrowLeft />
+              <span className="text-xs tracking-tight">DASHBOARD</span>
+            </Link>
+          </Button>
+        </SidebarMenu>
         <SidebarMenu className="px-2 flex flex-col gap-2">
-          {data.navMain.map((item) => {
+          {projectNavItems.map((item) => {
             const active = isActive(item.url);
             return (
               <SidebarMenuItem key={item.title}>

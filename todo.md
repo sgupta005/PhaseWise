@@ -6,3 +6,4 @@
 - [ ] Refactor create-project form to use react-hook-form
 - [ ] fix the type error in ProjectCard.tsx
 - [ ] Add option for searching and filtering projects
+- [ ] Fix projects page layout shift
