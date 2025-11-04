@@ -14,7 +14,7 @@ import Link from 'next/link';
 
 export function ProjectCard({ project }: { project: IProject }) {
   return (
-    <Link href={`/projects/${project._id}`} className="block h-sm w-sm">
+    <Link href={`/projects/${project._id}`} className="block h-auto w-auto">
       <Card className="group h-full w-full transition-all duration-300 hover:shadow-md">
         <CardHeader>
           <div className="flex items-start justify-between gap-4">

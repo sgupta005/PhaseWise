@@ -1,7 +1,8 @@
-- [ ] Add Profile Icon at the bottom of sidebar
+- [x] Add Profile Icon at the bottom of sidebar
 - [ ] In tech stack use predefined items instead of letting users add random shit
 - [ ] Save create project form data in local storage so page refresh dosen't erase it
 - [ ] why is the theme always dark on auth pages
 - [x] improve phase creation loading
 - [ ] Refactor create-project form to use react-hook-form
 - [ ] fix the type error in ProjectCard.tsx
+- [ ] Add option for searching and filtering projects

@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import DashboardLayoutClient from './layout-client';
-import { SidebarProvider } from '@/contexts/sidebar-context';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 export default async function DashboardLayout({
   children,

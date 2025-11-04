@@ -1,30 +1,40 @@
 'use client';
 
-import Sidebar from '@/components/Sidebar';
-import Header from '@/components/Header';
-import { useSidebar } from '@/contexts/sidebar-context';
+import { usePathname } from 'next/navigation';
+import { Separator } from '@/components/ui/separator';
+import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/AppSidebar';
+import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 
 export default function DashboardLayoutClient({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { sidebarOpen } = useSidebar();
+  const pathname = usePathname();
+
+  const lastSegment = pathname.split('/').filter(Boolean).pop();
+  const pageName = lastSegment
+    ? lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1)
+    : 'Dashboard';
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background text-foreground">
-      <Sidebar />
-
-      <div
-        className={`flex-1 flex flex-col transition-all duration-500 ease-in-out ${
-          sidebarOpen ? 'lg:ml-72' : 'lg:ml-0'
-        }`}
-      >
-        <Header />
-
-        {/* Scrollable page content */}
-        <div className="flex-1 overflow-y-auto">{children}</div>
-      </div>
-    </div>
+    <>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex sticky top-0 bg-background h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <span>{pageName}</span>
+          </div>
+          <AnimatedThemeToggler className="ml-auto mr-8" />
+        </header>
+        <div className="">{children}</div>
+      </SidebarInset>
+    </>
   );
 }
