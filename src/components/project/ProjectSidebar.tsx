@@ -2,15 +2,11 @@
 
 import type * as React from 'react';
 import {
-  Home,
   Settings,
-  FolderOpen,
-  User,
   LayoutDashboard,
   Users,
   ListTodo,
   ArrowLeft,
-  GalleryVerticalEnd,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -28,7 +24,6 @@ import {
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
-import { IProject } from '@/types/project.types';
 import { ProjectSwitcher } from './ProjectSwitcher';
 
 function getProjectNavItems(projectId: string) {
@@ -42,11 +37,6 @@ function getProjectNavItems(projectId: string) {
       title: 'Tasks',
       url: `/projects/${projectId}/tasks`,
       icon: ListTodo,
-    },
-    {
-      title: 'Files',
-      url: `/projects/${projectId}/files`,
-      icon: FolderOpen,
     },
     {
       title: 'Team',

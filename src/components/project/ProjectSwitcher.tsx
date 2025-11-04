@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronsUpDown, GalleryVerticalEnd, Plus } from 'lucide-react';
 
@@ -21,13 +21,18 @@ import {
 } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
-import { IProject } from '@/types/project.types';
 import { getUserProjectsAction } from '@/actions/project.actions';
+import { useProjectStore } from '@/stores/project.store';
 
 export function ProjectSwitcher() {
-  const [projects, setProjects] = useState<IProject[]>([]);
-  const [activeProject, setActiveProject] = useState<IProject | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    projects,
+    activeProject,
+    isLoading,
+    setProjects,
+    setActiveProject,
+    setIsLoading,
+  } = useProjectStore();
   const { isMobile } = useSidebar();
   const router = useRouter();
 
@@ -36,13 +41,10 @@ export function ProjectSwitcher() {
       setIsLoading(true);
       const fetchedProjects = await getUserProjectsAction();
       setProjects(fetchedProjects);
-      if (fetchedProjects.length > 0) {
-        setActiveProject(fetchedProjects[0]);
-      }
       setIsLoading(false);
     }
     fetchProjects();
-  }, []);
+  }, [setProjects, setIsLoading]);
 
   if (isLoading || !activeProject) {
     return (
@@ -93,7 +95,6 @@ export function ProjectSwitcher() {
               <DropdownMenuItem
                 key={project.title}
                 onClick={() => {
-                  setIsLoading(true);
                   setActiveProject(project);
                   router.push(`/projects/${project._id}`);
                 }}

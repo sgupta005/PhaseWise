@@ -1,3 +1,5 @@
+'use client';
+
 import { IProject } from '@/types/project.types';
 import {
   Card,
@@ -11,10 +13,17 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Github, ExternalLink, Lock, Globe } from 'lucide-react';
 import Link from 'next/link';
+import { useProjectStore } from '@/stores/project.store';
 
 export function ProjectCard({ project }: { project: IProject }) {
+  const { setActiveProject } = useProjectStore();
+
   return (
-    <Link href={`/projects/${project._id}`} className="block h-auto w-auto">
+    <Link
+      href={`/projects/${project._id}`}
+      className="block h-auto w-auto"
+      onClick={() => setActiveProject(project)}
+    >
       <Card className="group h-full w-full transition-all duration-300 hover:shadow-md">
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
@@ -87,7 +96,7 @@ export function ProjectCard({ project }: { project: IProject }) {
           {project.teamMember && project.teamMember.length > 0 && (
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
-                {project.teamMember.slice(0, 3).map((member, index) => (
+                {project.teamMember.slice(0, 3).map((member) => (
                   <Avatar key={member} className="size-7 border-2 border-card">
                     <AvatarImage src={`/avatars/${member}.jpg`} alt={member} />
                     <AvatarFallback className="text-xs">

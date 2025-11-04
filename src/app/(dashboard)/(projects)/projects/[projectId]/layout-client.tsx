@@ -14,6 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { useActiveProject } from '@/hooks/project/useActiveProject';
 
 interface ProjectLayoutClientProps {
   children: React.ReactNode;
@@ -24,6 +25,8 @@ export default function ProjectLayoutClient({
   children,
   project,
 }: ProjectLayoutClientProps) {
+  useActiveProject();
+
   const pathname = usePathname();
   const projectId = project._id;
 
