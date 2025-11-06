@@ -1,12 +1,12 @@
 import EmptyProjectsState from '@/components/EmptyProjectsState';
 import { ProjectCard } from '@/components/project/ProjectCard';
 import { Button } from '@/components/ui/button';
-import { getUserProjects } from '@/db/project.db';
+import { getUserProjectsWithTeamAndFaculty } from '@/db/project.db';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function Projects() {
-  const projects = await getUserProjects();
+  const projects = await getUserProjectsWithTeamAndFaculty();
 
   if (projects.length === 0) {
     return <EmptyProjectsState />;

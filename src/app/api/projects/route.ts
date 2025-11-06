@@ -4,11 +4,11 @@ import Project from '@/models/project.model';
 import Phase from '@/models/phase.model';
 import Task from '@/models/task.model';
 import User from '@/models/user.model';
-import { getUserProjects } from '@/db/project.db';
+import { getUserProjectsWithTeamAndFaculty } from '@/db/project.db';
 
 export async function GET(request: Request) {
   try {
-    const projects = await getUserProjects();
+    const projects = await getUserProjectsWithTeamAndFaculty();
     return NextResponse.json(
       {
         success: true,

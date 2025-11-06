@@ -19,3 +19,5 @@
   - [ ] subtasks
   - [ ] competed
   - [ ] statuses
+
+- Add timestamps to models?

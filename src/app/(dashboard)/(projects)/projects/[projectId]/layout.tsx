@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getPopulatedProjectById } from '@/db/project.db';
+import { getProjectByIdWithTeamAndFaculty } from '@/db/project.db';
 import ProjectLayoutClient from './layout-client';
 
 export default async function ProjectLayout({
@@ -10,7 +10,7 @@ export default async function ProjectLayout({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
-  const project = await getPopulatedProjectById(projectId);
+  const project = await getProjectByIdWithTeamAndFaculty(projectId);
 
   if (!project) {
     notFound();

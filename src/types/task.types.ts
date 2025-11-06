@@ -12,6 +12,7 @@ export interface ITask {
   assignedTo: string[]; // Array of user IDs
   priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
   status: string; // Status ID
+  createdBy: string; // User ID
 }
 
 // Task Status Management Types

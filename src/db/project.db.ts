@@ -4,7 +4,7 @@ import Project from '@/models/project.model';
 import { IProject } from '@/types/project.types';
 import { ITaskStatus } from '@/types/task.types';
 
-export async function getUserProjects(): Promise<IProject[]> {
+export async function getUserProjectsWithTeamAndFaculty(): Promise<IProject[]> {
   try {
     // Get current user session
     const session = await auth();
@@ -34,7 +34,7 @@ export async function getUserProjects(): Promise<IProject[]> {
   }
 }
 
-export async function getPopulatedProjectById(
+export async function getProjectByIdWithTeamAndFaculty(
   projectId: string
 ): Promise<IProject | null> {
   try {
@@ -95,7 +95,7 @@ export async function getProjectById(projectId: string) {
   return await Project.findById(projectId);
 }
 
-export async function getProjectWithTasks(projectId: string) {
+export async function getProjectByIdWithTasks(projectId: string) {
   await connectDb();
   return await Project.findById(projectId).populate({
     path: 'phases',

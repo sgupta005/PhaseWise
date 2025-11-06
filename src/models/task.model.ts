@@ -14,7 +14,7 @@ const taskSchema = new Schema({
           studentId: Types.ObjectId
         ): Promise<boolean> {
           const user = await User.findById(studentId);
-          return user && user.role === 'student';
+          return Boolean(user && user.role === 'student');
         },
         message: 'Task can only be assigned to student',
       },
@@ -30,12 +30,12 @@ const taskSchema = new Schema({
     required: true,
     default: 'todo',
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
-// Clear any existing model to prevent caching issues
-if (mongoose.models.Task) {
-  delete mongoose.models.Task;
-}
-
-const Task = mongoose.model('Task', taskSchema);
+const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
 export default Task;

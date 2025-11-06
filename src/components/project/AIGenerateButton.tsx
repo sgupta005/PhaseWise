@@ -16,6 +16,7 @@ import {
   PhaseFormData,
   TaskFormData,
 } from '@/types/project.types';
+import { useSession } from 'next-auth/react';
 
 interface AIGenerateButtonProps {
   projectTitle: string;
@@ -43,7 +44,7 @@ export function AIGenerateButton({
   const [isGenerating, setIsGenerating] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-
+  const userId = useSession().data?.user?.id;
   // Cycle through loading messages
   useEffect(() => {
     if (!isGenerating) return;
@@ -98,6 +99,7 @@ export function AIGenerateButton({
               task: task.task,
               assignedTo: [], // User will assign later
               priority: task.priority,
+              createdBy: userId,
             })) as TaskFormData[],
           })
         );

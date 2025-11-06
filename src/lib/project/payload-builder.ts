@@ -32,6 +32,7 @@ export function buildProjectPayload(
         task: task.task,
         assignedTo: task.assignedTo,
         priority: task.priority,
+        createdBy: userId,
       })),
     })),
   };

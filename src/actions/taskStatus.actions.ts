@@ -3,7 +3,7 @@
 import {
   verifyProjectAccess,
   getProjectById,
-  getProjectWithTasks,
+  getProjectByIdWithTasks,
 } from '@/db/project.db';
 import { ITaskStatus, StatusOperationResponse } from '@/types/task.types';
 
@@ -164,7 +164,7 @@ export async function deleteStatusAction(
     }
 
     // DB operations - get project with tasks populated
-    const project = await getProjectWithTasks(projectId);
+    const project = await getProjectByIdWithTasks(projectId);
     if (!project) {
       return {
         success: false,
