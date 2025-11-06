@@ -6,15 +6,6 @@ export interface ITaskStatus {
   isDefault: boolean;
 }
 
-export interface ITask {
-  _id?: string;
-  task: string;
-  assignedTo: string[]; // Array of user IDs
-  priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
-  status: string; // Status ID
-  createdBy: string; // User ID
-}
-
 // Task Status Management Types
 
 export interface CreateStatusPayload {

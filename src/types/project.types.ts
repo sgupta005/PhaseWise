@@ -1,56 +1,23 @@
-import { ITask, ITaskStatus } from './task.types';
-
-// Base Types
-
-export interface IUser {
-  _id: string;
-  name: string;
-  email: string;
-  role: 'student' | 'faculty' | 'admin';
-  image?: string | null;
-}
-
-export interface IPhase {
-  _id?: string;
-  title: string;
-  deadline: string | Date;
-  tasks: ITask[];
-}
-
-export interface IProject {
-  _id?: string;
-  title: string;
-  description?: string;
-  githubLink?: string;
-  projectUrl?: string;
-  techStack: string[];
-  isPublic: boolean;
-  teamMember: string[]; // Array of user IDs
-  faculty: string; // User ID
-  phases: string[]; // Array of phase IDs (when fetched from DB)
-  currentPhase: number;
-  createdBy: string; // User ID
-  taskStatuses: ITaskStatus[]; // Array of task statuses
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import { ProjectDocument } from '@/models/project.model';
+import { UserDocument } from '@/models/user.model';
+import { TaskDocument } from '@/models/task.model';
+import { PhaseDocument } from '@/models/phase.model';
 
 //  Populated Types (for displaying data)
 
-export interface ITaskPopulated extends Omit<ITask, 'assignedTo'> {
-  assignedTo: IUser[];
+export interface IProjectWithTeam
+  extends Omit<ProjectDocument, 'teamMember' | 'faculty' | 'createdBy'> {
+  teamMember: UserDocument[];
+  faculty: UserDocument;
+  createdBy: UserDocument;
 }
 
-export interface IPhasePopulated extends Omit<IPhase, 'tasks'> {
-  tasks: ITaskPopulated[];
+export interface IProjectWithTasks extends Omit<ProjectDocument, 'phases'> {
+  phases: IPhaseWithTasks[];
 }
 
-export interface IProjectPopulated
-  extends Omit<IProject, 'phases' | 'teamMember' | 'faculty' | 'createdBy'> {
-  phases: IPhasePopulated[];
-  teamMember: IUser[];
-  faculty: IUser;
-  createdBy: IUser;
+export interface IPhaseWithTasks extends Omit<PhaseDocument, 'tasks'> {
+  tasks: TaskDocument[];
 }
 
 // Form Data Types
@@ -61,8 +28,8 @@ export interface ProjectFormData {
   githubLink: string;
   projectUrl: string;
   techStack: string; // Comma-separated string (converted to array before submission)
-  faculty: IUser | null; // Selected faculty object
-  teamMembers: IUser[]; // Selected team members
+  faculty: UserDocument | null; // Selected faculty object
+  teamMembers: UserDocument[]; // Selected team members
 }
 
 export interface TaskFormData {
@@ -111,8 +78,8 @@ export interface ApiResponse<T> {
 export interface ProjectApiResponse {
   success: boolean;
   message: string;
-  project?: IProject;
-  data?: IProject | IProject[] | IProjectPopulated;
+  project?: ProjectDocument;
+  data?: ProjectDocument | ProjectDocument[];
 }
 
 // AI Generation Types

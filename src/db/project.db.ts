@@ -1,12 +1,13 @@
 import { auth } from '@/auth';
 import { connectDb } from '@/dbConfig/dbConfig';
-import Project from '@/models/project.model';
-import { IProject } from '@/types/project.types';
+import Project, { ProjectDocument } from '@/models/project.model';
+import { IProjectWithTeam, IProjectWithTasks } from '@/types/project.types';
 import { ITaskStatus } from '@/types/task.types';
 
-export async function getUserProjectsWithTeamAndFaculty(): Promise<IProject[]> {
+export async function getUserProjectsWithTeamAndFaculty(): Promise<
+  IProjectWithTeam[]
+> {
   try {
-    // Get current user session
     const session = await auth();
     if (!session?.user?.id) {
       console.error('No session found');
@@ -15,7 +16,6 @@ export async function getUserProjectsWithTeamAndFaculty(): Promise<IProject[]> {
 
     const userId = session.user.id;
 
-    // Connect to database and query directly
     await connectDb();
 
     const projects = await Project.find({
@@ -23,11 +23,12 @@ export async function getUserProjectsWithTeamAndFaculty(): Promise<IProject[]> {
     })
       .populate('faculty', 'name email')
       .populate('teamMember', 'name email')
+      .populate('createdBy', 'name email')
       .sort({ createdAt: -1 })
-      .lean(); // Convert to plain JavaScript objects
+      .lean();
 
     // Serialize the data properly for Next.js
-    return JSON.parse(JSON.stringify(projects)) as IProject[];
+    return JSON.parse(JSON.stringify(projects)) as IProjectWithTeam[];
   } catch (error) {
     console.error('Error fetching projects:', error);
     return [];
@@ -36,9 +37,8 @@ export async function getUserProjectsWithTeamAndFaculty(): Promise<IProject[]> {
 
 export async function getProjectByIdWithTeamAndFaculty(
   projectId: string
-): Promise<IProject | null> {
+): Promise<IProjectWithTeam | null> {
   try {
-    // Get current user session
     const session = await auth();
     if (!session?.user?.id) {
       console.error('No session found');
@@ -47,7 +47,6 @@ export async function getProjectByIdWithTeamAndFaculty(
 
     const userId = session.user.id;
 
-    // Connect to database
     await connectDb();
 
     const project = await Project.findOne({
@@ -56,14 +55,15 @@ export async function getProjectByIdWithTeamAndFaculty(
     })
       .populate('faculty', 'name email')
       .populate('teamMember', 'name email')
-      .lean(); // Convert to plain JavaScript objects
+      .populate('createdBy', 'name email')
+      .lean();
 
     if (!project) {
       return null;
     }
 
     // Serialize the data properly for Next.js
-    return JSON.parse(JSON.stringify(project)) as IProject;
+    return JSON.parse(JSON.stringify(project)) as IProjectWithTeam;
   } catch (error) {
     console.error('Error fetching project:', error);
     return null;
@@ -90,12 +90,16 @@ export async function verifyProjectAccess(projectId: string): Promise<boolean> {
   return !!project;
 }
 
-export async function getProjectById(projectId: string) {
+export async function getProjectById(
+  projectId: string
+): Promise<ProjectDocument | null> {
   await connectDb();
   return await Project.findById(projectId);
 }
 
-export async function getProjectByIdWithTasks(projectId: string) {
+export async function getProjectByIdWithTasks(
+  projectId: string
+): Promise<IProjectWithTasks> {
   await connectDb();
   return await Project.findById(projectId).populate({
     path: 'phases',

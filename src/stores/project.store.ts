@@ -1,14 +1,15 @@
+import { ProjectDocument } from '@/models/project.model';
+import { IProjectWithTeam } from '@/types/project.types';
 import { create } from 'zustand';
-import { IProject } from '@/types/project.types';
 
 interface ProjectStore {
-  activeProject: IProject | null;
-  projects: IProject[];
+  activeProject: IProjectWithTeam | null;
+  projects: ProjectDocument[];
   isLoading: boolean;
-  setActiveProject: (project: IProject | null) => void;
-  setProjects: (projects: IProject[]) => void;
+  setActiveProject: (project: IProjectWithTeam | null) => void;
+  setProjects: (projects: ProjectDocument[]) => void;
   setIsLoading: (isLoading: boolean) => void;
-  getProjectById: (id: string) => IProject | undefined;
+  getProjectById: (id: string) => ProjectDocument | undefined;
 }
 
 export const useProjectStore = create<ProjectStore>((set, get) => ({
@@ -20,6 +21,6 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   setIsLoading: (isLoading) => set({ isLoading }),
   getProjectById: (id) => {
     const { projects } = get();
-    return projects.find((project) => project._id === id);
+    return projects.find((project) => project._id.toString() === id);
   },
 }));

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from 'mongoose';
+import mongoose, { InferSchemaType, Schema, Types } from 'mongoose';
 import User from '@/models/user.model';
 
 const taskSchema = new Schema({
@@ -36,6 +36,13 @@ const taskSchema = new Schema({
     required: true,
   },
 });
+
+type inferredTaskSchema = InferSchemaType<typeof taskSchema>;
+export type TaskDocument = inferredTaskSchema & {
+  _id: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
 export default Task;

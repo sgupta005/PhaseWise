@@ -1,6 +1,5 @@
 'use client';
 
-import { IProject } from '@/types/project.types';
 import {
   Card,
   CardContent,
@@ -14,8 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Github, ExternalLink, Lock, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useProjectStore } from '@/stores/project.store';
+import { IProjectWithTeam } from '@/types/project.types';
 
-export function ProjectCard({ project }: { project: IProject }) {
+export function ProjectCard({ project }: { project: IProjectWithTeam }) {
   const { setActiveProject } = useProjectStore();
 
   return (
@@ -97,8 +97,11 @@ export function ProjectCard({ project }: { project: IProject }) {
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
                 {project.teamMember.slice(0, 3).map((member) => (
-                  <Avatar key={member} className="size-7 border-2 border-card">
-                    <AvatarImage src={`/avatars/${member}.jpg`} alt={member} />
+                  <Avatar
+                    key={member._id.toString()}
+                    className="size-7 border-2 border-card"
+                  >
+                    <AvatarImage src={member.image || ''} alt={member.name} />
                     <AvatarFallback className="text-xs">
                       {member?.name?.slice(0, 2).toUpperCase()}
                     </AvatarFallback>

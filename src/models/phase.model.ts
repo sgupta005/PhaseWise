@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { InferSchemaType, Schema, Types } from 'mongoose';
 
 const phaseSchema = new Schema({
   title: {
@@ -17,6 +17,13 @@ const phaseSchema = new Schema({
     },
   ],
 });
+
+type inferredPhaseSchema = InferSchemaType<typeof phaseSchema>;
+export type PhaseDocument = inferredPhaseSchema & {
+  _id: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 const Phase = mongoose.models.Phase || mongoose.model('Phase', phaseSchema);
 export default Phase;

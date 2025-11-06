@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ProjectSidebar } from '@/components/project/ProjectSidebar';
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
-import { IProject } from '@/types/project.types';
+import { ProjectDocument } from '@/models/project.model';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,7 +18,7 @@ import { useActiveProject } from '@/hooks/project/useActiveProject';
 
 interface ProjectLayoutClientProps {
   children: React.ReactNode;
-  project: IProject;
+  project: ProjectDocument;
 }
 
 export default function ProjectLayoutClient({
@@ -28,7 +28,7 @@ export default function ProjectLayoutClient({
   useActiveProject();
 
   const pathname = usePathname();
-  const projectId = project._id;
+  const projectId = project._id.toString();
 
   // Determine page name from the last segment
   const segments = pathname.split('/').filter(Boolean);
