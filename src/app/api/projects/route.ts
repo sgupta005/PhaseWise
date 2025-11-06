@@ -1,10 +1,37 @@
-import { ObjectId } from 'mongodb';
 import { NextResponse } from 'next/server';
 import { connectDb } from '@/dbConfig/dbConfig';
 import Project from '@/models/project.model';
 import Phase from '@/models/phase.model';
 import Task from '@/models/task.model';
 import User from '@/models/user.model';
+import { getUserProjects } from '@/db/project.db';
+
+export async function GET(request: Request) {
+  try {
+    const projects = await getUserProjects();
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Projects fetched successfully',
+        data: projects,
+      },
+      { status: 200 }
+    );
+  } catch (error: unknown) {
+    let message = 'Error in fetching projects';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return NextResponse.json(
+      {
+        success: false,
+        message,
+        data: null,
+      },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -123,84 +150,6 @@ export async function POST(req: Request) {
     );
   } catch (error: unknown) {
     let message = 'Error in creating projects';
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-
-    return NextResponse.json(
-      {
-        success: false,
-        message,
-        data: null,
-      },
-      { status: 500 }
-    );
-  }
-}
-
-export async function GET(request: Request) {
-  await connectDb();
-
-  try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-
-    // Check if id exists
-    if (!id) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Project ID is required',
-          data: null,
-        },
-        { status: 400 }
-      );
-    }
-
-    // Validate MongoDB ObjectId
-    if (!ObjectId.isValid(id) || String(new ObjectId(id)) !== id) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Invalid Project ID format',
-          data: null,
-        },
-        { status: 400 }
-      );
-    }
-
-    // Find project by ID
-    const project = await Project.findById(id).populate({
-      path: 'phases',
-      populate: {
-        path: 'tasks',
-      },
-    });
-
-    // Check if project exists
-    if (!project) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Project not found',
-          data: null,
-        },
-        { status: 404 }
-      );
-    }
-
-    // Return the project
-    return NextResponse.json(
-      {
-        success: true,
-        message: 'Project retrieved successfully',
-        data: project,
-      },
-      { status: 200 }
-    );
-  } catch (error: unknown) {
-    let message = 'Error in getting Project';
 
     if (error instanceof Error) {
       message = error.message;

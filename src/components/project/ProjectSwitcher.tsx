@@ -21,7 +21,6 @@ import {
 } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
-import { getUserProjectsAction } from '@/actions/project.actions';
 import { useProjectStore } from '@/stores/project.store';
 
 export function ProjectSwitcher() {
@@ -39,9 +38,15 @@ export function ProjectSwitcher() {
   useEffect(() => {
     async function fetchProjects() {
       setIsLoading(true);
-      const fetchedProjects = await getUserProjectsAction();
-      setProjects(fetchedProjects);
-      setIsLoading(false);
+      try {
+        const res = await fetch('/api/projects');
+        const fetchedProjects = (await res.json()).data;
+        setProjects(fetchedProjects);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        setIsLoading(false);
+      }
     }
     fetchProjects();
   }, [setProjects, setIsLoading]);
