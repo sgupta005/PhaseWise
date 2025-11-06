@@ -1,4 +1,6 @@
-// ==================== Base Types ====================
+import { ITask, ITaskStatus } from './task.types';
+
+// Base Types
 
 export interface IUser {
   _id: string;
@@ -6,13 +8,6 @@ export interface IUser {
   email: string;
   role: 'student' | 'faculty' | 'admin';
   image?: string | null;
-}
-
-export interface ITask {
-  _id?: string;
-  task: string;
-  assignedTo: string[]; // Array of user IDs
-  priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
 }
 
 export interface IPhase {
@@ -35,11 +30,12 @@ export interface IProject {
   faculty: string; // User ID
   phases: string[]; // Array of phase IDs (when fetched from DB)
   createdBy: string; // User ID
+  taskStatuses: ITaskStatus[]; // Array of task statuses
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-// ==================== Populated Types (for displaying data) ====================
+//  Populated Types (for displaying data)
 
 export interface ITaskPopulated extends Omit<ITask, 'assignedTo'> {
   assignedTo: IUser[];
@@ -57,7 +53,7 @@ export interface IProjectPopulated
   createdBy: IUser;
 }
 
-// ==================== Form Data Types ====================
+// Form Data Types
 
 export interface ProjectFormData {
   title: string;
@@ -105,7 +101,7 @@ export interface CreateProjectPayload {
   }[];
 }
 
-// ==================== API Response Types ====================
+// API Response Types
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -120,7 +116,7 @@ export interface ProjectApiResponse {
   data?: IProject | IProject[] | IProjectPopulated;
 }
 
-// ==================== AI Generation Types ====================
+// AI Generation Types
 
 export interface AIGeneratedTask {
   task: string;

@@ -69,6 +69,44 @@ const projectSchema = new Schema({
     ref: 'User',
     required: [true, 'Please enter who is creating this project'],
   },
+  taskStatuses: {
+    type: [
+      {
+        id: {
+          type: String,
+          required: true,
+        },
+        name: {
+          type: String,
+          required: true,
+        },
+        isDefault: {
+          type: Boolean,
+          required: true,
+          default: false,
+        },
+      },
+    ],
+    default: [
+      { id: 'todo', name: 'Todo', isDefault: true },
+      { id: 'in-progress', name: 'In Progress', isDefault: false },
+      { id: 'done', name: 'Done', isDefault: false },
+    ],
+    validate: {
+      validator: function (
+        statuses: { id: string; name: string; isDefault: boolean }[]
+      ): boolean {
+        // Ensure at least one status exists
+        if (statuses.length === 0) return false;
+
+        // Ensure exactly one status is marked as default
+        const defaultCount = statuses.filter((s) => s.isDefault).length;
+        return defaultCount === 1;
+      },
+      message:
+        'Project must have at least one status and exactly one default status',
+    },
+  },
 });
 
 const Project =

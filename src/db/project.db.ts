@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { connectDb } from '@/dbConfig/dbConfig';
 import Project from '@/models/project.model';
 import { IProject } from '@/types/project.types';
+import { ITaskStatus } from '@/types/task.types';
 
 export async function getUserProjects(): Promise<IProject[]> {
   try {
@@ -33,7 +34,7 @@ export async function getUserProjects(): Promise<IProject[]> {
   }
 }
 
-export async function getProjectById(
+export async function getPopulatedProjectById(
   projectId: string
 ): Promise<IProject | null> {
   try {
@@ -67,4 +68,50 @@ export async function getProjectById(
     console.error('Error fetching project:', error);
     return null;
   }
+}
+
+export async function verifyProjectAccess(projectId: string): Promise<boolean> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return false;
+  }
+
+  await connectDb();
+
+  const project = await Project.findOne({
+    _id: projectId,
+    $or: [
+      { teamMember: session.user.id },
+      { faculty: session.user.id },
+      { createdBy: session.user.id },
+    ],
+  });
+
+  return !!project;
+}
+
+export async function getProjectById(projectId: string) {
+  await connectDb();
+  return await Project.findById(projectId);
+}
+
+export async function getProjectWithTasks(projectId: string) {
+  await connectDb();
+  return await Project.findById(projectId).populate({
+    path: 'phases',
+    populate: {
+      path: 'tasks',
+    },
+  });
+}
+
+export async function getProjectStatuses(
+  projectId: string
+): Promise<ITaskStatus[]> {
+  await connectDb();
+  const project = await Project.findById(projectId);
+  if (!project) {
+    throw new Error('Project not found');
+  }
+  return project.taskStatuses || [];
 }

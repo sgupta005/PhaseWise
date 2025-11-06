@@ -30,7 +30,7 @@ function getProjectNavItems(projectId: string) {
   return [
     {
       title: 'Overview',
-      url: `/projects/${projectId}`,
+      url: `/projects/${projectId}/overview`,
       icon: LayoutDashboard,
     },
     {

@@ -7,3 +7,15 @@
 - [ ] fix the type error in ProjectCard.tsx
 - [ ] Add option for searching and filtering projects
 - [ ] Fix projects page layout shift
+- [ ] User profile on sidebar dosen't load on first render
+
+- [ ] CurrentPhase should be in project model not Phase, Task model does not have completed field
+- [ ] User should be able to set CurrentPhase
+- [ ] Tasks should have statuses
+- [ ] User should be able to change those statuses in settings
+
+- [ ] Task Model
+  - [ ] comments
+  - [ ] subtasks
+  - [ ] competed
+  - [ ] statuses
