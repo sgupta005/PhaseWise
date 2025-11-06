@@ -199,7 +199,7 @@ export function PhaseCard({
 
                         {/* Assigned To */}
                         <div className="space-y-2">
-                          <Label>Assigned To</Label>
+                          <Label>Assignees</Label>
                           <div className="flex flex-wrap gap-2">
                             {teamMembers.length === 0 ? (
                               <p className="text-sm text-muted-foreground italic">
@@ -251,4 +251,3 @@ export function PhaseCard({
     </Accordion>
   );
 }
-

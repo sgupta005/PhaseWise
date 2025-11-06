@@ -28,7 +28,6 @@ export function buildProjectPayload(
     phases: phases.map((phase, index) => ({
       title: phase.title,
       deadline: phase.deadline,
-      currentPhase: index + 1,
       tasks: phase.tasks.map((task) => ({
         task: task.task,
         assignedTo: task.assignedTo,

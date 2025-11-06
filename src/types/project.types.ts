@@ -14,7 +14,6 @@ export interface IPhase {
   _id?: string;
   title: string;
   deadline: string | Date;
-  currentPhase: number;
   tasks: ITask[];
 }
 
@@ -29,6 +28,7 @@ export interface IProject {
   teamMember: string[]; // Array of user IDs
   faculty: string; // User ID
   phases: string[]; // Array of phase IDs (when fetched from DB)
+  currentPhase: number;
   createdBy: string; // User ID
   taskStatuses: ITaskStatus[]; // Array of task statuses
   createdAt?: Date;
@@ -92,7 +92,6 @@ export interface CreateProjectPayload {
   phases: {
     title: string;
     deadline: string;
-    currentPhase: number;
     tasks: {
       task: string;
       assignedTo: string[];

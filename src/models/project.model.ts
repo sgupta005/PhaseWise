@@ -39,7 +39,7 @@ const projectSchema = new Schema({
           teamMemberId: Types.ObjectId
         ): Promise<boolean> {
           const user = await User.findById(teamMemberId);
-          return user && user.role === 'student';
+          return Boolean(user && user.role === 'student');
         },
         message: 'Selected user must have student role',
       },
@@ -52,7 +52,7 @@ const projectSchema = new Schema({
     validate: {
       validator: async function (facultyId: Types.ObjectId): Promise<boolean> {
         const user = await User.findById(facultyId);
-        return user && user.role === 'faculty';
+        return Boolean(user && user.role === 'faculty');
       },
       message: 'Selected user must have faculty role',
     },
@@ -64,6 +64,10 @@ const projectSchema = new Schema({
       required: [true, 'Please enter the phases'],
     },
   ],
+  currentPhase: {
+    type: Number,
+    default: 1,
+  },
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',

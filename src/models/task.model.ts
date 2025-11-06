@@ -32,5 +32,10 @@ const taskSchema = new Schema({
   },
 });
 
-const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
+// Clear any existing model to prevent caching issues
+if (mongoose.models.Task) {
+  delete mongoose.models.Task;
+}
+
+const Task = mongoose.model('Task', taskSchema);
 export default Task;

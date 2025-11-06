@@ -120,7 +120,6 @@ export async function POST(req: Request) {
       const newPhase = await Phase.create({
         title: phase.title,
         deadline: phase.deadline,
-        currentPhase: phase.currentPhase || 1,
         tasks: taskIds,
       });
 
