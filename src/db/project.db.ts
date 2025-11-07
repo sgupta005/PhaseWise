@@ -1,7 +1,11 @@
 import { auth } from '@/auth';
 import { connectDb } from '@/dbConfig/dbConfig';
 import Project, { ProjectDocument } from '@/models/project.model';
-import { IProjectWithTeam, IProjectWithTasks } from '@/types/project.types';
+import {
+  IProjectWithTeam,
+  IProjectWithTasks,
+  IProjectPopulated,
+} from '@/types/project.types';
 import { ITaskStatus } from '@/types/task.types';
 
 export async function getUserProjectsWithTeamAndFaculty(): Promise<
@@ -95,6 +99,26 @@ export async function getProjectById(
 ): Promise<ProjectDocument | null> {
   await connectDb();
   return await Project.findById(projectId);
+}
+
+export async function getProjectByIdPopulated(
+  projectId: string
+): Promise<IProjectPopulated> {
+  await connectDb();
+  const project = await Project.findById(projectId)
+    .populate({
+      path: 'phases',
+      populate: {
+        path: 'tasks',
+      },
+    })
+    .populate('faculty', 'name email')
+    .populate('teamMember', 'name email')
+    .populate('createdBy', 'name email')
+    .lean();
+
+  // Serialize the data properly for Next.js
+  return JSON.parse(JSON.stringify(project)) as IProjectPopulated;
 }
 
 export async function getProjectByIdWithTasks(

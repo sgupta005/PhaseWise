@@ -12,6 +12,17 @@ export interface IProjectWithTeam
   createdBy: UserDocument;
 }
 
+export interface IProjectPopulated
+  extends Omit<
+    ProjectDocument,
+    'teamMember' | 'faculty' | 'createdBy' | 'phases'
+  > {
+  teamMember: UserDocument[];
+  faculty: UserDocument;
+  createdBy: UserDocument;
+  phases: IPhaseWithTasks[];
+}
+
 export interface IProjectWithTasks extends Omit<ProjectDocument, 'phases'> {
   phases: IPhaseWithTasks[];
 }

@@ -15,10 +15,11 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { useActiveProject } from '@/hooks/project/useActiveProject';
+import { IProjectWithTeam } from '@/types/project.types';
 
 interface ProjectLayoutClientProps {
   children: React.ReactNode;
-  project: ProjectDocument;
+  project: IProjectWithTeam;
 }
 
 export default function ProjectLayoutClient({
