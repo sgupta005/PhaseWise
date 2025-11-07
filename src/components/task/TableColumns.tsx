@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/lib/utils/avatar';
 import { ITask } from '@/types/task.types';
 import { Minus } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<ITask>[] = [
   {
@@ -36,10 +37,17 @@ export const columns: ColumnDef<ITask>[] = [
   {
     accessorKey: 'priority',
     header: 'Priority',
+    cell: ({ row }) => <Badge variant="outline">{row.original.priority}</Badge>,
   },
   {
     accessorKey: 'status',
     header: 'Status',
+    cell: ({ row }) => (
+      <Badge variant="outline">
+        {row.original.status.charAt(0).toUpperCase() +
+          row.original.status.slice(1)}
+      </Badge>
+    ),
   },
   {
     accessorKey: 'phaseTitle',
