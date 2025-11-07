@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { useActiveProject } from '@/hooks/project/useActiveProject';
 import { IProjectWithTeam } from '@/types/project.types';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 interface ProjectLayoutClientProps {
   children: React.ReactNode;
@@ -61,7 +62,9 @@ export default function ProjectLayoutClient({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <AnimatedThemeToggler className="ml-auto mr-8" />
+          <div className="ml-auto mr-8">
+            <ThemeToggle />
+          </div>
         </header>
         <div className="">{children}</div>
       </SidebarInset>

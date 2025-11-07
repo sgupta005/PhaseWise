@@ -1,6 +1,6 @@
 - [x] Add Profile Icon at the bottom of sidebar
 - [ ] In tech stack use predefined items instead of letting users add random shit
-- [ ] why is the theme always dark on auth pages
+- [x] why is the theme always dark on auth pages
 - [x] improve phase creation loading
 - [ ] Refactor create-project form to use react-hook-form
 - [x] fix the type error in ProjectCard.tsx
