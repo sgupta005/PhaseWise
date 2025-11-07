@@ -22,10 +22,12 @@ export function buildProjectPayload(
     projectUrl: projectFormData.projectUrl || undefined,
     techStack: techStackArray,
     isPublic: true,
-    faculty: projectFormData.faculty!._id,
-    teamMember: projectFormData.teamMembers.map((member) => member._id),
+    faculty: projectFormData.faculty!._id.toString(),
+    teamMember: projectFormData.teamMembers.map((member) =>
+      member._id.toString()
+    ),
     createdBy: userId,
-    phases: phases.map((phase, index) => ({
+    phases: phases.map((phase) => ({
       title: phase.title,
       deadline: phase.deadline,
       tasks: phase.tasks.map((task) => ({

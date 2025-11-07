@@ -1,3 +1,4 @@
+import { columns } from '@/components/task/TableColumns';
 import TaskBoard from '@/components/task/TaskBoard';
 import TaskFilters from '@/components/task/TaskFilters';
 import TaskTable from '@/components/task/TaskTable';
@@ -60,10 +61,14 @@ export default async function ProjectTasksPage({
     }
 
     if (assigneeFilter && Array.isArray(task.assignedTo)) {
-      const hasAssignee = task.assignedTo.some(
-        (assignee) => assignee.toString() === assigneeFilter
-      );
-      if (!hasAssignee) return false;
+      if (assigneeFilter === 'none') {
+        if (task.assignedTo.length > 0) return false;
+      } else {
+        const hasAssignee = task.assignedTo.some(
+          (assignee) => assignee._id.toString() === assigneeFilter
+        );
+        if (!hasAssignee) return false;
+      }
     }
 
     if (priorityFilter) {
@@ -81,7 +86,7 @@ export default async function ProjectTasksPage({
       }
     }
 
-    if (createdByFilter && task.createdBy.toString() !== createdByFilter) {
+    if (createdByFilter && task.createdBy._id.toString() !== createdByFilter) {
       return false;
     }
 
@@ -95,16 +100,16 @@ export default async function ProjectTasksPage({
   return (
     <div className="px-6 py-4 flex flex-col">
       <TaskFilters project={project} />
-      <Tabs defaultValue="board">
+      <Tabs defaultValue="table">
         <TabsList>
           <TabsTrigger value="table">Table</TabsTrigger>
           <TabsTrigger value="board">Board</TabsTrigger>
         </TabsList>
         <TabsContent value="table">
-          <TaskTable tasks={filteredTasks} project={project} />
+          <TaskTable tasks={filteredTasks} columns={columns} />
         </TabsContent>
         <TabsContent value="board">
-          <TaskBoard tasks={filteredTasks} project={project} />
+          <TaskBoard tasks={filteredTasks} />
         </TabsContent>
       </Tabs>
     </div>

@@ -1,9 +1,19 @@
 // Base Types
 
+import { TaskDocument } from '@/models/task.model';
+import { UserDocument } from '@/models/user.model';
+
 export interface ITaskStatus {
   id: string;
   name: string;
   isDefault: boolean;
+}
+
+export interface ITask extends Omit<TaskDocument, 'assignedTo' | 'createdBy'> {
+  assignedTo: UserDocument[];
+  createdBy: UserDocument;
+  phaseId: string;
+  phaseTitle: string;
 }
 
 // Task Status Management Types

@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { RefreshCcw, Search } from 'lucide-react';
 
 export default function TaskFilters({
@@ -27,17 +27,20 @@ export default function TaskFilters({
     searchParams.get('search') || ''
   );
 
-  function updateSearchParam(key: string, value: string) {
-    const params = new URLSearchParams(searchParams.toString());
+  const updateSearchParam = useCallback(
+    function (key: string, value: string) {
+      const params = new URLSearchParams(searchParams.toString());
 
-    if (value === 'all' || value === '') {
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
+      if (value === 'all' || value === '') {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
 
-    router.push(`?${params.toString()}`, { scroll: false });
-  }
+      router.push(`?${params.toString()}`, { scroll: false });
+    },
+    [searchParams, router]
+  );
 
   function clearAllFilters() {
     setSearchValue('');
@@ -51,7 +54,7 @@ export default function TaskFilters({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchValue]);
+  }, [searchValue, updateSearchParam]);
 
   const currentPhase = searchParams.get('phase') || 'all';
   const currentAssignee = searchParams.get('assignee') || 'all';
@@ -103,6 +106,7 @@ export default function TaskFilters({
           <SelectGroup>
             <SelectLabel>Assigned To</SelectLabel>
             <SelectItem value="all">All Assignees</SelectItem>
+            <SelectItem value="none">Unassigned</SelectItem>
             {project.teamMember.map((member) => (
               <SelectItem
                 key={member._id.toString()}

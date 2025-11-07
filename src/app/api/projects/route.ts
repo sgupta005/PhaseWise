@@ -6,7 +6,7 @@ import Task from '@/models/task.model';
 import User from '@/models/user.model';
 import { getUserProjectsWithTeamAndFaculty } from '@/db/project.db';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const projects = await getUserProjectsWithTeamAndFaculty();
     return NextResponse.json(

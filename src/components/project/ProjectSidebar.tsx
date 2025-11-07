@@ -63,7 +63,7 @@ export function ProjectSidebar({
     return pathname.endsWith(url);
   }
   return (
-    <Sidebar collapsible="icon" {...props} className="dark:shadow-sm">
+    <Sidebar collapsible="icon" {...props} className="dark:shadow-sm z-20">
       <SidebarHeader>
         <ProjectSwitcher />
       </SidebarHeader>

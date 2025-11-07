@@ -20,13 +20,20 @@ export interface IProjectPopulated
   teamMember: UserDocument[];
   faculty: UserDocument;
   createdBy: UserDocument;
-  phases: IPhaseWithTasks[];
+  phases: IPhaseWithPopulatedTasks[];
+}
+export interface IPhaseWithPopulatedTasks extends Omit<PhaseDocument, 'tasks'> {
+  tasks: IPopulatedTask[];
+}
+export interface IPopulatedTask
+  extends Omit<TaskDocument, 'assignedTo' | 'createdBy'> {
+  assignedTo: UserDocument[];
+  createdBy: UserDocument;
 }
 
 export interface IProjectWithTasks extends Omit<ProjectDocument, 'phases'> {
   phases: IPhaseWithTasks[];
 }
-
 export interface IPhaseWithTasks extends Omit<PhaseDocument, 'tasks'> {
   tasks: TaskDocument[];
 }

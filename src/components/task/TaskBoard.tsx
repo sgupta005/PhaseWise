@@ -1,12 +1,10 @@
-import { TaskDocument } from '@/models/task.model';
-import { IProjectPopulated } from '@/types/project.types';
+import { ITask } from '@/types/task.types';
 
 interface TaskBoardProps {
-  tasks: (TaskDocument & { phaseId: string; phaseTitle: string })[];
-  project: IProjectPopulated;
+  tasks: ITask[];
 }
 
-export default function TaskBoard({ tasks, project }: TaskBoardProps) {
+export default function TaskBoard({ tasks }: TaskBoardProps) {
   return (
     <div>
       <p>Task Board - Showing {tasks.length} tasks</p>

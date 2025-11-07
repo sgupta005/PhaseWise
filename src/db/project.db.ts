@@ -110,6 +110,9 @@ export async function getProjectByIdPopulated(
       path: 'phases',
       populate: {
         path: 'tasks',
+        populate: {
+          path: 'assignedTo createdBy',
+        },
       },
     })
     .populate('faculty', 'name email')

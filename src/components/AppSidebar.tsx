@@ -1,7 +1,7 @@
 'use client';
 
 import type * as React from 'react';
-import { Home, Settings, FolderOpen, User } from 'lucide-react';
+import { Home, Settings, FolderOpen } from 'lucide-react';
 import Link from 'next/link';
 
 import { NavUser } from '@/components/NavUser';

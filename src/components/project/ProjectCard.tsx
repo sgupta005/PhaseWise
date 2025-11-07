@@ -14,6 +14,7 @@ import { Github, ExternalLink, Lock, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useProjectStore } from '@/stores/project.store';
 import { IProjectWithTeam } from '@/types/project.types';
+import { getInitials } from '@/lib/utils/avatar';
 
 export function ProjectCard({ project }: { project: IProjectWithTeam }) {
   const { setActiveProject } = useProjectStore();
@@ -103,7 +104,7 @@ export function ProjectCard({ project }: { project: IProjectWithTeam }) {
                   >
                     <AvatarImage src={member.image || ''} alt={member.name} />
                     <AvatarFallback className="text-xs">
-                      {member?.name?.slice(0, 2).toUpperCase()}
+                      {getInitials(member.name)}
                     </AvatarFallback>
                   </Avatar>
                 ))}
