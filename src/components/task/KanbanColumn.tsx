@@ -1,22 +1,31 @@
 'use client';
 
+import { useDroppable } from '@dnd-kit/core';
 import { ITask } from '@/types/task.types';
-import KanbanCard from './KanbanCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Inbox } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface KanbanColumnProps {
+  id: string;
   title: string;
   tasks: ITask[];
   count: number;
+  children: React.ReactNode;
 }
 
 export default function KanbanColumn({
+  id,
   title,
   tasks,
   count,
+  children,
 }: KanbanColumnProps) {
+  const { setNodeRef, isOver } = useDroppable({
+    id,
+  });
+
   return (
     <div className="flex flex-col h-full min-w-[280px] max-w-[280px]">
       <div className="flex items-center justify-between mb-4 px-1">
@@ -28,18 +37,22 @@ export default function KanbanColumn({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+      <div
+        ref={setNodeRef}
+        className={cn(
+          'flex-1 overflow-y-auto space-y-2 pr-2 rounded-lg transition-colors min-h-[200px]',
+          isOver && 'bg-accent'
+        )}
+      >
         {tasks.length === 0 ? (
-          <Card className="p-8  border-dashed">
+          <Card className="p-8 border-dashed border-[1.6px] min-h-[200px] flex items-center justify-center">
             <CardContent className="flex flex-col items-center justify-center text-center">
               <Inbox className="size-8 text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">No tasks</p>
             </CardContent>
           </Card>
         ) : (
-          tasks.map((task) => (
-            <KanbanCard key={task._id.toString()} task={task} />
-          ))
+          children
         )}
       </div>
     </div>

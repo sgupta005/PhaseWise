@@ -3,42 +3,31 @@
 import { verifyProjectAccess, getProjectByIdWithTasks } from '@/db/project.db';
 import { connectDb } from '@/dbConfig/dbConfig';
 import Task from '@/models/task.model';
-import { TaskUpdateResponse, UpdateTaskPayload } from '@/types/task.types';
+import { TaskUpdateResponse } from '@/types/task.types';
 import { revalidatePath } from 'next/cache';
-import { PRIORITIES } from '@/constants';
+import { updateTaskSchema, type UpdateTaskSchema } from '@/schemas/task.schema';
 
 export async function updateTaskAction(
-  payload: UpdateTaskPayload
+  payload: UpdateTaskSchema
 ): Promise<TaskUpdateResponse> {
   try {
-    const { taskId, projectId, status, priority } = payload;
+    // Validate input
+    const validatedFields = updateTaskSchema.safeParse(payload);
+    if (!validatedFields.success) {
+      console.error('Validation error:', validatedFields.error);
+      return {
+        success: false,
+        message: 'Invalid Fields.',
+      };
+    }
+    const { taskId, projectId, status, priority } = validatedFields.data;
 
-    // Auth check
     const hasAccess = await verifyProjectAccess(projectId);
     if (!hasAccess) {
       return {
         success: false,
         message: 'Unauthorized: You do not have access to this project',
       };
-    }
-
-    // Validation - at least one field must be provided
-    if (!status && !priority) {
-      return {
-        success: false,
-        message: 'Either status or priority must be provided',
-      };
-    }
-
-    // Validate priority if provided
-    if (priority) {
-      const validPriorities = PRIORITIES;
-      if (!validPriorities.includes(priority)) {
-        return {
-          success: false,
-          message: 'Invalid priority value',
-        };
-      }
     }
 
     // Verify task belongs to project
