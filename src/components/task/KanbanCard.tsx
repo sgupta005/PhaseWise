@@ -2,7 +2,7 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ITask } from '@/types/task.types';
+import { GroupByMode, ITask } from '@/types/task.types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -41,9 +41,14 @@ export default function KanbanCard({ task, id }: KanbanCardProps) {
           <Badge variant="outline" className="w-full">
             <span className="text-xs truncate">{task.phaseTitle}</span>
           </Badge>
-          <Badge variant="outline" className="text-xs">
-            {task.priority}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              {task.priority}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+            </Badge>
+          </div>
           <div className="text-sm font-medium line-clamp-3">
             {task.task || 'Untitled Task'}
           </div>

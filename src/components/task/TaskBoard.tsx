@@ -20,13 +20,13 @@ import {
 import { groupTasks } from '@/lib/task/groupTasks';
 import KanbanColumn from './KanbanColumn';
 import KanbanCard from './KanbanCard';
-import { Button } from '@/components/ui/button';
 import { LayoutGrid, List } from 'lucide-react';
 import { PRIORITIES } from '@/constants';
 import { updateTaskAction } from '@/actions/task.actions';
 import { toast } from 'sonner';
 import { getColumns } from '@/lib/task/getColumns';
 import { createCollisonStrategy } from '@/lib/task/createCollisionStrategy';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TaskBoardProps {
   tasks: ITask[];
@@ -127,25 +127,22 @@ export default function TaskBoard({
       onDragEnd={handleDragEnd}
     >
       <div className="flex flex-col h-[78vh]">
-        <div className="flex items-center gap-2 mb-4 ml-auto mr-4 -mt-10">
-          <Button
-            variant={groupByMode === 'status' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setGroupByMode('status')}
-            className="gap-2"
+        <div className="flex items-center mb-4 ml-auto mr-4 -mt-10">
+          <Tabs
+            value={groupByMode}
+            onValueChange={(value) => setGroupByMode(value as GroupByMode)}
           >
-            <List className="size-4" />
-            Group by Status
-          </Button>
-          <Button
-            variant={groupByMode === 'priority' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setGroupByMode('priority')}
-            className="gap-2"
-          >
-            <LayoutGrid className="size-4" />
-            Group by Priority
-          </Button>
+            <TabsList>
+              <TabsTrigger value="status">
+                <List className="size-4" />
+                Group by Status
+              </TabsTrigger>
+              <TabsTrigger value="priority">
+                <LayoutGrid className="size-4" />
+                Group by Priority
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
         <div className="flex-1 overflow-x-auto">
