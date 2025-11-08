@@ -78,6 +78,13 @@ export default function TaskBoard({
 
     const taskId = active.id as string;
     const targetColumnKey = over.id as string;
+
+    // Check if the drop target is a valid column
+    const isValidColumn = columns.some(
+      (column) => column.key === targetColumnKey
+    );
+    if (!isValidColumn) return;
+
     // If the target column is the same as the active column, don't update
     if (targetColumnKey === active.id) return;
 
