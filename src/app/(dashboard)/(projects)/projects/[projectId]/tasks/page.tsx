@@ -109,7 +109,11 @@ export default async function ProjectTasksPage({
           <TaskTable tasks={filteredTasks} columns={columns} />
         </TabsContent>
         <TabsContent value="board">
-          <TaskBoard tasks={filteredTasks} />
+          <TaskBoard
+            tasks={filteredTasks}
+            projectId={projectId}
+            taskStatuses={project.taskStatuses}
+          />
         </TabsContent>
       </Tabs>
     </div>

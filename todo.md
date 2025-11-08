@@ -17,6 +17,7 @@
 - [ ] Add due date and last updated to task table
 - [ ] Create Permissions system
 - [ ] Fix schema isn't registered error
+- [ ] Change scrollbar in chrome to look like that in firefox
 
 - [ ] Task Model
   - [ ] comments

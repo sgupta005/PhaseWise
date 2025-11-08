@@ -41,3 +41,19 @@ export interface StatusOperationResponse {
   status?: ITaskStatus;
   statuses?: ITaskStatus[];
 }
+
+// Kanban Board Types
+export type GroupByMode = 'status' | 'priority';
+
+export interface UpdateTaskPayload {
+  taskId: string;
+  projectId: string;
+  status?: string;
+  priority?: 'Low Priority' | 'High Priority' | 'Medium Priority' | 'Urgent';
+}
+
+export interface TaskUpdateResponse {
+  success: boolean;
+  message: string;
+  task?: ITask;
+}
