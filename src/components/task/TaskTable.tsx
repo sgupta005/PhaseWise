@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface TaskTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,6 +48,8 @@ export default function TaskTable<TData, TValue>({
       pagination,
     },
   });
+
+  const router = useRouter();
   return (
     <>
       <div className="overflow-hidden rounded-md border">
@@ -73,8 +76,16 @@ export default function TaskTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  onClick={() =>
+                    router.push(
+                      window.location.pathname +
+                        // @ts-ignore
+                        `/${row.original._id.toString()}`
+                    )
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
