@@ -99,6 +99,9 @@ export function AIGenerateButton({
               task: task.task,
               assignedTo: [], // User will assign later
               priority: task.priority,
+              dueDate: task.dueDate
+                ? new Date(task.dueDate).toISOString().split('T')[0]
+                : undefined, // Convert to YYYY-MM-DD format
               createdBy: userId,
             })) as TaskFormData[],
           })

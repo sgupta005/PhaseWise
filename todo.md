@@ -16,13 +16,17 @@
 - [ ] Add due date to tasks model
 - [ ] Add due date and last updated to task table
 - [ ] Create Permissions system
-- [ ] Fix schema isn't registered error
+- [x] Fix schema isn't registered error
 - [ ] Change scrollbar in chrome to look like that in firefox
 
-- [ ] Task Model
-  - [ ] comments
-  - [ ] subtasks
-  - [ ] competed
-  - [ ] statuses
+- [x] Task Model
+  - [x] comments
+  - [x] subtasks
+  - [x] competed
+  - [x] statuses
 
 - [x] Add timestamps to models?
+- [ ] Fix console errors in kanban
+- [ ] Add postioning logic in kanban
+- [ ] Add colors to statuses, priorities and phases?
+- [ ] Add create task button in both tables and kanban board

@@ -9,6 +9,10 @@ const AIGeneratedTaskSchema = z.object({
     'High Priority',
     'Urgent',
   ]),
+  dueDate: z
+    .string()
+    .regex(/\+\d+\s*(day|week|month)s?/i, 'Invalid dueDate format')
+    .optional(),
 });
 
 const AIGeneratedPhaseSchema = z.object({
@@ -66,6 +70,12 @@ export const geminiResponseSchema: Schema = {
                     'Urgent',
                   ],
                   format: 'enum',
+                },
+                dueDate: {
+                  type: SchemaType.STRING,
+                  description:
+                    'Optional relative due date in format: +N day|week|month (e.g., "+3 days", "+1 week")',
+                  nullable: true,
                 },
               },
               required: ['task', 'priority'],

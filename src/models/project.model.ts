@@ -1,5 +1,6 @@
 import mongoose, { Schema, Types, InferSchemaType } from 'mongoose';
 import User from '@/models/user.model';
+import Phase from './phase.model';
 
 const projectSchema = new Schema(
   {
@@ -33,7 +34,7 @@ const projectSchema = new Schema(
     teamMember: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: User,
         required: [true, 'Please enter team member'],
         validate: {
           validator: async function (
@@ -48,7 +49,7 @@ const projectSchema = new Schema(
     ],
     faculty: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: User,
       required: [true, 'Please enter faculty'],
       validate: {
         validator: async function (
@@ -63,7 +64,7 @@ const projectSchema = new Schema(
     phases: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Phase',
+        ref: Phase,
         required: [true, 'Please enter the phases'],
       },
     ],
@@ -73,7 +74,7 @@ const projectSchema = new Schema(
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: User,
       required: [true, 'Please enter who is creating this project'],
     },
     taskStatuses: {

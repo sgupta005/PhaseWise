@@ -29,10 +29,11 @@ export async function generateProjectPhases(
     Output Requirements:
     - Follow Software Development Life Cycle (SDLC) stages — Requirements, Design, Development, Testing, Deployment, Maintenance.
     - Each phase should:
-    - Have a clear, descriptive title (e.g., “Backend API Development & Integration”)
-    - Contain realistic deadline in relative format (“+2 weeks”)
-    - Contain tasks with action-oriented descriptions and priority levels.
-    - Tasks should be granular enough to be assigned to a developer (avoid vague ones like “set up frontend”)
+    - Have a clear, descriptive title (e.g., "Backend API Development & Integration")
+    - Contain realistic deadline in relative format ("+2 weeks")
+    - Contain tasks with action-oriented descriptions, priority levels, and optional due dates
+    - Tasks should be granular enough to be assigned to a developer (avoid vague ones like "set up frontend")
+    - Each task should optionally include a dueDate in relative format (e.g., "+3 days", "+1 week") based on the task's complexity and phase timeline
     - Use SDLC best practices tailored to the tech stack
     - Return output in valid JSON that conforms exactly to the schema`;
 

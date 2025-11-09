@@ -18,12 +18,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { PhaseFormData, TaskFormData, IUser } from '@/types/project.types';
+import { PhaseFormData, TaskFormData } from '@/types/project.types';
+import { UserDocument } from '@/models/user.model';
+import { PRIORITIES } from '@/constants';
 
 interface PhaseCardProps {
   phase: PhaseFormData;
   phaseIndex: number;
-  teamMembers: IUser[];
+  teamMembers: UserDocument[];
   onChange: (updatedPhase: PhaseFormData) => void;
   onRemove: () => void;
   canRemove: boolean;
@@ -170,31 +172,42 @@ export function PhaseCard({
                           />
                         </div>
 
-                        {/* Priority */}
-                        <div className="space-y-2">
-                          <Label>Priority</Label>
-                          <Select
-                            value={task.priority}
-                            onValueChange={(value) =>
-                              updateTask(taskIndex, 'priority', value)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Low Priority">
-                                Low Priority
-                              </SelectItem>
-                              <SelectItem value="Medium Priority">
-                                Medium Priority
-                              </SelectItem>
-                              <SelectItem value="High Priority">
-                                High Priority
-                              </SelectItem>
-                              <SelectItem value="Urgent">Urgent</SelectItem>
-                            </SelectContent>
-                          </Select>
+                        {/* Priority and Due Date */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="space-y-2">
+                            <Label>Priority</Label>
+                            <Select
+                              value={task.priority}
+                              onValueChange={(value) =>
+                                updateTask(taskIndex, 'priority', value)
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {PRIORITIES.map((priority) => (
+                                  <SelectItem key={priority} value={priority}>
+                                    {priority}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor={`task-due-${task.id}`}>
+                              Due Date
+                            </Label>
+                            <Input
+                              id={`task-due-${task.id}`}
+                              type="date"
+                              value={task.dueDate || ''}
+                              onChange={(e) =>
+                                updateTask(taskIndex, 'dueDate', e.target.value)
+                              }
+                            />
+                          </div>
                         </div>
 
                         {/* Assigned To */}
@@ -208,17 +221,17 @@ export function PhaseCard({
                             ) : (
                               teamMembers.map((member) => {
                                 const isAssigned = task.assignedTo.includes(
-                                  member._id
+                                  member._id.toString()
                                 );
                                 return (
                                   <Badge
-                                    key={member._id}
+                                    key={member._id.toString()}
                                     variant={isAssigned ? 'default' : 'outline'}
                                     className="cursor-pointer"
                                     onClick={() =>
                                       toggleTaskAssignment(
                                         taskIndex,
-                                        member._id
+                                        member._id.toString()
                                       )
                                     }
                                   >

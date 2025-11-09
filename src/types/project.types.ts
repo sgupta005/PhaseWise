@@ -55,6 +55,7 @@ export interface TaskFormData {
   task: string;
   assignedTo: string[]; // Array of selected user IDs from team
   priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
+  dueDate?: string; // ISO date string
 }
 
 export interface PhaseFormData {
@@ -81,6 +82,7 @@ export interface CreateProjectPayload {
       task: string;
       assignedTo: string[];
       priority: string;
+      dueDate?: string;
     }[];
   }[];
 }
@@ -105,6 +107,7 @@ export interface ProjectApiResponse {
 export interface AIGeneratedTask {
   task: string;
   priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
+  dueDate?: string; // Relative deadline like "+3 days" or "+1 week"
 }
 
 export interface AIGeneratedPhase {

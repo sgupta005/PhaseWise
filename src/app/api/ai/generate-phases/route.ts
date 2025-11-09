@@ -23,10 +23,14 @@ export async function POST(req: Request) {
       techStack,
     });
 
-    // Convert relative deadlines to ISO date strings
+    // Convert relative deadlines to ISO date strings for phases and tasks
     const phasesWithDates = generatedPhases.map((phase) => ({
       ...phase,
       deadline: parseRelativeDeadline(phase.deadline),
+      tasks: phase.tasks.map((task) => ({
+        ...task,
+        dueDate: task.dueDate ? parseRelativeDeadline(task.dueDate) : undefined,
+      })),
     }));
 
     return NextResponse.json({

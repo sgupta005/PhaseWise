@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { ProjectSidebar } from '@/components/project/ProjectSidebar';
-import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -51,7 +50,7 @@ export default function ProjectLayoutClient({
               className="mr-2 data-[orientation=vertical]:h-4"
             />
             <Breadcrumb>
-              <BreadcrumbList>
+              <BreadcrumbList className="text-base">
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="/projects">Projects</BreadcrumbLink>
                 </BreadcrumbItem>

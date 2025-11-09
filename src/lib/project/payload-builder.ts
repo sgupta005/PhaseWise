@@ -34,6 +34,7 @@ export function buildProjectPayload(
         task: task.task,
         assignedTo: task.assignedTo,
         priority: task.priority,
+        dueDate: task.dueDate,
         createdBy: userId,
       })),
     })),

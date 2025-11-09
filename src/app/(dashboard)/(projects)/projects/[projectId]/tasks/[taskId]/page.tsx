@@ -1,0 +1,38 @@
+import { notFound } from 'next/navigation';
+import { getTaskByIdPopulated, verifyTaskBelongsToProject } from '@/db/task.db';
+import { verifyProjectAccess, getProjectByIdPopulated } from '@/db/project.db';
+import TaskDetailView from '@/components/task/TaskDetailView';
+
+export default async function TaskDetailPage({
+  params,
+}: {
+  params: Promise<{ projectId: string; taskId: string }>;
+}) {
+  const { projectId, taskId } = await params;
+
+  const hasAccess = await verifyProjectAccess(projectId);
+  const task = await getTaskByIdPopulated(taskId);
+  const taskBelongsToProject = await verifyTaskBelongsToProject(
+    taskId,
+    projectId
+  );
+  const project = await getProjectByIdPopulated(projectId);
+  if (!hasAccess || !task || !taskBelongsToProject || !project) {
+    notFound();
+  }
+
+  // Find which phase this task belongs to
+  let phaseTitle: string | null = null;
+
+  for (const phase of project.phases) {
+    const taskInPhase = phase.tasks.find((t) => t._id.toString() === taskId);
+    if (taskInPhase) {
+      phaseTitle = phase.title;
+      break;
+    }
+  }
+
+  return (
+    <TaskDetailView task={task} projectId={projectId} phaseTitle={phaseTitle} />
+  );
+}

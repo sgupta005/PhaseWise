@@ -2,6 +2,8 @@
 
 import { TaskDocument } from '@/models/task.model';
 import { UserDocument } from '@/models/user.model';
+import { SubtaskDocument } from '@/models/subtask.model';
+import { CommentDocument } from '@/models/comment.model';
 
 export interface ITaskStatus {
   id: string;
@@ -14,6 +16,17 @@ export interface ITask extends Omit<TaskDocument, 'assignedTo' | 'createdBy'> {
   createdBy: UserDocument;
   phaseId: string;
   phaseTitle: string;
+}
+
+export interface ITaskDetailed
+  extends Omit<
+    TaskDocument,
+    'assignedTo' | 'createdBy' | 'subtasks' | 'comments'
+  > {
+  assignedTo: UserDocument[];
+  createdBy: UserDocument;
+  subtasks: (SubtaskDocument & { createdBy: UserDocument })[];
+  comments: (CommentDocument & { createdBy: UserDocument })[];
 }
 
 // Task Status Management Types

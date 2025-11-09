@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { PhaseCard } from './PhaseCard';
 import { AIGenerateButton } from './AIGenerateButton';
-import { PhaseFormData, IUser } from '@/types/project.types';
+import { PhaseFormData } from '@/types/project.types';
+import { UserDocument } from '@/models/user.model';
 
 interface PhasesFormProps {
   phases: PhaseFormData[];
-  teamMembers: IUser[];
+  teamMembers: UserDocument[];
   projectTitle: string;
   projectDescription: string;
   techStack: string[];

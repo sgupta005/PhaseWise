@@ -134,7 +134,7 @@ export default function TaskBoard({
       onDragEnd={handleDragEnd}
     >
       <div className="flex flex-col h-[78vh]">
-        <div className="flex items-center mb-4 ml-auto mr-4 -mt-10">
+        <div className="flex items-center mb-4 ml-auto mr-2 -mt-10">
           <Tabs
             value={groupByMode}
             onValueChange={(value) => setGroupByMode(value as GroupByMode)}

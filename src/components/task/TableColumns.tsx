@@ -6,6 +6,7 @@ import { getInitials } from '@/lib/utils/avatar';
 import { ITask } from '@/types/task.types';
 import { Minus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { formatPriority } from '@/lib/task/formatters';
 
 export const columns: ColumnDef<ITask>[] = [
   {
@@ -37,7 +38,14 @@ export const columns: ColumnDef<ITask>[] = [
   {
     accessorKey: 'priority',
     header: 'Priority',
-    cell: ({ row }) => <Badge variant="outline">{row.original.priority}</Badge>,
+    cell: ({ row }) => {
+      const priorityInfo = formatPriority(row.original.priority);
+      return (
+        <Badge variant="outline" className={priorityInfo.color}>
+          {priorityInfo.text}
+        </Badge>
+      );
+    },
   },
   {
     accessorKey: 'status',

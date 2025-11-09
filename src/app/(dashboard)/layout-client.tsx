@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
-import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function DashboardLayoutClient({
