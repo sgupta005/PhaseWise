@@ -6,6 +6,8 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  SortingState,
+  getSortedRowModel,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -27,6 +29,7 @@ export default function TaskTable<TData, TValue>({
   columns,
   tasks,
 }: TaskTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 12, //default page size
@@ -37,7 +40,10 @@ export default function TaskTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
+      sorting,
       pagination,
     },
   });

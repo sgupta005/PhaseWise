@@ -4,9 +4,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/lib/utils/avatar';
 import { ITask } from '@/types/task.types';
-import { Minus } from 'lucide-react';
+import { ArrowUpDown, Minus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { formatPriority } from '@/lib/task/formatters';
+import { formatDueDate, formatPriority } from '@/lib/task/formatters';
+import { Button } from '../ui/button';
 
 export const columns: ColumnDef<ITask>[] = [
   {
@@ -31,6 +32,30 @@ export const columns: ColumnDef<ITask>[] = [
               <AvatarFallback>{getInitials(assignee.name)}</AvatarFallback>
             </Avatar>
           ))}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'dueDate',
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Due Date
+          <ArrowUpDown className="ml-2 size-4 text-primary dark:text-accent-foreground" />
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      if (!row.original.dueDate) {
+        return <Minus className="size-4 text-muted-foreground" />;
+      }
+      return (
+        <div className="truncate max-w-60">
+          {formatDueDate(row.original.dueDate)}
         </div>
       );
     },

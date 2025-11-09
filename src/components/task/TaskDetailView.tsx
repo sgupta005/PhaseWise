@@ -11,6 +11,7 @@ import { formatPriority, formatDueDate } from '@/lib/task/formatters';
 import TaskDetailHeader from './TaskDetailHeader';
 import SubtasksList from './SubtasksList';
 import CommentsList from './CommentsList';
+import { Minus } from 'lucide-react';
 
 interface TaskDetailViewProps {
   task: ITaskDetailed;
@@ -144,7 +145,16 @@ export default function TaskDetailView({
                 <p className="text-sm font-medium text-muted-foreground mb-2">
                   Due
                 </p>
-                <p className="text-sm">{dueDateFormatted || 'No due date'}</p>
+                <p className="text-sm">
+                  {new Date(task.dueDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  }) ||
+                    dueDateFormatted || (
+                      <Minus className="size-4 text-muted-foreground" />
+                    )}
+                </p>
               </div>
 
               {/* Completed Status */}
