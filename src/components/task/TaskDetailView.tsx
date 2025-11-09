@@ -2,16 +2,14 @@
 
 import { useState } from 'react';
 import { ITaskDetailed } from '@/types/task.types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { getInitials } from '@/lib/utils/avatar';
-import { formatPriority, formatDueDate } from '@/lib/task/formatters';
+import { formatPriority } from '@/lib/task/formatters';
 import TaskDetailHeader from './TaskDetailHeader';
+import TaskDetailSidebar from './TaskDetailSidebar';
 import SubtasksList from './SubtasksList';
 import CommentsList from './CommentsList';
-import { Minus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TaskDetailViewProps {
   task: ITaskDetailed;
@@ -27,7 +25,6 @@ export default function TaskDetailView({
   const [isEditMode, setIsEditMode] = useState(false);
 
   const priorityInfo = formatPriority(task.priority);
-  const dueDateFormatted = formatDueDate(task.dueDate);
 
   const handleToggleEdit = () => {
     setIsEditMode(!isEditMode);
@@ -39,7 +36,7 @@ export default function TaskDetailView({
   };
 
   return (
-    <div className="px-6 py-4 flex flex-col gap-6">
+    <div className="px-6 py-4 flex flex-col gap-4">
       <TaskDetailHeader
         projectId={projectId}
         taskId={task._id.toString()}
@@ -56,169 +53,57 @@ export default function TaskDetailView({
               {task.task || 'Untitled Task'}
             </h1>
             <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant="outline" className={priorityInfo.color}>
+              <Badge
+                variant="outline"
+                className={cn(priorityInfo.color, 'text-sm')}
+              >
                 {priorityInfo.text}
               </Badge>
-              <Badge variant="outline">
+              <Badge variant="outline" className="text-sm">
                 {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
               </Badge>
-              {phaseTitle && <Badge variant="outline">{phaseTitle}</Badge>}
-              {task.completed && <Badge variant="default">Completed</Badge>}
+              {phaseTitle && (
+                <Badge variant="outline" className="text-sm">
+                  {phaseTitle}
+                </Badge>
+              )}
+              {task.completed && (
+                <Badge variant="default" className="text-sm">
+                  Completed
+                </Badge>
+              )}
             </div>
           </div>
         </div>
 
         <Separator />
-
-        {/* Details Grid */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Assigned To */}
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-2">
-                  Assigned To
-                </p>
-                {task.assignedTo && task.assignedTo.length > 0 ? (
-                  <div className="space-y-2">
-                    <div className="flex -space-x-2">
-                      {task.assignedTo.slice(0, 5).map((assignee) => (
-                        <Avatar
-                          key={assignee._id.toString()}
-                          className="size-8 border-2 border-background"
-                        >
-                          <AvatarImage src={assignee.image} />
-                          <AvatarFallback>
-                            {getInitials(assignee.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                      ))}
-                      {task.assignedTo.length > 5 && (
-                        <div className="size-8 rounded-full border-2 border-background bg-muted flex items-center justify-center">
-                          <span className="text-xs text-muted-foreground">
-                            +{task.assignedTo.length - 5}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      {task.assignedTo.slice(0, 3).map((assignee) => (
-                        <span key={assignee._id.toString()} className="text-sm">
-                          {assignee.name}
-                        </span>
-                      ))}
-                      {task.assignedTo.length > 3 && (
-                        <span className="text-sm text-muted-foreground">
-                          and {task.assignedTo.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">Unassigned</p>
-                )}
-              </div>
-
-              {/* Created By */}
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-2">
-                  Created By
-                </p>
-                <div className="flex items-center gap-2">
-                  <Avatar className="size-8">
-                    <AvatarImage src={task.createdBy?.image} />
-                    <AvatarFallback>
-                      {getInitials(task.createdBy?.name || 'Unknown')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm">
-                    {task.createdBy?.name || 'Unknown'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Due Date */}
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-2">
-                  Due
-                </p>
-                <p className="text-sm">
-                  {new Date(task.dueDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  }) ||
-                    dueDateFormatted || (
-                      <Minus className="size-4 text-muted-foreground" />
-                    )}
-                </p>
-              </div>
-
-              {/* Completed Status */}
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-2">
-                  Status
-                </p>
-                <p className="text-sm">
-                  {task.completed
-                    ? 'Completed'
-                    : task.status.charAt(0).toUpperCase() +
-                      task.status.slice(1)}
-                </p>
-              </div>
-
-              {/* Created At */}
-              {task.createdAt && (
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-2">
-                    Created
-                  </p>
-                  <p className="text-sm">
-                    {new Date(task.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
-              )}
-
-              {/* Updated At */}
-              {task.updatedAt && (
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-2">
-                    Last Updated
-                  </p>
-                  <p className="text-sm">
-                    {new Date(task.updatedAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
-      {/* Subtasks Section */}
-      <SubtasksList
-        subtasks={task.subtasks || []}
-        taskId={task._id.toString()}
-        isEditMode={isEditMode}
-      />
+      {/* Three Column Layout: Comments Sidebar | Subtasks (Center) | Details Sidebar */}
+      <div className="flex flex-col xl:flex-row gap-6">
+        {/* Left Sidebar - Comments */}
+        <div className="w-full xl:w-80 order-2 xl:order-1">
+          <CommentsList
+            comments={task.comments || []}
+            taskId={task._id.toString()}
+            isEditMode={isEditMode}
+          />
+        </div>
 
-      {/* Comments Section */}
-      <CommentsList
-        comments={task.comments || []}
-        taskId={task._id.toString()}
-        isEditMode={isEditMode}
-      />
+        {/* Center - Main Content (Subtasks) */}
+        <div className="flex-1 min-w-0 order-1 xl:order-2">
+          <SubtasksList
+            subtasks={task.subtasks || []}
+            taskId={task._id.toString()}
+            isEditMode={isEditMode}
+          />
+        </div>
+
+        {/* Right Sidebar - Details */}
+        <div className="order-3">
+          <TaskDetailSidebar task={task} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -15,6 +15,9 @@ import {
 import { useActiveProject } from '@/hooks/project/useActiveProject';
 import { IProjectWithTeam } from '@/types/project.types';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { TaskDocument } from '@/models/task.model';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ProjectLayoutClientProps {
   children: React.ReactNode;
@@ -25,6 +28,8 @@ export default function ProjectLayoutClient({
   children,
   project,
 }: ProjectLayoutClientProps) {
+  const [task, setTask] = useState<TaskDocument | null>(null);
+
   useActiveProject();
 
   const pathname = usePathname();
@@ -32,11 +37,26 @@ export default function ProjectLayoutClient({
 
   // Determine page name from the last segment
   const segments = pathname.split('/').filter(Boolean);
+  const secondLastSegment = segments[segments.length - 2];
   const lastSegment = segments[segments.length - 1];
   const pageName =
     lastSegment === projectId
       ? 'Overview'
       : lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1);
+
+  useEffect(
+    function () {
+      function fetchTask() {
+        fetch(`/api/task?taskId=${lastSegment}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setTask(data.data);
+          });
+      }
+      if (secondLastSegment === 'tasks') fetchTask();
+    },
+    [lastSegment]
+  );
 
   return (
     <>
@@ -50,14 +70,32 @@ export default function ProjectLayoutClient({
               className="mr-2 data-[orientation=vertical]:h-4"
             />
             <Breadcrumb>
-              <BreadcrumbList className="text-base">
+              <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="/projects">Projects</BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{pageName}</BreadcrumbPage>
-                </BreadcrumbItem>
+                {secondLastSegment && secondLastSegment === 'tasks' ? (
+                  <>
+                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbItem className="hidden md:block">
+                      <BreadcrumbLink href={`/projects/${projectId}/tasks`}>
+                        Tasks
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator className="hidden md:block" />
+
+                    <BreadcrumbPage className="truncate">
+                      {task?.task}
+                    </BreadcrumbPage>
+                  </>
+                ) : (
+                  <>
+                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>{pageName}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </>
+                )}
               </BreadcrumbList>
             </Breadcrumb>
           </div>

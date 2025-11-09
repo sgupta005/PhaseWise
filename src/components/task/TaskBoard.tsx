@@ -25,7 +25,7 @@ import { PRIORITIES } from '@/constants';
 import { updateTaskAction } from '@/actions/task.actions';
 import { toast } from 'sonner';
 import { getColumns } from '@/lib/task/getColumns';
-import { createCollisonStrategy } from '@/lib/task/createCollisionStrategy';
+import { createCollisonStrategy } from '@/lib/task/collisonStrategy';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TaskBoardProps {

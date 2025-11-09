@@ -9,7 +9,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { getInitials } from '@/lib/utils/avatar';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { formatPriority } from '@/lib/task/formatters';
+import { formatDueDate, formatPriority } from '@/lib/task/formatters';
+import { CalendarIcon } from 'lucide-react';
 
 interface KanbanCardProps {
   task: ITask;
@@ -46,6 +47,12 @@ export default function KanbanCard({ task, id }: KanbanCardProps) {
             <Badge variant="outline" className="w-full">
               <span className="text-xs truncate">{task.phaseTitle}</span>
             </Badge>
+            {task.dueDate && (
+              <Badge variant="outline" className="text-xs">
+                <CalendarIcon className="size-4" />
+                {formatDueDate(task.dueDate)}
+              </Badge>
+            )}
             <div className="flex items-center gap-2">
               <Badge variant="outline" className={priorityInfo.color}>
                 {priorityInfo.text}
@@ -54,6 +61,7 @@ export default function KanbanCard({ task, id }: KanbanCardProps) {
                 {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
               </Badge>
             </div>
+
             <div className="text-sm font-medium line-clamp-3">
               {task.task || 'Untitled Task'}
             </div>

@@ -45,7 +45,7 @@ export default function KanbanColumn({
         )}
       >
         {tasks.length === 0 ? (
-          <Card className="p-8 border-dashed border-[1.6px] min-h-[200px] flex items-center justify-center">
+          <Card className="p-8 border-dashed border-[1.6px] min-h-[228px] flex items-center justify-center">
             <CardContent className="flex flex-col items-center justify-center text-center">
               <Inbox className="size-8 text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">No tasks</p>

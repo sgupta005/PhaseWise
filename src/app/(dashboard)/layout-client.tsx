@@ -38,7 +38,7 @@ export default function DashboardLayoutClient({
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
-            <span>{pageName}</span>
+            <span className="text-sm">{pageName}</span>
           </div>
           <div className="ml-auto mr-8">
             <ThemeToggle />

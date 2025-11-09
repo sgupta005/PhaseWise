@@ -1,6 +1,6 @@
 import { connectDb } from '@/dbConfig/dbConfig';
 import Project from '@/models/project.model';
-import Task from '@/models/task.model';
+import Task, { TaskDocument } from '@/models/task.model';
 import { ITaskDetailed } from '@/types/task.types';
 import { getProjectByIdWithTasks } from './project.db';
 
@@ -82,5 +82,18 @@ export async function verifyTaskBelongsToProject(
   } catch (error) {
     console.error('Error verifying task belongs to project:', error);
     return false;
+  }
+}
+
+export async function getTaskById(
+  taskId: string
+): Promise<TaskDocument | null> {
+  try {
+    await connectDb();
+    const task = await Task.findById(taskId);
+    return task;
+  } catch (error) {
+    console.error('Error fetching task by ID:', error);
+    return null;
   }
 }
