@@ -3,13 +3,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/lib/utils/avatar';
-import { ITask } from '@/types/task.types';
+import { ITaskWithTeam } from '@/types/task.types';
 import { ArrowUpDown, Minus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { formatDueDate, formatPriority } from '@/lib/task/formatters';
 import { Button } from '../ui/button';
 
-export const columns: ColumnDef<ITask>[] = [
+export const columns: ColumnDef<ITaskWithTeam>[] = [
   {
     accessorKey: 'task',
     header: 'Title',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useDroppable } from '@dnd-kit/core';
-import { ITask } from '@/types/task.types';
+import { ITaskWithTeam } from '@/types/task.types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Inbox } from 'lucide-react';
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 interface KanbanColumnProps {
   id: string;
   title: string;
-  tasks: ITask[];
+  tasks: ITaskWithTeam[];
   count: number;
   children: React.ReactNode;
 }

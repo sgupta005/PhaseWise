@@ -1,9 +1,11 @@
-import { columns } from '@/components/task/TableColumns';
-import TaskBoard from '@/components/task/TaskBoard';
-import TaskFilters from '@/components/task/TaskFilters';
-import TaskTable from '@/components/task/TaskTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { columns } from '@/components/task/TableColumns';
+import { filterTasks, resolveFilters } from '@/lib/task/filters';
 import { getProjectByIdPopulated } from '@/db/project.db';
+import TaskFilters from '@/components/task/TaskFilters';
+import TaskBoard from '@/components/task/TaskBoard';
+import TaskTable from '@/components/task/TaskTable';
+import CreateTaskWrapper from '@/components/task/CreateTaskWrapper';
 
 export default async function ProjectTasksPage({
   params,
@@ -15,33 +17,6 @@ export default async function ProjectTasksPage({
   const { projectId } = await params;
   const project = await getProjectByIdPopulated(projectId);
 
-  const resolvedSearchParams = await searchParams;
-
-  const phaseFilter =
-    typeof resolvedSearchParams.phase === 'string'
-      ? resolvedSearchParams.phase
-      : undefined;
-  const assigneeFilter =
-    typeof resolvedSearchParams.assignee === 'string'
-      ? resolvedSearchParams.assignee
-      : undefined;
-  const priorityFilter =
-    typeof resolvedSearchParams.priority === 'string'
-      ? resolvedSearchParams.priority
-      : undefined;
-  const createdByFilter =
-    typeof resolvedSearchParams.createdBy === 'string'
-      ? resolvedSearchParams.createdBy
-      : undefined;
-  const statusFilter =
-    typeof resolvedSearchParams.status === 'string'
-      ? resolvedSearchParams.status
-      : undefined;
-  const searchQuery =
-    typeof resolvedSearchParams.search === 'string'
-      ? resolvedSearchParams.search.toLowerCase()
-      : undefined;
-
   // Flatten all tasks from all phases
   const allTasks = project.phases.flatMap((phase) =>
     phase.tasks.map((task) => ({
@@ -50,52 +25,8 @@ export default async function ProjectTasksPage({
       phaseTitle: phase.title,
     }))
   );
-
-  const filteredTasks = allTasks.filter((task) => {
-    if (searchQuery && !task.task?.toLowerCase().includes(searchQuery)) {
-      return false;
-    }
-
-    if (phaseFilter && task.phaseId !== phaseFilter) {
-      return false;
-    }
-
-    if (assigneeFilter && Array.isArray(task.assignedTo)) {
-      if (assigneeFilter === 'none') {
-        if (task.assignedTo.length > 0) return false;
-      } else {
-        const hasAssignee = task.assignedTo.some(
-          (assignee) => assignee._id.toString() === assigneeFilter
-        );
-        if (!hasAssignee) return false;
-      }
-    }
-
-    if (priorityFilter) {
-      // Convert filter value to match database format
-      const priorityMap: Record<string, string> = {
-        low: 'Low Priority',
-        medium: 'Medium Priority',
-        high: 'High Priority',
-        urgent: 'Urgent',
-      };
-
-      const expectedPriority = priorityMap[priorityFilter];
-      if (task.priority !== expectedPriority) {
-        return false;
-      }
-    }
-
-    if (createdByFilter && task.createdBy._id.toString() !== createdByFilter) {
-      return false;
-    }
-
-    if (statusFilter && task.status !== statusFilter) {
-      return false;
-    }
-
-    return true;
-  });
+  const filters = await resolveFilters(searchParams);
+  const filteredTasks = filterTasks(allTasks, filters);
 
   return (
     <div className="px-6 py-4 flex flex-col">
@@ -106,6 +37,9 @@ export default async function ProjectTasksPage({
           <TabsTrigger value="board">Board</TabsTrigger>
         </TabsList>
         <TabsContent value="table">
+          <div className="flex flex-col gap-4">
+            <CreateTaskWrapper projectId={projectId} />
+          </div>
           <TaskTable tasks={filteredTasks} columns={columns} />
         </TabsContent>
         <TabsContent value="board">

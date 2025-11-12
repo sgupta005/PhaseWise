@@ -11,7 +11,8 @@ export interface ITaskStatus {
   isDefault: boolean;
 }
 
-export interface ITask extends Omit<TaskDocument, 'assignedTo' | 'createdBy'> {
+export interface ITaskWithTeam
+  extends Omit<TaskDocument, 'assignedTo' | 'createdBy'> {
   assignedTo: UserDocument[];
   createdBy: UserDocument;
   phaseId: string;
@@ -61,5 +62,5 @@ export type GroupByMode = 'status' | 'priority';
 export interface TaskUpdateResponse {
   success: boolean;
   message: string;
-  task?: ITask;
+  task?: ITaskWithTeam;
 }

@@ -12,7 +12,7 @@ import {
   DragOverlay,
 } from '@dnd-kit/core';
 import {
-  ITask,
+  ITaskWithTeam,
   ITaskStatus,
   GroupByMode,
   TaskUpdateResponse,
@@ -29,7 +29,7 @@ import { createCollisonStrategy } from '@/lib/task/collisonStrategy';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TaskBoardProps {
-  tasks: ITask[];
+  tasks: ITaskWithTeam[];
   projectId: string;
   taskStatuses: ITaskStatus[];
 }
@@ -42,7 +42,7 @@ export default function TaskBoard({
   const [groupByMode, setGroupByMode] = useState<GroupByMode>('status');
   const [optimisticTasks, addOptimisticTasks] = useOptimistic(
     tasks,
-    (state: ITask[], updatedTask: ITask) => {
+    (state: ITaskWithTeam[], updatedTask: ITaskWithTeam) => {
       // Replace the task with the updated version
       return state.map((task) =>
         task._id.toString() === updatedTask._id.toString() ? updatedTask : task
@@ -104,7 +104,7 @@ export default function TaskBoard({
       updatePayload.priority = targetColumnKey as (typeof PRIORITIES)[number];
     }
 
-    addOptimisticTasks({ ...draggedTask, ...updatePayload } as ITask);
+    addOptimisticTasks({ ...draggedTask, ...updatePayload } as ITaskWithTeam);
 
     const result: TaskUpdateResponse = await updateTaskAction({
       taskId,

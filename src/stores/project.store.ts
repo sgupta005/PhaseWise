@@ -4,12 +4,12 @@ import { create } from 'zustand';
 
 interface ProjectStore {
   activeProject: IProjectWithTeam | null;
-  projects: ProjectDocument[];
+  projects: IProjectWithTeam[];
   isLoading: boolean;
   setActiveProject: (project: IProjectWithTeam | null) => void;
-  setProjects: (projects: ProjectDocument[]) => void;
+  setProjects: (projects: IProjectWithTeam[]) => void;
   setIsLoading: (isLoading: boolean) => void;
-  getProjectById: (id: string) => ProjectDocument | undefined;
+  getProjectById: (id: string) => IProjectWithTeam | undefined;
 }
 
 export const useProjectStore = create<ProjectStore>((set, get) => ({

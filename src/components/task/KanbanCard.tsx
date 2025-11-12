@@ -2,7 +2,7 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ITask } from '@/types/task.types';
+import { ITaskWithTeam } from '@/types/task.types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,7 +13,7 @@ import { formatDueDate, formatPriority } from '@/lib/task/formatters';
 import { CalendarIcon } from 'lucide-react';
 
 interface KanbanCardProps {
-  task: ITask;
+  task: ITaskWithTeam;
   id: string;
 }
 
