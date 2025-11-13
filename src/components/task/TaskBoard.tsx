@@ -32,12 +32,16 @@ interface TaskBoardProps {
   tasks: ITaskWithTeam[];
   projectId: string;
   taskStatuses: ITaskStatus[];
+  phases: { _id: string; title: string }[];
+  teamMembers: { _id: string; name: string; email: string }[];
 }
 
 export default function TaskBoard({
   tasks,
   projectId,
   taskStatuses,
+  phases,
+  teamMembers,
 }: TaskBoardProps) {
   const [groupByMode, setGroupByMode] = useState<GroupByMode>('status');
   const [optimisticTasks, addOptimisticTasks] = useOptimistic(
@@ -163,6 +167,12 @@ export default function TaskBoard({
                   title={column.title}
                   tasks={columnTasks}
                   count={columnTasks.length}
+                  projectId={projectId}
+                  phases={phases}
+                  teamMembers={teamMembers}
+                  taskStatuses={taskStatuses}
+                  columnKey={column.key}
+                  groupByMode={groupByMode}
                 >
                   {columnTasks.map((task) => (
                     <KanbanCard

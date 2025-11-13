@@ -1,11 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { notFound } from 'next/navigation';
 import { columns } from '@/components/task/TableColumns';
 import { filterTasks, resolveFilters } from '@/lib/task/filters';
 import { getProjectByIdPopulated } from '@/db/project.db';
+import { getProjectDataForTaskForm } from '@/actions/task.actions';
+
 import TaskFilters from '@/components/task/TaskFilters';
 import TaskBoard from '@/components/task/TaskBoard';
 import TaskTable from '@/components/task/TaskTable';
-import CreateTaskWrapper from '@/components/task/CreateTaskWrapper';
+import CreateTaskForm from '@/components/task/CreateTaskForm';
 
 export default async function ProjectTasksPage({
   params,
@@ -28,6 +31,12 @@ export default async function ProjectTasksPage({
   const filters = await resolveFilters(searchParams);
   const filteredTasks = filterTasks(allTasks, filters);
 
+  const dataForTaskForm = await getProjectDataForTaskForm(projectId);
+  if (!dataForTaskForm.success || !dataForTaskForm.data) {
+    return notFound();
+  }
+  const { phases, teamMembers, taskStatuses } = dataForTaskForm.data;
+
   return (
     <div className="px-6 py-4 flex flex-col">
       <TaskFilters project={project} />
@@ -38,7 +47,12 @@ export default async function ProjectTasksPage({
         </TabsList>
         <TabsContent value="table">
           <div className="flex flex-col gap-4">
-            <CreateTaskWrapper projectId={projectId} />
+            <CreateTaskForm
+              projectId={projectId}
+              phases={phases}
+              teamMembers={teamMembers}
+              taskStatuses={taskStatuses}
+            />
           </div>
           <TaskTable tasks={filteredTasks} columns={columns} />
         </TabsContent>
@@ -46,7 +60,9 @@ export default async function ProjectTasksPage({
           <TaskBoard
             tasks={filteredTasks}
             projectId={projectId}
-            taskStatuses={project.taskStatuses}
+            taskStatuses={taskStatuses}
+            phases={phases}
+            teamMembers={teamMembers}
           />
         </TabsContent>
       </Tabs>

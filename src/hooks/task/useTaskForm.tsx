@@ -23,11 +23,18 @@ export const steps: Step[] = [
 interface UseTaskFormProps {
   projectId: string;
   onSuccess?: () => void;
+  initialValues?: Partial<TaskFormStepData>;
 }
 
-export function useTaskForm({ projectId, onSuccess }: UseTaskFormProps) {
+export function useTaskForm({
+  projectId,
+  onSuccess,
+  initialValues,
+}: UseTaskFormProps) {
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [formData, setFormData] = useState<Partial<TaskFormStepData>>({});
+  const [formData, setFormData] = useState<Partial<TaskFormStepData>>(
+    initialValues || {}
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const defaultValues: Partial<TaskFormStepData> =
@@ -39,6 +46,7 @@ export function useTaskForm({ projectId, onSuccess }: UseTaskFormProps) {
           priority: 'Low Priority' as const,
           status: '',
           dueDate: '',
+          ...initialValues,
         }
       : {
           subtasks: [],

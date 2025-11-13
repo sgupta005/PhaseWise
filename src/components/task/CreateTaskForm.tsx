@@ -29,6 +29,8 @@ interface CreateTaskDialogProps {
   teamMembers: { _id: string; name: string; email: string }[];
   taskStatuses: ITaskStatus[];
   onSuccess?: () => void;
+  initialValues?: Partial<TaskFormStepData>;
+  triggerButton?: React.ReactNode;
 }
 
 export default function CreateTaskForm({
@@ -37,6 +39,8 @@ export default function CreateTaskForm({
   teamMembers,
   taskStatuses,
   onSuccess,
+  initialValues,
+  triggerButton,
 }: CreateTaskDialogProps) {
   const [open, setOpen] = useState(false);
   const {
@@ -59,6 +63,7 @@ export default function CreateTaskForm({
       setOpen(false);
       onSuccess?.();
     },
+    initialValues,
   });
 
   const { reset, trigger, handleSubmit, control, getValues, setValue } =
@@ -98,9 +103,11 @@ export default function CreateTaskForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-max ml-auto mr-0 -mt-11">
-          <Plus /> Create Task
-        </Button>
+        {triggerButton || (
+          <Button className="w-max ml-auto mr-0 -mt-11">
+            <Plus /> Create Task
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogTitle className="sr-only">Create Task</DialogTitle>

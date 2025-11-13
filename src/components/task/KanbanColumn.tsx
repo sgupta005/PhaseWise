@@ -1,11 +1,14 @@
 'use client';
 
 import { useDroppable } from '@dnd-kit/core';
-import { ITaskWithTeam } from '@/types/task.types';
+import { ITaskWithTeam, ITaskStatus, GroupByMode } from '@/types/task.types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Inbox } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Inbox, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import CreateTaskForm from './CreateTaskForm';
+import { PRIORITIES } from '@/constants';
 
 interface KanbanColumnProps {
   id: string;
@@ -13,6 +16,12 @@ interface KanbanColumnProps {
   tasks: ITaskWithTeam[];
   count: number;
   children: React.ReactNode;
+  projectId: string;
+  phases: { _id: string; title: string }[];
+  teamMembers: { _id: string; name: string; email: string }[];
+  taskStatuses: ITaskStatus[];
+  columnKey: string;
+  groupByMode: GroupByMode;
 }
 
 export default function KanbanColumn({
@@ -21,6 +30,12 @@ export default function KanbanColumn({
   tasks,
   count,
   children,
+  projectId,
+  phases,
+  teamMembers,
+  taskStatuses,
+  columnKey,
+  groupByMode,
 }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id,
@@ -35,6 +50,22 @@ export default function KanbanColumn({
             {count}
           </Badge>
         </div>
+        <CreateTaskForm
+          projectId={projectId}
+          phases={phases}
+          teamMembers={teamMembers}
+          taskStatuses={taskStatuses}
+          initialValues={
+            groupByMode === 'status'
+              ? { status: columnKey }
+              : { priority: columnKey as (typeof PRIORITIES)[number] }
+          }
+          triggerButton={
+            <Button variant="ghost" size="icon" className="text-primary">
+              <Plus className="size-4" />
+            </Button>
+          }
+        />
       </div>
 
       <div
