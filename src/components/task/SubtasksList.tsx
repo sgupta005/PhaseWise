@@ -19,40 +19,50 @@ interface SubtasksListProps {
   taskId: string;
   projectId: string;
   teamMembers: { _id: string; name: string; email: string }[];
-  isEditMode: boolean;
 }
+
+type OptimisticAction =
+  | { type: 'add'; title: string; assignedTo?: string }
+  | { type: 'toggle'; subtaskId: string; completed: boolean };
 
 export default function SubtasksList({
   subtasks,
   taskId,
   projectId,
   teamMembers,
-  isEditMode,
 }: SubtasksListProps) {
   const { data: session } = useSession();
 
-  const [optimisticSubtasks, addOptimisticSubtask] = useOptimistic<
+  const [optimisticSubtasks, updateOptimisticSubtasks] = useOptimistic<
     FormattedSubtask[],
-    { title: string; assignedTo?: string }
-  >(subtasks, (state, newSubtaskData) => {
-    const optimisticSubtask: FormattedSubtask = {
-      _id: `temp-${Date.now()}`,
-      title: newSubtaskData.title,
-      completed: false,
-      createdBy: {
-        name: session?.user?.name || 'You',
-        image: session?.user?.image || null,
-      },
-    };
-    return [...state, optimisticSubtask];
+    OptimisticAction
+  >(subtasks, (state, action) => {
+    if (action.type === 'add') {
+      const optimisticSubtask: FormattedSubtask = {
+        _id: `temp-${Date.now()}`,
+        title: action.title,
+        completed: false,
+        createdBy: {
+          name: session?.user?.name || 'You',
+          image: session?.user?.image || null,
+        },
+      };
+      return [...state, optimisticSubtask];
+    } else if (action.type === 'toggle') {
+      return state.map((subtask) =>
+        subtask._id === action.subtaskId
+          ? { ...subtask, completed: action.completed }
+          : subtask
+      );
+    }
+    return state;
   });
 
   const [isPending, startTransition] = useTransition();
 
-  const handleToggleSubtask = (subtaskId: string, completed: boolean) => {
-    if (!isEditMode) return;
-
+  function handleToggleSubtask(subtaskId: string, completed: boolean) {
     startTransition(async () => {
+      updateOptimisticSubtasks({ type: 'toggle', subtaskId, completed });
       const result = await toggleSubtaskAction(
         subtaskId,
         taskId,
@@ -60,11 +70,13 @@ export default function SubtasksList({
         completed
       );
 
-      if (!result.success) {
+      if (result.success) {
+        toast.success('Subtask updated');
+      } else {
         toast.error(result.message);
       }
     });
-  };
+  }
 
   return (
     <Card>
@@ -74,7 +86,13 @@ export default function SubtasksList({
           taskId={taskId}
           projectId={projectId}
           teamMembers={teamMembers}
-          onOptimisticAdd={addOptimisticSubtask}
+          onOptimisticAdd={(data) =>
+            updateOptimisticSubtasks({
+              type: 'add',
+              title: data.title,
+              assignedTo: data.assignedTo,
+            })
+          }
         >
           <Button size="sm" variant="outline" className="h-8">
             <Plus className="size-4" />
@@ -95,7 +113,13 @@ export default function SubtasksList({
               taskId={taskId}
               projectId={projectId}
               teamMembers={teamMembers}
-              onOptimisticAdd={addOptimisticSubtask}
+              onOptimisticAdd={(data) =>
+                updateOptimisticSubtasks({
+                  type: 'add',
+                  title: data.title,
+                  assignedTo: data.assignedTo,
+                })
+              }
             >
               <Button size="sm">
                 <Plus className="size-4" />
@@ -109,7 +133,7 @@ export default function SubtasksList({
               <div className="flex items-start gap-3">
                 <Checkbox
                   checked={subtask.completed}
-                  disabled={!isEditMode || isPending}
+                  disabled={isPending}
                   onCheckedChange={(checked) =>
                     handleToggleSubtask(subtask._id, checked as boolean)
                   }

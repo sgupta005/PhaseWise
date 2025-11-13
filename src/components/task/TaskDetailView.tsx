@@ -145,7 +145,6 @@ export default function TaskDetailView({
             taskId={task._id.toString()}
             projectId={projectId}
             teamMembers={teamMembers}
-            isEditMode={isEditMode}
           />
         </div>
 
