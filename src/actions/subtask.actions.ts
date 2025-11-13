@@ -122,3 +122,52 @@ export async function toggleSubtaskAction(
     };
   }
 }
+
+export async function deleteSubtaskAction(
+  subtaskId: string,
+  taskId: string,
+  projectId: string
+): Promise<SubtaskActionResponse> {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        message: 'Unauthorized: Please log in',
+      };
+    }
+
+    await connectDb();
+
+    // Verify subtask exists
+    const subtask = await Subtask.findById(subtaskId);
+    if (!subtask) {
+      return {
+        success: false,
+        message: 'Subtask not found',
+      };
+    }
+
+    // Remove subtask from task
+    await Task.findByIdAndUpdate(taskId, {
+      $pull: { subtasks: subtaskId },
+    });
+
+    // Delete the subtask
+    await Subtask.findByIdAndDelete(subtaskId);
+
+    // Revalidate the task detail page
+    revalidatePath(`/projects/${projectId}/tasks/${taskId}`);
+
+    return {
+      success: true,
+      message: 'Subtask deleted successfully',
+    };
+  } catch (error) {
+    console.error('Error in deleteSubtaskAction:', error);
+    return {
+      success: false,
+      message: 'Failed to delete subtask',
+    };
+  }
+}

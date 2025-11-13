@@ -88,16 +88,18 @@ export default function CommentsList({
   }
 
   return (
-    <Card className="sticky top-4 flex flex-col min-h-[580px]">
-      <CardHeader>
+    <Card className="h-full flex flex-col shadow-none bg-background">
+      <CardHeader className="flex-shrink-0">
         <CardTitle>Comments ({optimisticComments?.length || 0})</CardTitle>
       </CardHeader>
 
       {/* Comments List */}
       {!optimisticComments || optimisticComments.length === 0 ? (
-        <p className="flex-1 flex items-center justify-center text-sm text-muted-foreground text-center">
-          No comments yet.
-        </p>
+        <div className="flex-1 flex items-center justify-center min-h-0">
+          <p className="text-sm text-muted-foreground text-center">
+            No comments yet.
+          </p>
+        </div>
       ) : (
         <CardContent
           ref={scrollRef}
@@ -138,13 +140,13 @@ export default function CommentsList({
         </CardContent>
       )}
 
-      <div className="px-4">
+      <div className="px-4 flex-shrink-0">
         <div className="space-y-2 relative">
           <Textarea
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Write a comment..."
-            className="w-full min-h-[100px] resize-none p-3"
+            className="w-full min-h-[100px] resize-none p-3 bg-muted-foreground/10"
             disabled={isPending}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {

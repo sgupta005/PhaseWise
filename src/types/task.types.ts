@@ -26,7 +26,10 @@ export interface ITaskDetailed
   > {
   assignedTo: UserDocument[];
   createdBy: UserDocument;
-  subtasks: (SubtaskDocument & { createdBy: UserDocument })[];
+  subtasks: (SubtaskDocument & {
+    createdBy: UserDocument;
+    assignedTo?: UserDocument;
+  })[];
   comments: (CommentDocument & { createdBy: UserDocument })[];
 }
 

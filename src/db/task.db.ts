@@ -30,10 +30,16 @@ export async function getTaskByIdPopulated(
       .populate('createdBy', 'name email image')
       .populate({
         path: 'subtasks',
-        populate: {
-          path: 'createdBy',
-          select: 'name email image',
-        },
+        populate: [
+          {
+            path: 'createdBy',
+            select: 'name email image',
+          },
+          {
+            path: 'assignedTo',
+            select: 'name email image',
+          },
+        ],
       })
       .populate({
         path: 'comments',

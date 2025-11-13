@@ -29,6 +29,10 @@ export type FormattedSubtask = {
     name: string;
     image: string | null;
   };
+  assignedTo?: {
+    name: string;
+    image: string | null;
+  } | null;
 };
 
 interface TaskDetailViewProps {
@@ -79,21 +83,28 @@ export default function TaskDetailView({
         name: subtask.createdBy.name,
         image: subtask.createdBy.image,
       },
+      assignedTo: subtask.assignedTo
+        ? {
+            name: subtask.assignedTo.name,
+            image: subtask.assignedTo.image,
+          }
+        : null,
     };
   });
 
   return (
-    <div className="px-6 py-4 flex flex-col gap-4">
-      <TaskDetailHeader
-        projectId={projectId}
-        taskId={task._id.toString()}
-        isEditMode={isEditMode}
-        onToggleEdit={handleToggleEdit}
-        onDelete={handleDelete}
-      />
+    <div className="h-[calc(100vh-64px)] flex flex-col px-6 py-4">
+      <div className="flex-shrink-0 mb-4">
+        <TaskDetailHeader
+          projectId={projectId}
+          taskId={task._id.toString()}
+          isEditMode={isEditMode}
+          onToggleEdit={handleToggleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
 
-      {/* Header Section */}
-      <div className="space-y-4">
+      <div className="flex-shrink-0 space-y-4 mb-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <h1 className="text-3xl font-bold mb-3">
@@ -126,10 +137,8 @@ export default function TaskDetailView({
         <Separator />
       </div>
 
-      {/* Three Column Layout: Comments Sidebar | Subtasks (Center) | Details Sidebar */}
-      <div className="flex flex-col xl:flex-row gap-6">
-        {/* Left Sidebar - Comments */}
-        <div className="w-full xl:w-80 order-2 xl:order-1">
+      <div className="flex flex-col md:flex-row gap-6 flex-1 min-h-0">
+        <div className="w-full md:flex-[1_0_300px] order-2 md:order-1 h-full">
           <CommentsList
             comments={formattedComments || []}
             taskId={task._id.toString()}
@@ -138,8 +147,7 @@ export default function TaskDetailView({
           />
         </div>
 
-        {/* Center - Main Content (Subtasks) */}
-        <div className="flex-1 min-w-0 order-1 xl:order-2">
+        <div className="flex-[2_0_450px] order-1 md:order-2 h-full">
           <SubtasksList
             subtasks={formattedSubtasks || []}
             taskId={task._id.toString()}
@@ -148,8 +156,7 @@ export default function TaskDetailView({
           />
         </div>
 
-        {/* Right Sidebar - Details */}
-        <div className="order-3">
+        <div className="order-3 md:w-80 md:flex-shrink-0">
           <TaskDetailSidebar task={task} />
         </div>
       </div>
