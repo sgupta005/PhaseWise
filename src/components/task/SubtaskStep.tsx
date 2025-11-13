@@ -19,15 +19,12 @@ import { Field, FieldError, FieldLabel } from '../ui/field';
 
 interface Subtask {
   title: string;
-  assignedTo: string | undefined;
 }
 
 export default function SubtaskStep({
-  teamMembers,
   setValue,
   control,
 }: {
-  teamMembers: { _id: string; name: string; email: string }[];
   setValue: UseFormSetValue<TaskFormStepData>;
   control: Control<TaskFormStepData>;
 }) {
@@ -39,10 +36,7 @@ export default function SubtaskStep({
 
   function handleAddSubtask() {
     const currentSubtasks = subtasks || [];
-    setValue('subtasks', [
-      ...currentSubtasks,
-      { title: '', assignedTo: undefined },
-    ]);
+    setValue('subtasks', [...currentSubtasks, { title: '' }]);
   }
 
   function handleRemoveSubtask(index: number) {
@@ -107,40 +101,6 @@ export default function SubtaskStep({
                           <FieldError errors={[fieldState.error]} />
                         )}
                       </Field>
-                    )}
-                  />
-
-                  {/* Assigned To */}
-                  <Controller
-                    name={`subtasks.${index}.assignedTo` as any}
-                    control={control}
-                    render={({ field }) => (
-                      <div className="space-y-2">
-                        <label
-                          htmlFor={`subtask-assignee-${index}`}
-                          className="text-sm font-medium"
-                        >
-                          Assigned To (Optional)
-                        </label>
-                        <Select
-                          value={field.value || ''}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger
-                            id={`subtask-assignee-${index}`}
-                            className="w-full"
-                          >
-                            <SelectValue placeholder="Select team member" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {teamMembers.map((member) => (
-                              <SelectItem key={member._id} value={member._id}>
-                                {member.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
                     )}
                   />
                 </div>

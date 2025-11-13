@@ -34,7 +34,7 @@ export async function createSubtaskAction(
       };
     }
 
-    const { title, assignedTo } = validatedFields.data;
+    const { title } = validatedFields.data;
 
     await connectDb();
 
@@ -50,7 +50,6 @@ export async function createSubtaskAction(
     // Create the subtask
     const newSubtask = await Subtask.create({
       title: title.trim(),
-      assignedTo: assignedTo || null,
       createdBy: session.user.id,
       completed: false,
     });

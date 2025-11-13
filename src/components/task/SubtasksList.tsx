@@ -25,7 +25,7 @@ interface SubtasksListProps {
 }
 
 type OptimisticAction =
-  | { type: 'add'; title: string; assignedTo?: string }
+  | { type: 'add'; title: string }
   | { type: 'toggle'; subtaskId: string; completed: boolean }
   | { type: 'delete'; subtaskId: string };
 
@@ -118,7 +118,6 @@ export default function SubtasksList({
             updateOptimisticSubtasks({
               type: 'add',
               title: data.title,
-              assignedTo: data.assignedTo,
             })
           }
         >
@@ -145,7 +144,6 @@ export default function SubtasksList({
                 updateOptimisticSubtasks({
                   type: 'add',
                   title: data.title,
-                  assignedTo: data.assignedTo,
                 })
               }
             >
@@ -180,24 +178,6 @@ export default function SubtasksList({
                       {subtask.title}
                     </p>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                      {subtask.assignedTo && (
-                        <div className="flex items-center gap-2">
-                          <Avatar className="size-5">
-                            <AvatarImage
-                              src={subtask.assignedTo.image || undefined}
-                            />
-                            <AvatarFallback className="text-xs">
-                              {getInitials(subtask.assignedTo.name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-xs text-muted-foreground">
-                            {subtask.assignedTo.name}{' '}
-                            <span className="text-muted-foreground/70">
-                              (Assignee)
-                            </span>
-                          </span>
-                        </div>
-                      )}
                       <div className="flex items-center gap-2">
                         <Avatar className="size-5">
                           <AvatarImage

@@ -29,10 +29,6 @@ export type FormattedSubtask = {
     name: string;
     image: string | null;
   };
-  assignedTo?: {
-    name: string;
-    image: string | null;
-  } | null;
 };
 
 interface TaskDetailViewProps {
@@ -83,12 +79,6 @@ export default function TaskDetailView({
         name: subtask.createdBy.name,
         image: subtask.createdBy.image,
       },
-      assignedTo: subtask.assignedTo
-        ? {
-            name: subtask.assignedTo.name,
-            image: subtask.assignedTo.image,
-          }
-        : null,
     };
   });
 

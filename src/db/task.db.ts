@@ -35,10 +35,6 @@ export async function getTaskByIdPopulated(
             path: 'createdBy',
             select: 'name email image',
           },
-          {
-            path: 'assignedTo',
-            select: 'name email image',
-          },
         ],
       })
       .populate({

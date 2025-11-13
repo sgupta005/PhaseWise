@@ -123,11 +123,7 @@ export default function CreateTaskForm({
           />
         )}
         {currentStep === 1 && (
-          <SubtaskStep
-            teamMembers={teamMembers}
-            setValue={setValue}
-            control={control}
-          />
+          <SubtaskStep setValue={setValue} control={control} />
         )}
         <div className="flex justify-between pt-4">
           <Button

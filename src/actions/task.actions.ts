@@ -147,7 +147,6 @@ export async function createTaskAction(
         .filter((st) => st.title.trim().length >= 3) // Only create valid subtasks
         .map((st) => ({
           title: st.title,
-          assignedTo: st.assignedTo || null,
           createdBy: session.user.id,
           completed: false,
         }));

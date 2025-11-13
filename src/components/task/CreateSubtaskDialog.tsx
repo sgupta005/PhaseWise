@@ -36,7 +36,7 @@ interface CreateSubtaskDialogProps {
   projectId: string;
   teamMembers: { _id: string; name: string; email: string }[];
   children: React.ReactNode;
-  onOptimisticAdd: (data: { title: string; assignedTo?: string }) => void;
+  onOptimisticAdd: (data: { title: string }) => void;
 }
 
 export default function CreateSubtaskDialog({
@@ -60,18 +60,15 @@ export default function CreateSubtaskDialog({
     resolver: zodResolver(subtaskSchema),
     defaultValues: {
       title: '',
-      assignedTo: '',
     },
   });
-
-  const assignedTo = watch('assignedTo');
 
   function onSubmit(data: SubtaskFormData) {
     setOpen(false);
     reset();
 
     startTransition(async () => {
-      onOptimisticAdd({ title: data.title, assignedTo: data.assignedTo });
+      onOptimisticAdd({ title: data.title });
       const result = await createSubtaskAction(taskId, projectId, data);
 
       if (result.success) {
@@ -109,33 +106,6 @@ export default function CreateSubtaskDialog({
               Provide a clear and concise title for this subtask.
             </FieldDescription>
             {errors.title && <FieldError>{errors.title.message}</FieldError>}
-          </Field>
-
-          {/* Assigned To Field */}
-          <Field>
-            <FieldLabel htmlFor="assignedTo">Assign To (Optional)</FieldLabel>
-            <Select
-              value={assignedTo}
-              onValueChange={(value) => setValue('assignedTo', value)}
-              disabled={isPending}
-            >
-              <SelectTrigger id="assignedTo">
-                <SelectValue placeholder="Select team member..." />
-              </SelectTrigger>
-              <SelectContent>
-                {teamMembers.map((member) => (
-                  <SelectItem key={member._id} value={member._id}>
-                    {member.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FieldDescription>
-              Optionally assign this subtask to a team member.
-            </FieldDescription>
-            {errors.assignedTo && (
-              <FieldError>{errors.assignedTo.message}</FieldError>
-            )}
           </Field>
 
           {/* Submit Button */}
