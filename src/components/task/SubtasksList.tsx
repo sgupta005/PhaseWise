@@ -1,6 +1,6 @@
 'use client';
 
-import { ITaskDetailed } from '@/types/task.types';
+import { useTransition, useOptimistic } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -8,39 +8,82 @@ import { getInitials } from '@/lib/utils/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import CreateSubtaskDialog from './CreateSubtaskDialog';
+import { toggleSubtaskAction } from '@/actions/subtask.actions';
+import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
+import { FormattedSubtask } from './TaskDetailView';
 
 interface SubtasksListProps {
-  subtasks: ITaskDetailed['subtasks'];
+  subtasks: FormattedSubtask[];
   taskId: string;
+  projectId: string;
+  teamMembers: { _id: string; name: string; email: string }[];
   isEditMode: boolean;
 }
 
 export default function SubtasksList({
   subtasks,
   taskId,
+  projectId,
+  teamMembers,
   isEditMode,
 }: SubtasksListProps) {
-  const handleCreateSubtask = () => {
-    // TODO: Implement subtask creation in Phase 4
-    console.log('Create subtask');
+  const { data: session } = useSession();
+
+  const [optimisticSubtasks, addOptimisticSubtask] = useOptimistic<
+    FormattedSubtask[],
+    { title: string; assignedTo?: string }
+  >(subtasks, (state, newSubtaskData) => {
+    const optimisticSubtask: FormattedSubtask = {
+      _id: `temp-${Date.now()}`,
+      title: newSubtaskData.title,
+      completed: false,
+      createdBy: {
+        name: session?.user?.name || 'You',
+        image: session?.user?.image || null,
+      },
+    };
+    return [...state, optimisticSubtask];
+  });
+
+  const [isPending, startTransition] = useTransition();
+
+  const handleToggleSubtask = (subtaskId: string, completed: boolean) => {
+    if (!isEditMode) return;
+
+    startTransition(async () => {
+      const result = await toggleSubtaskAction(
+        subtaskId,
+        taskId,
+        projectId,
+        completed
+      );
+
+      if (!result.success) {
+        toast.error(result.message);
+      }
+    });
   };
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle>Subtasks ({subtasks?.length || 0})</CardTitle>
-        <Button
-          onClick={handleCreateSubtask}
-          size="sm"
-          variant="outline"
-          className="h-8"
+        <CardTitle>Subtasks ({optimisticSubtasks?.length || 0})</CardTitle>
+        <CreateSubtaskDialog
+          taskId={taskId}
+          projectId={projectId}
+          teamMembers={teamMembers}
+          onOptimisticAdd={addOptimisticSubtask}
         >
-          <Plus className="size-4" />
-          Create Subtask
-        </Button>
+          <Button size="sm" variant="outline" className="h-8">
+            <Plus className="size-4" />
+            Create Subtask
+          </Button>
+        </CreateSubtaskDialog>
       </CardHeader>
       <CardContent>
-        {!subtasks || subtasks.length === 0 ? (
+        {!optimisticSubtasks || optimisticSubtasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center pb-8 text-center">
             <div className="rounded-full bg-muted p-3 mb-3">
               <Plus className="size-6 text-muted-foreground" />
@@ -48,18 +91,28 @@ export default function SubtasksList({
             <p className="text-sm text-muted-foreground mb-4">
               Break down this task into smaller, <br /> manageable steps
             </p>
-            <Button onClick={handleCreateSubtask} size="sm">
-              <Plus className="size-4" />
-              Create Subtask
-            </Button>
+            <CreateSubtaskDialog
+              taskId={taskId}
+              projectId={projectId}
+              teamMembers={teamMembers}
+              onOptimisticAdd={addOptimisticSubtask}
+            >
+              <Button size="sm">
+                <Plus className="size-4" />
+                Create Subtask
+              </Button>
+            </CreateSubtaskDialog>
           </div>
         ) : (
-          subtasks.map((subtask, index) => (
-            <div key={subtask._id.toString()}>
+          optimisticSubtasks.map((subtask, index) => (
+            <div key={subtask._id}>
               <div className="flex items-start gap-3">
                 <Checkbox
                   checked={subtask.completed}
-                  disabled={!isEditMode}
+                  disabled={!isEditMode || isPending}
+                  onCheckedChange={(checked) =>
+                    handleToggleSubtask(subtask._id, checked as boolean)
+                  }
                   className="mt-1"
                   aria-label={`Mark subtask "${subtask.title}" as ${subtask.completed ? 'incomplete' : 'complete'}`}
                 />
@@ -75,7 +128,9 @@ export default function SubtasksList({
                   </p>
                   <div className="flex items-center gap-2 mt-1">
                     <Avatar className="size-5">
-                      <AvatarImage src={subtask.createdBy?.image} />
+                      <AvatarImage
+                        src={subtask.createdBy?.image || undefined}
+                      />
                       <AvatarFallback className="text-xs">
                         {getInitials(subtask.createdBy?.name || 'Unknown')}
                       </AvatarFallback>
@@ -86,7 +141,9 @@ export default function SubtasksList({
                   </div>
                 </div>
               </div>
-              {index < subtasks.length - 1 && <Separator className="mt-3" />}
+              {index < optimisticSubtasks.length - 1 && (
+                <Separator className="mt-3" />
+              )}
             </div>
           ))
         )}

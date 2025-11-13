@@ -11,29 +11,76 @@ import SubtasksList from './SubtasksList';
 import CommentsList from './CommentsList';
 import { cn } from '@/lib/utils';
 
+export type FormattedComment = {
+  _id: string;
+  comment: string;
+  createdAt: Date;
+  createdBy: {
+    name: string;
+    image: string;
+  };
+};
+
+export type FormattedSubtask = {
+  _id: string;
+  title: string;
+  completed: boolean;
+  createdBy: {
+    name: string;
+    image: string | null;
+  };
+};
+
 interface TaskDetailViewProps {
   task: ITaskDetailed;
   projectId: string;
   phaseTitle?: string | null;
+  teamMembers: { _id: string; name: string; email: string }[];
 }
 
 export default function TaskDetailView({
   task,
   projectId,
   phaseTitle,
+  teamMembers,
 }: TaskDetailViewProps) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const priorityInfo = formatPriority(task.priority);
 
-  const handleToggleEdit = () => {
+  function handleToggleEdit() {
     setIsEditMode(!isEditMode);
-  };
+  }
 
-  const handleDelete = () => {
+  function handleDelete() {
     // Placeholder for delete functionality (will be implemented in Phase 6)
     console.log('Delete task:', task._id.toString());
-  };
+  }
+
+  const formattedComments: FormattedComment[] = task.comments.map((comment) => {
+    return {
+      _id: comment._id.toString(),
+      comment: comment.comment,
+      createdAt: comment.createdAt,
+      createdBy: {
+        name: comment.createdBy.name,
+        email: comment.createdBy.email,
+        image: comment.createdBy.image,
+      },
+    };
+  });
+
+  const formattedSubtasks: FormattedSubtask[] = task.subtasks.map((subtask) => {
+    return {
+      _id: subtask._id.toString(),
+      title: subtask.title,
+      completed: subtask.completed,
+      createdBy: {
+        name: subtask.createdBy.name,
+        image: subtask.createdBy.image,
+      },
+    };
+  });
 
   return (
     <div className="px-6 py-4 flex flex-col gap-4">
@@ -84,8 +131,9 @@ export default function TaskDetailView({
         {/* Left Sidebar - Comments */}
         <div className="w-full xl:w-80 order-2 xl:order-1">
           <CommentsList
-            comments={task.comments || []}
+            comments={formattedComments || []}
             taskId={task._id.toString()}
+            projectId={projectId}
             isEditMode={isEditMode}
           />
         </div>
@@ -93,8 +141,10 @@ export default function TaskDetailView({
         {/* Center - Main Content (Subtasks) */}
         <div className="flex-1 min-w-0 order-1 xl:order-2">
           <SubtasksList
-            subtasks={task.subtasks || []}
+            subtasks={formattedSubtasks || []}
             taskId={task._id.toString()}
+            projectId={projectId}
+            teamMembers={teamMembers}
             isEditMode={isEditMode}
           />
         </div>

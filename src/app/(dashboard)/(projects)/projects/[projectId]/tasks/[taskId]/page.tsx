@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTaskByIdPopulated, verifyTaskBelongsToProject } from '@/db/task.db';
 import { verifyProjectAccess, getProjectByIdPopulated } from '@/db/project.db';
 import TaskDetailView from '@/components/task/TaskDetailView';
+import { getProjectDataForTaskForm } from '@/actions/task.actions';
 
 export default async function TaskDetailPage({
   params,
@@ -32,7 +33,16 @@ export default async function TaskDetailPage({
     }
   }
 
+  // Fetch team members for subtask assignment
+  const projectData = await getProjectDataForTaskForm(projectId);
+  const teamMembers = projectData.data?.teamMembers || [];
+
   return (
-    <TaskDetailView task={task} projectId={projectId} phaseTitle={phaseTitle} />
+    <TaskDetailView
+      task={task}
+      projectId={projectId}
+      phaseTitle={phaseTitle}
+      teamMembers={teamMembers}
+    />
   );
 }

@@ -1,50 +1,110 @@
 'use client';
 
-import { ITaskDetailed } from '@/types/task.types';
+import {
+  useState,
+  useTransition,
+  useOptimistic,
+  useRef,
+  useEffect,
+} from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/lib/utils/avatar';
-import { formatRelativeTime } from '@/lib/task/formatters';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, Send } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowUp } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
+import { toast } from 'sonner';
+import { formatRelativeTime } from '@/lib/task/formatters';
+import { useSession } from 'next-auth/react';
+
+import { addCommentAction } from '@/actions/comment.actions';
+import { FormattedComment } from './TaskDetailView';
 
 interface CommentsListProps {
-  comments: ITaskDetailed['comments'];
+  comments: FormattedComment[];
   taskId: string;
+  projectId: string;
   isEditMode: boolean;
 }
 
 export default function CommentsList({
   comments,
   taskId,
+  projectId,
   isEditMode,
 }: CommentsListProps) {
-  const [commentText, setCommentText] = useState('');
+  const { data: session } = useSession();
 
-  const handleSubmit = () => {
-    // TODO: Implement comment submission in Phase 5
-    console.log('Submit comment:', commentText);
+  const [optimisticComments, addOptimisticComment] = useOptimistic<
+    FormattedComment[],
+    string
+  >(comments, (state, newCommentText: string) => {
+    const optimisticComment: FormattedComment = {
+      _id: Date.now().toString(),
+      comment: newCommentText,
+      createdAt: new Date(),
+      createdBy: {
+        name: session?.user?.name || 'You',
+        image: session?.user?.image || '',
+      },
+    };
+    return [...state, optimisticComment];
+  });
+
+  const [commentText, setCommentText] = useState('');
+  const [isPending, startTransition] = useTransition();
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new comments are added
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [optimisticComments.length]);
+
+  function handleSubmit() {
+    // Validate comment text
+    if (!commentText || commentText.trim().length === 0) {
+      toast.error('Comment cannot be empty');
+      return;
+    }
+
+    const textToSubmit = commentText;
     setCommentText('');
-  };
+
+    startTransition(async function () {
+      addOptimisticComment(textToSubmit);
+      const result = await addCommentAction(taskId, projectId, textToSubmit);
+
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+        setCommentText(textToSubmit);
+      }
+    });
+  }
 
   return (
     <Card className="sticky top-4 flex flex-col min-h-[580px]">
       <CardHeader>
-        <CardTitle>Comments ({comments?.length || 0})</CardTitle>
+        <CardTitle>Comments ({optimisticComments?.length || 0})</CardTitle>
       </CardHeader>
 
       {/* Comments List */}
-      {!comments || comments.length === 0 ? (
+      {!optimisticComments || optimisticComments.length === 0 ? (
         <p className="flex-1 flex items-center justify-center text-sm text-muted-foreground text-center">
           No comments yet.
         </p>
       ) : (
-        <CardContent className="flex-1 overflow-y-auto space-y-4 min-h-0">
-          {comments.map((comment, index) => (
-            <div key={comment._id.toString()}>
+        <CardContent
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto space-y-4 min-h-0"
+        >
+          {optimisticComments.map((comment, index) => (
+            <div key={comment._id}>
               <div className="flex gap-3">
                 <Avatar className="size-8 shrink-0">
                   <AvatarImage src={comment.createdBy?.image} />
@@ -61,12 +121,18 @@ export default function CommentsList({
                       {formatRelativeTime(comment.createdAt)}
                     </span>
                   </div>
-                  <p className="text-sm text-foreground whitespace-pre-wrap break-words">
+                  <p
+                    className={`text-sm text-foreground whitespace-pre-wrap break-words ${
+                      isPending ? 'opacity-70' : ''
+                    }`}
+                  >
                     {comment.comment}
                   </p>
                 </div>
               </div>
-              {index < comments.length - 1 && <Separator className="mt-4" />}
+              {index < optimisticComments.length - 1 && (
+                <Separator className="mt-4" />
+              )}
             </div>
           ))}
         </CardContent>
@@ -79,8 +145,20 @@ export default function CommentsList({
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Write a comment..."
             className="w-full min-h-[100px] resize-none p-3"
+            disabled={isPending}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
           />
-          <Button size="icon" className="absolute bottom-2 right-2">
+          <Button
+            size="icon"
+            className="absolute bottom-2 right-2"
+            onClick={handleSubmit}
+            disabled={isPending || !commentText.trim()}
+          >
             <ArrowUp className="size-4" />
           </Button>
         </div>

@@ -14,15 +14,6 @@ const subtaskSchema = new Schema(
     assignedTo: {
       type: Schema.Types.ObjectId,
       ref: User,
-      validate: {
-        validator: async function (
-          studentId: Types.ObjectId
-        ): Promise<boolean> {
-          const user = await User.findById(studentId);
-          return Boolean(user && user.role === 'student');
-        },
-        message: 'Task can only be assigned to student',
-      },
     },
     createdBy: {
       type: Schema.Types.ObjectId,
