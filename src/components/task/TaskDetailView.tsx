@@ -52,11 +52,6 @@ export default function TaskDetailView({
     setIsEditMode(!isEditMode);
   }
 
-  function handleDelete() {
-    // Placeholder for delete functionality (will be implemented in Phase 6)
-    console.log('Delete task:', task._id.toString());
-  }
-
   const formattedComments: FormattedComment[] = task.comments.map((comment) => {
     return {
       _id: comment._id.toString(),
@@ -90,7 +85,6 @@ export default function TaskDetailView({
           taskId={task._id.toString()}
           isEditMode={isEditMode}
           onToggleEdit={handleToggleEdit}
-          onDelete={handleDelete}
         />
       </div>
 

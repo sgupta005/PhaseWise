@@ -1,76 +1,16 @@
 'use server';
 
-import {
-  verifyProjectAccess,
-  getProjectByIdWithTasks,
-  getProjectByIdPopulated,
-} from '@/db/project.db';
+import { verifyProjectAccess, getProjectByIdWithTasks } from '@/db/project.db';
 import { connectDb } from '@/dbConfig/dbConfig';
 import Task from '@/models/task.model';
 import Phase from '@/models/phase.model';
 import Subtask from '@/models/subtask.model';
+import Comment from '@/models/comment.model';
 import { TaskUpdateResponse } from '@/types/task.types';
 import { revalidatePath } from 'next/cache';
 import { updateTaskSchema, type UpdateTaskSchema } from '@/schemas/task.schema';
 import { auth } from '@/auth';
 import { taskFormSchema, TaskFormAllFields } from '@/schemas/task-form.schema';
-
-export async function getProjectDataForTaskForm(projectId: string) {
-  try {
-    const hasAccess = await verifyProjectAccess(projectId);
-    if (!hasAccess) {
-      return {
-        success: false,
-        message: 'Unauthorized: You do not have access to this project',
-        data: null,
-      };
-    }
-
-    const project = await getProjectByIdPopulated(projectId);
-    if (!project) {
-      return {
-        success: false,
-        message: 'Project not found',
-        data: null,
-      };
-    }
-
-    // Extract phases with only id and title
-    const phases = project.phases.map((phase) => ({
-      _id: phase._id.toString(),
-      title: phase.title,
-    }));
-
-    // Extract team members
-    const teamMembers = [...(project.teamMember || []), project.faculty]
-      .filter(Boolean)
-      .map((member) => ({
-        _id: member._id.toString(),
-        name: member.name,
-        email: member.email,
-      }));
-
-    // Get task statuses
-    const taskStatuses = project.taskStatuses || [];
-
-    return {
-      success: true,
-      message: 'Project data fetched successfully',
-      data: {
-        phases,
-        teamMembers,
-        taskStatuses,
-      },
-    };
-  } catch (error) {
-    console.error('Error in getProjectDataForTaskForm:', error);
-    return {
-      success: false,
-      message: 'Failed to fetch project data',
-      data: null,
-    };
-  }
-}
 
 export async function createTaskAction(
   projectId: string,
@@ -295,6 +235,103 @@ export async function updateTaskAction(
     return {
       success: false,
       message: 'Failed to update task',
+    };
+  }
+}
+
+export async function deleteTaskAction(
+  taskId: string,
+  projectId: string
+): Promise<{ success: boolean; message: string }> {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        message: 'Unauthorized: Please log in',
+      };
+    }
+
+    const hasAccess = await verifyProjectAccess(projectId);
+    if (!hasAccess) {
+      return {
+        success: false,
+        message: 'Unauthorized: You do not have access to this project',
+      };
+    }
+
+    await connectDb();
+
+    // Verify task exists and belongs to project
+    const project = await getProjectByIdWithTasks(projectId);
+    if (!project) {
+      return {
+        success: false,
+        message: 'Project not found',
+      };
+    }
+
+    // Find which phase contains this task
+    let phaseId = null;
+    for (const phase of project.phases) {
+      if (phase.tasks && Array.isArray(phase.tasks)) {
+        const taskInPhase = phase.tasks.find(
+          (task) => task._id.toString() === taskId
+        );
+        if (taskInPhase) {
+          phaseId = phase._id;
+          break;
+        }
+      }
+    }
+
+    if (!phaseId) {
+      return {
+        success: false,
+        message: 'Task not found in this project',
+      };
+    }
+
+    // Get the task to find its subtasks
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return {
+        success: false,
+        message: 'Task not found',
+      };
+    }
+
+    // Delete all subtasks associated with this task
+    if (task.subtasks && task.subtasks.length > 0) {
+      await Subtask.deleteMany({ _id: { $in: task.subtasks } });
+    }
+
+    // Delete all comments associated with this task
+    if (task.comments && task.comments.length > 0) {
+      await Comment.deleteMany({ _id: { $in: task.comments } });
+    }
+
+    // Remove task from phase
+    await Phase.findByIdAndUpdate(phaseId, {
+      $pull: { tasks: taskId },
+    });
+
+    // Delete the task
+    await Task.findByIdAndDelete(taskId);
+
+    // Revalidate the tasks page
+    revalidatePath(`/projects/${projectId}/tasks`);
+    revalidatePath(`/projects/${projectId}/tasks/${taskId}`);
+
+    return {
+      success: true,
+      message: 'Task deleted successfully',
+    };
+  } catch (error) {
+    console.error('Error in deleteTaskAction:', error);
+    return {
+      success: false,
+      message: 'Failed to delete task',
     };
   }
 }

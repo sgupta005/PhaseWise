@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { columns } from '@/components/task/TableColumns';
 import { filterTasks, resolveFilters } from '@/lib/task/filters';
 import { getProjectByIdPopulated } from '@/db/project.db';
-import { getProjectDataForTaskForm } from '@/actions/task.actions';
+import { getProjectDataForTaskForm } from '@/db/project.db';
 
 import TaskFilters from '@/components/task/TaskFilters';
 import TaskBoard from '@/components/task/TaskBoard';

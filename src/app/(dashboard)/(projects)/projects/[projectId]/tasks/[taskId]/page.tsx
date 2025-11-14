@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTaskByIdPopulated, verifyTaskBelongsToProject } from '@/db/task.db';
 import { verifyProjectAccess, getProjectByIdPopulated } from '@/db/project.db';
 import TaskDetailView from '@/components/task/TaskDetailView';
-import { getProjectDataForTaskForm } from '@/actions/task.actions';
+import { getProjectDataForTaskForm } from '@/db/project.db';
 
 export default async function TaskDetailPage({
   params,

@@ -146,3 +146,60 @@ export async function getProjectStatuses(
   }
   return project.taskStatuses || [];
 }
+
+export async function getProjectDataForTaskForm(projectId: string) {
+  try {
+    const hasAccess = await verifyProjectAccess(projectId);
+    if (!hasAccess) {
+      return {
+        success: false,
+        message: 'Unauthorized: You do not have access to this project',
+        data: null,
+      };
+    }
+
+    const project = await getProjectByIdPopulated(projectId);
+    if (!project) {
+      return {
+        success: false,
+        message: 'Project not found',
+        data: null,
+      };
+    }
+
+    // Extract phases with only id and title
+    const phases = project.phases.map((phase) => ({
+      _id: phase._id.toString(),
+      title: phase.title,
+    }));
+
+    // Extract team members
+    const teamMembers = [...(project.teamMember || []), project.faculty]
+      .filter(Boolean)
+      .map((member) => ({
+        _id: member._id.toString(),
+        name: member.name,
+        email: member.email,
+      }));
+
+    // Get task statuses
+    const taskStatuses = project.taskStatuses || [];
+
+    return {
+      success: true,
+      message: 'Project data fetched successfully',
+      data: {
+        phases,
+        teamMembers,
+        taskStatuses,
+      },
+    };
+  } catch (error) {
+    console.error('Error in getProjectDataForTaskForm:', error);
+    return {
+      success: false,
+      message: 'Failed to fetch project data',
+      data: null,
+    };
+  }
+}
