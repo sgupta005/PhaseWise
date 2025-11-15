@@ -62,30 +62,32 @@ export default async function TaskDetailView({
 
   const priorityInfo = formatPriority(task.priority);
 
-  const formattedComments: FormattedComment[] = task.comments.map((comment) => {
-    return {
-      _id: comment._id.toString(),
-      comment: comment.comment,
-      createdAt: comment.createdAt,
-      createdBy: {
-        name: comment.createdBy.name,
-        email: comment.createdBy.email,
-        image: comment.createdBy.image,
-      },
-    };
-  });
+  const formattedComments: FormattedComment[] =
+    task?.comments?.map((comment) => {
+      return {
+        _id: comment._id.toString(),
+        comment: comment.comment,
+        createdAt: comment.createdAt,
+        createdBy: {
+          name: comment.createdBy.name,
+          email: comment.createdBy.email,
+          image: comment.createdBy.image,
+        },
+      };
+    }) || [];
 
-  const formattedSubtasks: FormattedSubtask[] = task.subtasks.map((subtask) => {
-    return {
-      _id: subtask._id.toString(),
-      title: subtask.title,
-      completed: subtask.completed,
-      createdBy: {
-        name: subtask.createdBy.name,
-        image: subtask.createdBy.image,
-      },
-    };
-  });
+  const formattedSubtasks: FormattedSubtask[] =
+    task?.subtasks?.map((subtask) => {
+      return {
+        _id: subtask._id.toString(),
+        title: subtask.title,
+        completed: subtask.completed,
+        createdBy: {
+          name: subtask.createdBy.name,
+          image: subtask.createdBy.image,
+        },
+      };
+    }) || [];
 
   return (
     <div className="h-[calc(100vh-64px)] flex flex-col px-6 py-4">

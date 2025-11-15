@@ -40,7 +40,7 @@ export default function DashboardLayoutClient({
             />
             <span className="text-sm">{pageName}</span>
           </div>
-          <div className="ml-auto mr-8">
+          <div className="ml-auto mr-3">
             <ThemeToggle />
           </div>
         </header>

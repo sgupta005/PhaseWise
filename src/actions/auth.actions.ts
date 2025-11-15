@@ -10,6 +10,7 @@ import {
 import { createUser as createUserDb, getUserByEmail } from '@/db/auth.db';
 import { signIn } from '@/auth';
 import { isStudentEmail } from '@/lib/utils';
+import { AuthError } from 'next-auth';
 
 export async function login(data: LoginSchema) {
   try {
@@ -45,7 +46,22 @@ export async function login(data: LoginSchema) {
 
     return { success: 'Logged in successfully.' };
   } catch (error) {
-    console.error('Create account error:', error);
+    console.error('Login error:', error);
+
+    // Handle specific AuthJS errors
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return {
+            error: 'Wrong email or password.',
+          };
+        default:
+          return {
+            error: 'Authentication failed. Please try again.',
+          };
+      }
+    }
+
     return {
       error: 'Something went wrong.',
     };

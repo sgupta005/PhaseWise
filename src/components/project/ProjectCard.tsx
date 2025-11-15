@@ -13,8 +13,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Github, ExternalLink, Lock, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useProjectStore } from '@/stores/project.store';
-import { IProjectWithTeam } from '@/types/project.types';
 import { getInitials } from '@/lib/utils/avatar';
+import { IProjectWithTeam } from '@/types/project.types';
 
 export function ProjectCard({ project }: { project: IProjectWithTeam }) {
   const { setActiveProject } = useProjectStore();
@@ -102,7 +102,10 @@ export function ProjectCard({ project }: { project: IProjectWithTeam }) {
                     key={member._id.toString()}
                     className="size-7 border-2 border-card"
                   >
-                    <AvatarImage src={member.image || ''} alt={member.name} />
+                    <AvatarImage
+                      src={`/avatars/${member._id.toString()}.jpg`}
+                      alt={member.name}
+                    />
                     <AvatarFallback className="text-xs">
                       {getInitials(member.name)}
                     </AvatarFallback>

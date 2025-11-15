@@ -15,7 +15,7 @@ export function useActiveProject() {
     if (!projectId) return;
 
     // If the active project doesn't match the URL, update it
-    if (activeProject?._id !== projectId) {
+    if (activeProject?._id.toString() !== projectId) {
       const project = getProjectById(projectId);
       if (project) {
         setActiveProject(project);

@@ -1,6 +1,5 @@
-import { ProjectDocument } from '@/models/project.model';
-import { IProjectWithTeam } from '@/types/project.types';
 import { create } from 'zustand';
+import { IProjectWithTeam } from '@/types/project.types';
 
 interface ProjectStore {
   activeProject: IProjectWithTeam | null;

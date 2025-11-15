@@ -99,7 +99,7 @@ export default function ProjectLayoutClient({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <div className="ml-auto mr-8">
+          <div className="ml-auto mr-3">
             <ThemeToggle />
           </div>
         </header>

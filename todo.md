@@ -5,7 +5,6 @@
 - [ ] In tech stack use predefined items instead of letting users add random shit
 - [ ] Refactor create-project form to use react-hook-form
 - [ ] Add option for searching and filtering projects
-- [ ] Fix projects page layout shift
 - [ ] User profile on sidebar dosen't load on first render
 
 - [x] CurrentPhase should be in project model not Phase
@@ -18,16 +17,13 @@
 - [ ] User should be able to change those statuses in settings
 - [ ] Create Permissions system
 - [ ] Change scrollbar in chrome to look like that in firefox
-
-- [x] Task Model
-  - [x] comments
-  - [x] subtasks
-  - [x] competed
-  - [x] statuses
+- [ ] What if someone assigns me a task and instead of doing it I assign it back to them?
 
 - [x] Add timestamps to models?
 - [ ] Fix console errors in kanban
 - [ ] Add postioning logic in kanban
 - [ ] Add colors to statuses, priorities and phases?
-- [ ] Add create task button in both tables and kanban board
+- [x] Add create task button in both tables and kanban board
 - [ ] Add due Date filter in tasks page
+
+- [ ] Task form validation shows errors inconsistently

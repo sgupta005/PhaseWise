@@ -5,11 +5,3 @@ export default function ProjectTeamPage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
