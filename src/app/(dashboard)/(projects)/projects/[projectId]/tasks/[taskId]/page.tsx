@@ -24,11 +24,13 @@ export default async function TaskDetailPage({
 
   // Find which phase this task belongs to
   let phaseTitle: string | null = null;
+  let currentPhaseId: string = '';
 
   for (const phase of project.phases) {
     const taskInPhase = phase.tasks.find((t) => t._id.toString() === taskId);
     if (taskInPhase) {
       phaseTitle = phase.title;
+      currentPhaseId = phase._id.toString();
       break;
     }
   }
@@ -42,6 +44,7 @@ export default async function TaskDetailPage({
       task={task}
       projectId={projectId}
       phaseTitle={phaseTitle}
+      currentPhaseId={currentPhaseId}
       teamMembers={teamMembers}
     />
   );

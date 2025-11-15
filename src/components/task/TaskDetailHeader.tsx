@@ -14,23 +14,37 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Spinner } from '@/components/ui/spinner';
-import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { deleteTaskAction } from '@/actions/task.actions';
 import { toast } from 'sonner';
+import EditTaskDetailsForm from './EditTaskDetailsForm';
+import { ITaskStatus } from '@/types/task.types';
 
 interface TaskDetailHeaderProps {
   projectId: string;
   taskId: string;
-  isEditMode: boolean;
-  onToggleEdit: () => void;
+  currentPhaseId: string;
+  taskData: {
+    task: string;
+    priority: string;
+    status: string;
+    assignedTo: string[];
+    dueDate?: string | null;
+  };
+  phases: { _id: string; title: string }[];
+  teamMembers: { _id: string; name: string; email: string }[];
+  taskStatuses: ITaskStatus[];
 }
 
 export default function TaskDetailHeader({
   projectId,
   taskId,
-  isEditMode,
-  onToggleEdit,
+  currentPhaseId,
+  taskData,
+  phases,
+  teamMembers,
+  taskStatuses,
 }: TaskDetailHeaderProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -68,13 +82,15 @@ export default function TaskDetailHeader({
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant={isEditMode ? 'secondary' : 'outline'}
-            onClick={onToggleEdit}
-          >
-            <Edit className="size-4" />
-            {isEditMode ? 'View Mode' : 'Edit Mode'}
-          </Button>
+          <EditTaskDetailsForm
+            taskId={taskId}
+            projectId={projectId}
+            currentPhaseId={currentPhaseId}
+            taskData={taskData}
+            phases={phases}
+            teamMembers={teamMembers}
+            taskStatuses={taskStatuses}
+          />
           <AlertDialog>
             <AlertDialogTrigger>
               <Button variant="destructive">

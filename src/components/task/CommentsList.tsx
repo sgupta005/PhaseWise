@@ -25,14 +25,12 @@ interface CommentsListProps {
   comments: FormattedComment[];
   taskId: string;
   projectId: string;
-  isEditMode: boolean;
 }
 
 export default function CommentsList({
   comments,
   taskId,
   projectId,
-  isEditMode,
 }: CommentsListProps) {
   const { data: session } = useSession();
 

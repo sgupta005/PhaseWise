@@ -1,6 +1,3 @@
-'use client';
-
-import { useState } from 'react';
 import { ITaskDetailed } from '@/types/task.types';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -10,6 +7,7 @@ import TaskDetailSidebar from './TaskDetailSidebar';
 import SubtasksList from './SubtasksList';
 import CommentsList from './CommentsList';
 import { cn } from '@/lib/utils';
+import { getProjectDataForTaskForm } from '@/db/project.db';
 
 export type FormattedComment = {
   _id: string;
@@ -35,22 +33,34 @@ interface TaskDetailViewProps {
   task: ITaskDetailed;
   projectId: string;
   phaseTitle?: string | null;
+  currentPhaseId: string;
   teamMembers: { _id: string; name: string; email: string }[];
 }
 
-export default function TaskDetailView({
+export default async function TaskDetailView({
   task,
   projectId,
   phaseTitle,
+  currentPhaseId,
   teamMembers,
 }: TaskDetailViewProps) {
-  const [isEditMode, setIsEditMode] = useState(false);
+  // Fetch project data for the edit form
+  const projectData = await getProjectDataForTaskForm(projectId);
+  const phases = projectData.data?.phases || [];
+  const taskStatuses = projectData.data?.taskStatuses || [];
+
+  // Prepare task data for editing
+  const taskData = {
+    task: task.task || '',
+    priority: task.priority,
+    status: task.status,
+    assignedTo: task.assignedTo.map((user) => user._id.toString()),
+    dueDate: task.dueDate
+      ? new Date(task.dueDate).toISOString().split('T')[0]
+      : null,
+  };
 
   const priorityInfo = formatPriority(task.priority);
-
-  function handleToggleEdit() {
-    setIsEditMode(!isEditMode);
-  }
 
   const formattedComments: FormattedComment[] = task.comments.map((comment) => {
     return {
@@ -83,8 +93,11 @@ export default function TaskDetailView({
         <TaskDetailHeader
           projectId={projectId}
           taskId={task._id.toString()}
-          isEditMode={isEditMode}
-          onToggleEdit={handleToggleEdit}
+          currentPhaseId={currentPhaseId}
+          taskData={taskData}
+          phases={phases}
+          teamMembers={teamMembers}
+          taskStatuses={taskStatuses}
         />
       </div>
 
@@ -127,7 +140,6 @@ export default function TaskDetailView({
             comments={formattedComments || []}
             taskId={task._id.toString()}
             projectId={projectId}
-            isEditMode={isEditMode}
           />
         </div>
 

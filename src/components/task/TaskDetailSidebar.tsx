@@ -35,7 +35,7 @@ export default function TaskDetailSidebar({ task }: TaskDetailSidebarProps) {
                       key={assignee._id.toString()}
                       className="flex items-center gap-2"
                     >
-                      <Avatar className="size-7 border-2 border-background">
+                      <Avatar className="size-8">
                         <AvatarImage src={assignee.image} />
                         <AvatarFallback className="text-xs">
                           {getInitials(assignee.name)}
@@ -59,7 +59,7 @@ export default function TaskDetailSidebar({ task }: TaskDetailSidebarProps) {
               Created By
             </p>
             <div className="flex items-center gap-2">
-              <Avatar className="size-7">
+              <Avatar className="size-8">
                 <AvatarImage src={task.createdBy?.image} />
                 <AvatarFallback className="text-xs">
                   {getInitials(task.createdBy?.name || 'Unknown')}
