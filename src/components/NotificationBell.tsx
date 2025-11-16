@@ -142,36 +142,27 @@ export function NotificationBell() {
                   href={notification.link || '/'}
                   key={notification._id.toString()}
                 >
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex flex-col items-start justify-between gap-2 px-2 my-1 relative">
                     {!notification.read && (
-                      <div className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0 mt-1" />
+                      <div className="absolute top-0 left-0 w-2 h-2 rounded-full bg-blue-500" />
                     )}
-                    <div className={cn('flex-1', notification.read && 'pl-2')}>
-                      <p className="font-medium text-sm">
-                        {notification.title}
-                      </p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {notification.message}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-2 mb-1">
-                        {formatDistanceToNow(new Date(notification.createdAt), {
-                          addSuffix: true,
-                        })}
-                      </p>
-                    </div>
+                    <p className={'font-medium text-sm'}>
+                      {notification.title}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {notification.message}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatDistanceToNow(new Date(notification.createdAt), {
+                        addSuffix: true,
+                      })}
+                    </p>
                   </div>
                 </Link>
               ))}
             </div>
           )}
         </ScrollArea>
-
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/notifications" className="w-full text-center">
-            View all notifications
-          </Link>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
