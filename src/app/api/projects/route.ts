@@ -123,7 +123,7 @@ export async function POST(req: Request) {
         tasks: taskIds,
       });
 
-      phaseIds.push(newPhase._id);
+      phaseIds.push(newPhase._id.toString());
     }
 
     const newProject = await Project.create({

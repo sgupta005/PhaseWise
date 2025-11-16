@@ -18,11 +18,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
-import { IUser } from '@/types/project.types';
+import { UserDocument } from '@/models/user.model';
 
 interface TeamMemberSelectorProps {
-  value: IUser[];
-  onChange: (users: IUser[]) => void;
+  value: UserDocument[];
+  onChange: (users: UserDocument[]) => void;
   disabled?: boolean;
   placeholder?: string;
 }
@@ -34,7 +34,7 @@ export function TeamMemberSelector({
   placeholder = 'Select team members...',
 }: TeamMemberSelectorProps) {
   const [open, setOpen] = useState(false);
-  const [students, setStudents] = useState<IUser[]>([]);
+  const [students, setStudents] = useState<UserDocument[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -82,17 +82,21 @@ export function TeamMemberSelector({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const toggleStudent = (student: IUser) => {
-    const isSelected = value.some((s) => s._id === student._id);
+  const toggleStudent = (student: UserDocument) => {
+    const isSelected = value.some(
+      (s) => s._id.toString() === student._id.toString()
+    );
     if (isSelected) {
-      onChange(value.filter((s) => s._id !== student._id));
+      onChange(
+        value.filter((s) => s._id.toString() !== student._id.toString())
+      );
     } else {
       onChange([...value, student]);
     }
   };
 
   const removeStudent = (studentId: string) => {
-    onChange(value.filter((s) => s._id !== studentId));
+    onChange(value.filter((s) => s._id.toString() !== studentId));
   };
 
   return (
@@ -144,12 +148,12 @@ export function TeamMemberSelector({
                   <CommandGroup>
                     {students.map((student) => {
                       const isSelected = value.some(
-                        (s) => s._id === student._id
+                        (s) => s._id.toString() === student._id.toString()
                       );
                       return (
                         <CommandItem
-                          key={student._id}
-                          value={student._id}
+                          key={student._id.toString()}
+                          value={student._id.toString()}
                           onSelect={() => toggleStudent(student)}
                         >
                           <Check
@@ -180,14 +184,14 @@ export function TeamMemberSelector({
         <div className="flex flex-wrap gap-2">
           {value.map((member) => (
             <Badge
-              key={member._id}
+              key={member._id.toString()}
               variant="secondary"
               className="pl-3 pr-1 py-1.5"
             >
               <span className="text-sm">{member.name}</span>
               <button
                 type="button"
-                onClick={() => removeStudent(member._id)}
+                onClick={() => removeStudent(member._id.toString())}
                 disabled={disabled}
                 className="ml-2 rounded-full hover:bg-muted p-0.5 transition-colors"
               >
@@ -200,7 +204,3 @@ export function TeamMemberSelector({
     </div>
   );
 }
-
-
-
-

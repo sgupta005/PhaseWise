@@ -3,6 +3,7 @@ import { getTaskByIdPopulated, verifyTaskBelongsToProject } from '@/db/task.db';
 import { verifyProjectAccess, getProjectByIdPopulated } from '@/db/project.db';
 import TaskDetailView from '@/components/task/TaskDetailView';
 import { getProjectDataForTaskForm } from '@/db/project.db';
+import { Types } from 'mongoose';
 
 export default async function TaskDetailPage({
   params,
@@ -10,6 +11,11 @@ export default async function TaskDetailPage({
   params: Promise<{ projectId: string; taskId: string }>;
 }) {
   const { projectId, taskId } = await params;
+
+  // Validate that both IDs are valid MongoDB ObjectIds
+  if (!Types.ObjectId.isValid(projectId) || !Types.ObjectId.isValid(taskId)) {
+    notFound();
+  }
 
   const hasAccess = await verifyProjectAccess(projectId);
   const task = await getTaskByIdPopulated(taskId);

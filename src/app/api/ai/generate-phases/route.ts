@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { generateProjectPhases, parseRelativeDeadline } from '@/lib/gemini';
+import { generateProjectPhases, parseRelativeDeadline } from '@/lib/ai/gemini';
 import { AIGenerateRequest } from '@/types/project.types';
 import { AIPhaseGenerationRequestSchema } from '@/schemas/phase.schema';
 

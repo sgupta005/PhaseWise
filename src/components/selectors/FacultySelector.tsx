@@ -17,11 +17,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { IUser } from '@/types/project.types';
+import { UserDocument } from '@/models/user.model';
 
 interface FacultySelectorProps {
-  value: IUser | null;
-  onChange: (user: IUser | null) => void;
+  value: UserDocument | null;
+  onChange: (user: UserDocument | null) => void;
   disabled?: boolean;
 }
 
@@ -31,7 +31,7 @@ export function FacultySelector({
   disabled = false,
 }: FacultySelectorProps) {
   const [open, setOpen] = useState(false);
-  const [faculty, setFaculty] = useState<IUser[]>([]);
+  const [faculty, setFaculty] = useState<UserDocument[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -125,11 +125,12 @@ export function FacultySelector({
                 <CommandGroup>
                   {faculty.map((facultyMember) => (
                     <CommandItem
-                      key={facultyMember._id}
-                      value={facultyMember._id}
+                      key={facultyMember._id.toString()}
+                      value={facultyMember._id.toString()}
                       onSelect={() => {
                         onChange(
-                          value?._id === facultyMember._id
+                          value?._id?.toString() ===
+                            facultyMember._id.toString()
                             ? null
                             : facultyMember
                         );

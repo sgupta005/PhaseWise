@@ -17,7 +17,7 @@ import { IProjectWithTeam } from '@/types/project.types';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { TaskDocument } from '@/models/task.model';
 import { useEffect, useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { NotificationBell } from '@/components/NotificationBell';
 
 interface ProjectLayoutClientProps {
   children: React.ReactNode;
@@ -99,7 +99,8 @@ export default function ProjectLayoutClient({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <div className="ml-auto mr-3">
+          <div className="ml-auto mr-3 flex items-center gap-3">
+            <NotificationBell />
             <ThemeToggle />
           </div>
         </header>

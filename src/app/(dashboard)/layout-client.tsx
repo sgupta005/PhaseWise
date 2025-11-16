@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { NotificationBell } from '@/components/NotificationBell';
 
 export default function DashboardLayoutClient({
   children,
@@ -40,7 +41,8 @@ export default function DashboardLayoutClient({
             />
             <span className="text-sm">{pageName}</span>
           </div>
-          <div className="ml-auto mr-3">
+          <div className="ml-auto mr-3 flex items-center gap-3">
+            <NotificationBell />
             <ThemeToggle />
           </div>
         </header>
