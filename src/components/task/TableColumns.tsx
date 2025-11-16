@@ -4,10 +4,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/lib/utils/avatar';
 import { ITaskWithTeam } from '@/types/task.types';
-import { ArrowUpDown, Minus } from 'lucide-react';
+import { ArrowUpDown, Check, Minus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { formatDueDate, formatPriority } from '@/lib/task/formatters';
-import { Button } from '../ui/button';
 
 export const columns: ColumnDef<ITaskWithTeam>[] = [
   {
@@ -80,6 +79,21 @@ export const columns: ColumnDef<ITaskWithTeam>[] = [
         {row.original.status.charAt(0).toUpperCase() +
           row.original.status.slice(1)}
       </Badge>
+    ),
+  },
+  {
+    accessorKey: 'completed',
+    header: 'Completed',
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center w-full">
+        <Badge variant="outline" className="rounded-full p-1">
+          {row.original.completed ? (
+            <Check className="dark:text-green-200 text-green-500" />
+          ) : (
+            <Minus className="dark:text-red-200 text-red-500" />
+          )}
+        </Badge>
+      </div>
     ),
   },
   {

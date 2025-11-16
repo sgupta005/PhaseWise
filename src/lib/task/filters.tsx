@@ -29,6 +29,14 @@ export async function resolveFilters(
     typeof resolvedSearchParams.search === 'string'
       ? resolvedSearchParams.search.toLowerCase()
       : undefined;
+  const completedFilter =
+    typeof resolvedSearchParams.completed === 'string'
+      ? resolvedSearchParams.completed === 'true'
+        ? true
+        : resolvedSearchParams.completed === 'false'
+          ? false
+          : undefined
+      : undefined;
 
   return {
     phaseFilter,
@@ -37,6 +45,7 @@ export async function resolveFilters(
     createdByFilter,
     statusFilter,
     searchQuery,
+    completedFilter,
   };
 }
 
@@ -49,6 +58,7 @@ export function filterTasks(
     createdByFilter?: string;
     statusFilter?: string;
     searchQuery?: string;
+    completedFilter?: boolean;
   }
 ) {
   const filteredTasks = tasks.filter((task) => {
@@ -59,6 +69,7 @@ export function filterTasks(
       createdByFilter,
       statusFilter,
       searchQuery,
+      completedFilter,
     } = filters;
 
     if (searchQuery && !task.task?.toLowerCase().includes(searchQuery)) {
@@ -100,6 +111,10 @@ export function filterTasks(
     }
 
     if (statusFilter && task.status !== statusFilter) {
+      return false;
+    }
+
+    if (completedFilter && task.completed !== completedFilter) {
       return false;
     }
 
