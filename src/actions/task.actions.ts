@@ -137,6 +137,10 @@ export async function createTaskAction(
             assigneeEmail: assigneeUser.email,
             assignedById: session.user.id,
             assignedByName: session.user.name || '',
+            priority: validatedFields.data.priority,
+            dueDate: validatedFields.data.dueDate
+              ? new Date(validatedFields.data.dueDate)
+              : null,
           });
         }
       }
@@ -305,6 +309,8 @@ export async function editTaskDetailsAction(
             assigneeEmail: assigneeUser.email,
             assignedById: session.user.id,
             assignedByName: session.user.name || '',
+            priority: updatedTask.priority,
+            dueDate: updatedTask.dueDate,
           });
         }
       }
