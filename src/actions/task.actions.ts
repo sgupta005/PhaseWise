@@ -435,6 +435,13 @@ export async function updateTaskAction(
   payload: UpdateTaskSchema
 ): Promise<TaskUpdateResponse> {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        message: 'Unauthorized: Please log in',
+      };
+    }
     // Validate input
     const validatedFields = updateTaskSchema.safeParse(payload);
     if (!validatedFields.success) {
@@ -536,5 +543,60 @@ export async function updateTaskAction(
       success: false,
       message: 'Failed to update task',
     };
+  }
+}
+
+export async function toggleTaskCompleted(taskId: string, projectId: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        message: 'Unauthorized: Please log in',
+      };
+    }
+
+    const hasAccess = await verifyProjectAccess(projectId);
+    if (!hasAccess) {
+      return {
+        success: false,
+        message: 'Unauthorized: You do not have access to this project',
+      };
+    }
+
+    if (!taskId || !projectId) {
+      return { success: false, message: 'Task id is required.' };
+    }
+
+    const task = await Task.findOneAndUpdate(
+      {
+        _id: taskId,
+        $or: [{ createdBy: session.user.id }, { assignedTo: session.user.id }],
+      },
+      [
+        {
+          $set: {
+            completed: { $not: '$completed' },
+          },
+        },
+      ],
+      { new: true }
+    );
+    if (!task) {
+      return {
+        success: false,
+        message: 'Task not found or you do not have permission.',
+      };
+    }
+
+    revalidatePath(`/projects/${projectId}/tasks/${taskId}`);
+    return {
+      success: true,
+      message: 'Task completed status toggled successfully.',
+      task: task,
+    };
+  } catch (error) {
+    console.error('Error in markTaskAsCompleted:', error);
+    return { success: false, message: 'Failed to mark task as completed.' };
   }
 }

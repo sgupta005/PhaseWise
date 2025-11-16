@@ -14,14 +14,15 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Spinner } from '@/components/ui/spinner';
-import { ArrowLeft, Trash2 } from 'lucide-react';
+import { ArrowLeft, Check, CircleDot, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { deleteTaskAction } from '@/actions/task.actions';
+import { deleteTaskAction, toggleTaskCompleted } from '@/actions/task.actions';
 import { toast } from 'sonner';
 import EditTaskDetailsForm from './EditTaskDetailsForm';
 import { ITaskStatus } from '@/types/task.types';
 
 interface TaskDetailHeaderProps {
+  isCompleted: boolean;
   projectId: string;
   taskId: string;
   currentPhaseId: string;
@@ -38,6 +39,7 @@ interface TaskDetailHeaderProps {
 }
 
 export default function TaskDetailHeader({
+  isCompleted,
   projectId,
   taskId,
   currentPhaseId,
@@ -48,6 +50,7 @@ export default function TaskDetailHeader({
 }: TaskDetailHeaderProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isToggling, setIsToggling] = useState(false);
 
   async function handleDeleteConfirm() {
     setIsDeleting(true);
@@ -69,6 +72,17 @@ export default function TaskDetailHeader({
     }
   }
 
+  async function handleToggleTaskCompleted() {
+    setIsToggling(true);
+    const result = await toggleTaskCompleted(taskId, projectId);
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+    }
+    setIsToggling(false);
+  }
+
   return (
     <>
       <div className="flex items-center justify-between ">
@@ -82,15 +96,6 @@ export default function TaskDetailHeader({
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          <EditTaskDetailsForm
-            taskId={taskId}
-            projectId={projectId}
-            currentPhaseId={currentPhaseId}
-            taskData={taskData}
-            phases={phases}
-            teamMembers={teamMembers}
-            taskStatuses={taskStatuses}
-          />
           <AlertDialog>
             <AlertDialogTrigger>
               <Button variant="destructive">
@@ -130,6 +135,47 @@ export default function TaskDetailHeader({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          <EditTaskDetailsForm
+            taskId={taskId}
+            projectId={projectId}
+            currentPhaseId={currentPhaseId}
+            taskData={taskData}
+            phases={phases}
+            teamMembers={teamMembers}
+            taskStatuses={taskStatuses}
+          />
+          {isCompleted ? (
+            <Button
+              variant="secondary"
+              onClick={() => handleToggleTaskCompleted()}
+            >
+              {isToggling ? (
+                <>
+                  <Spinner className="size-4" />
+                  Reopening Task...
+                </>
+              ) : (
+                <>
+                  <CircleDot className="size-4" />
+                  Reopen Task
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button onClick={() => handleToggleTaskCompleted()}>
+              {isToggling ? (
+                <>
+                  <Spinner className="size-4" />
+                  Marking as Complete...
+                </>
+              ) : (
+                <>
+                  <Check className="size-4" />
+                  Mark as Complete
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </>

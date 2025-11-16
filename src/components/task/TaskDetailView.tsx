@@ -8,6 +8,7 @@ import SubtasksList from './SubtasksList';
 import CommentsList from './CommentsList';
 import { cn } from '@/lib/utils';
 import { getProjectDataForTaskForm } from '@/db/project.db';
+import { Check, CircleCheckBig } from 'lucide-react';
 
 export type FormattedComment = {
   _id: string;
@@ -93,6 +94,7 @@ export default async function TaskDetailView({
     <div className="h-[calc(100vh-64px)] flex flex-col px-6 py-4">
       <div className="flex-shrink-0 mb-4">
         <TaskDetailHeader
+          isCompleted={task.completed}
           projectId={projectId}
           taskId={task._id.toString()}
           currentPhaseId={currentPhaseId}
@@ -125,7 +127,11 @@ export default async function TaskDetailView({
                 </Badge>
               )}
               {task.completed && (
-                <Badge variant="default" className="text-sm">
+                <Badge
+                  variant="outline"
+                  className="text-sm dark:bg-green-900 dark:text-green-300 bg-green-100 text-green-900 gap-2"
+                >
+                  <CircleCheckBig className="size-4" />
                   Completed
                 </Badge>
               )}

@@ -11,6 +11,10 @@ const phaseSchema = new Schema(
       type: Date,
       required: [true, 'Set deadline for phase'],
     },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
     tasks: [
       {
         type: Schema.Types.ObjectId,

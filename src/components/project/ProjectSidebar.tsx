@@ -7,6 +7,7 @@ import {
   Users,
   ListTodo,
   ArrowLeft,
+  ListOrdered,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -32,6 +33,11 @@ function getProjectNavItems(projectId: string) {
       title: 'Overview',
       url: `/projects/${projectId}/overview`,
       icon: LayoutDashboard,
+    },
+    {
+      title: 'Phases',
+      url: `/projects/${projectId}/phases`,
+      icon: ListOrdered,
     },
     {
       title: 'Tasks',
