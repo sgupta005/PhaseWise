@@ -18,15 +18,19 @@ interface TaskAssignmentData {
   dueDate?: Date | null;
 }
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
 export async function sendTaskAssignmentNotification(data: TaskAssignmentData) {
   try {
     await connectDb();
+    const taskUrl = `${baseUrl}/projects/${data.projectId}/tasks/${data.taskId}`;
 
     // Create in-app notification (blocking - critical)
     await Notification.create<NotificationDocument>({
       triggeredBy: data.assignedById,
       userId: data.assigneeId,
       type: 'TASK_ASSIGNED',
+      link: taskUrl,
       title: 'New Task Assignment',
       message: `${data.assignedByName} assigned you "${data.taskTitle}" in ${data.projectName}`,
       metadata: {
@@ -44,8 +48,7 @@ export async function sendTaskAssignmentNotification(data: TaskAssignmentData) {
       assignedByName: data.assignedByName,
       taskTitle: data.taskTitle,
       projectName: data.projectName,
-      taskId: data.taskId,
-      projectId: data.projectId,
+      taskUrl: taskUrl,
       priority: data.priority,
       dueDate: data.dueDate,
     }).catch((error) => {

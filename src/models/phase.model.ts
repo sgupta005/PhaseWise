@@ -29,9 +29,5 @@ export type PhaseDocument = inferredPhaseSchema & {
   updatedAt: Date;
 };
 
-if (mongoose.models['Phase']) {
-  delete mongoose.models['Phase']; // Remove the existing model
-}
-
-const Phase = mongoose.model('Phase', phaseSchema);
+const Phase = mongoose.models.Phase || mongoose.model('Phase', phaseSchema);
 export default Phase;

@@ -14,6 +14,7 @@ const notificationSchema = new Schema({
       'PROJECT_ADDED',
     ],
   },
+  link: { type: String, required: false },
   title: { type: String, required: true },
   message: { type: String, required: true },
   metadata: { type: Schema.Types.Mixed },

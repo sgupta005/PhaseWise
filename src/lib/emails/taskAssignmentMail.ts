@@ -9,8 +9,7 @@ interface SendTaskAssignmentEmailParams {
   assignedByName: string;
   taskTitle: string;
   projectName: string;
-  taskId: string;
-  projectId: string;
+  taskUrl: string;
   priority?: string;
   dueDate?: Date | null;
 }
@@ -21,16 +20,11 @@ export async function sendTaskAssignmentEmail({
   assignedByName,
   taskTitle,
   projectName,
-  taskId,
-  projectId,
+  taskUrl,
   priority,
   dueDate,
 }: SendTaskAssignmentEmailParams) {
   try {
-    // Construct the task URL (update base URL as needed for production)
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const taskUrl = `${baseUrl}/projects/${projectId}/tasks/${taskId}`;
-
     const htmlContent = generateTaskAssignmentEmail({
       assigneeName,
       assignedByName,
