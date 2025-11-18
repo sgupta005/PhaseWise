@@ -1,5 +1,5 @@
 import { connectDb } from '@/dbConfig/dbConfig';
-import Phase from '@/models/phase.model';
+import Project from '@/models/project.model';
 import { IPhaseWithPopulatedTasks } from '@/types/project.types';
 
 export async function getProjectPhases(
@@ -7,8 +7,24 @@ export async function getProjectPhases(
 ): Promise<IPhaseWithPopulatedTasks[] | null> {
   try {
     await connectDb();
-    const phases = await Phase.find({ project: projectId }).populate('tasks');
-    return JSON.parse(JSON.stringify(phases)) as IPhaseWithPopulatedTasks[];
+    const project = await Project.findById(projectId).populate({
+      path: 'phases',
+      populate: {
+        path: 'tasks',
+        populate: {
+          path: 'assignedTo createdBy',
+          select: 'name email',
+        },
+      },
+    });
+
+    if (!project) {
+      return null;
+    }
+
+    return JSON.parse(
+      JSON.stringify(project.phases)
+    ) as IPhaseWithPopulatedTasks[];
   } catch (error) {
     console.error('Error fetching project phases:', error);
     return null;

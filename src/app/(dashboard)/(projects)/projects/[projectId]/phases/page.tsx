@@ -1,5 +1,8 @@
 import { getProjectPhases } from '@/db/phase.db';
 import { notFound } from 'next/navigation';
+import { PhasesPageClient } from '@/components/phase/PhasesPageClient';
+import { getProjectByIdWithTeamAndFaculty } from '@/db/project.db';
+import { EmptyPhaseState } from '@/components/phase/EmptyPhaseState';
 
 export default async function ProjectPhasesPage({
   params,
@@ -7,13 +10,27 @@ export default async function ProjectPhasesPage({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
-  const projectPhases = await getProjectPhases(projectId);
-  if (!projectPhases) {
+
+  const phases = await getProjectPhases(projectId);
+  const project = await getProjectByIdWithTeamAndFaculty(projectId);
+
+  if (!phases || !project) {
     notFound();
   }
+
+  if (phases.length === 0) {
+    return (
+      <EmptyPhaseState projectId={projectId} teamMembers={project.teamMember} />
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-      <h1 className="text-2xl font-semibold">Phases</h1>
+    <div className="px-6 py-4">
+      <PhasesPageClient
+        projectId={projectId}
+        phases={phases}
+        project={project}
+      />
     </div>
   );
 }

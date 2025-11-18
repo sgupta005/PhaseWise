@@ -13,9 +13,8 @@
 - [x] Add due date to tasks model
 - [x] Add due date and last updated to task table
 - [x] Fix schema isn't registered error
-- [ ] User should be able to set CurrentPhase
+- [x] User should be able to set CurrentPhase
 - [ ] User should be able to change those statuses in settings
-- [ ] Create Permissions system
 - [ ] Change scrollbar in chrome to look like that in firefox
 - [ ] What if someone assigns me a task and instead of doing it I assign it back to them?
 
@@ -27,3 +26,10 @@
 - [ ] Add due Date filter in tasks page
 
 - [ ] Task form validation shows errors inconsistently
+
+- [x] set current phase otimistically
+- [x] fix width of phase cards
+- [x] go through code phase.actions.ts
+- [x] should router.refresh() be added
+- [ ] handle indexing of phases
+- [ ] handle phase number before title
