@@ -15,6 +15,10 @@ const phaseSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    order: {
+      type: Number,
+      required: [true, 'Order is required for phase'],
+    },
     tasks: [
       {
         type: Schema.Types.ObjectId,
@@ -25,6 +29,8 @@ const phaseSchema = new Schema(
   },
   { timestamps: true }
 );
+
+phaseSchema.index({ order: 1 });
 
 type inferredPhaseSchema = InferSchemaType<typeof phaseSchema>;
 export type PhaseDocument = inferredPhaseSchema & {

@@ -107,12 +107,13 @@ export interface ProjectApiResponse {
 export interface AIGeneratedTask {
   task: string;
   priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
-  dueDate?: string; // Relative deadline like "+3 days" or "+1 week"
+  dueDate?: string | null; // Relative deadline like "+3 days" or "+1 week"
 }
 
 export interface AIGeneratedPhase {
   title: string;
   deadline: string; // Relative deadline like "+7 days" or "+2 weeks"
+  order: number; // Zero-based sequential order
   tasks: AIGeneratedTask[];
 }
 

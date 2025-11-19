@@ -12,6 +12,7 @@ const AIGeneratedTaskSchema = z.object({
   dueDate: z
     .string()
     .regex(/\+\d+\s*(day|week|month)s?/i, 'Invalid dueDate format')
+    .nullable()
     .optional(),
 });
 
@@ -20,6 +21,7 @@ const AIGeneratedPhaseSchema = z.object({
   deadline: z
     .string()
     .regex(/\+\d+\s*(day|week|month)s?/i, 'Invalid deadline format'),
+  order: z.number().int().min(0, 'Order must be a non-negative integer'),
   tasks: z
     .array(AIGeneratedTaskSchema)
     .min(1, 'At least one task is required per phase'),
@@ -43,12 +45,18 @@ export const geminiResponseSchema: Schema = {
         properties: {
           title: {
             type: SchemaType.STRING,
-            description: 'Clear, descriptive title of the phase',
+            description:
+              'Clear, descriptive title of the phase WITHOUT any prefix like "Phase 1:" or "Phase 2:" - just the actual phase name',
           },
           deadline: {
             type: SchemaType.STRING,
             description:
               'Relative deadline in format: +N day|week|month (e.g., "+2 weeks")',
+          },
+          order: {
+            type: SchemaType.INTEGER,
+            description:
+              'Zero-based sequential order of the phase (0, 1, 2, etc.)',
           },
           tasks: {
             type: SchemaType.ARRAY,
@@ -82,7 +90,7 @@ export const geminiResponseSchema: Schema = {
             },
           },
         },
-        required: ['title', 'deadline', 'tasks'],
+        required: ['title', 'deadline', 'order', 'tasks'],
       },
     },
   },

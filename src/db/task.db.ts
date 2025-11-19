@@ -9,6 +9,7 @@ export async function getProjectPhasesWithTasks(projectId: string) {
     await connectDb();
     const project = await Project.findById(projectId).populate({
       path: 'phases',
+      options: { sort: { order: 1 } },
       populate: {
         path: 'tasks',
       },

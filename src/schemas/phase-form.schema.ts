@@ -20,7 +20,7 @@ export const editPhaseFormSchema = z.object({
 });
 
 export const setCurrentPhaseSchema = z.object({
-  phaseIndex: z.number().min(0, 'Invalid phase index'),
+  phaseOrder: z.number().min(0, 'Invalid phase order'),
 });
 
 // AI Phase Generation Request Schema

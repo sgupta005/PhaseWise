@@ -98,7 +98,11 @@ export async function getProjectById(
   projectId: string
 ): Promise<ProjectDocument | null> {
   await connectDb();
-  return await Project.findById(projectId);
+  const project = await Project.findById(projectId);
+  if (!project) {
+    return null;
+  }
+  return JSON.parse(JSON.stringify(project)) as ProjectDocument;
 }
 
 export async function getProjectByIdPopulated(
@@ -108,6 +112,7 @@ export async function getProjectByIdPopulated(
   const project = await Project.findById(projectId)
     .populate({
       path: 'phases',
+      options: { sort: { order: 1 } },
       populate: {
         path: 'tasks',
         populate: {
@@ -128,12 +133,14 @@ export async function getProjectByIdWithTasks(
   projectId: string
 ): Promise<IProjectWithTasks> {
   await connectDb();
-  return await Project.findById(projectId).populate({
+  const project = await Project.findById(projectId).populate({
     path: 'phases',
+    options: { sort: { order: 1 } },
     populate: {
       path: 'tasks',
     },
   });
+  return JSON.parse(JSON.stringify(project)) as IProjectWithTasks;
 }
 
 export async function getProjectStatuses(

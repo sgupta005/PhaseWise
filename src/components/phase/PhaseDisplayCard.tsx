@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CircularProgress } from '@/components/ui/circular-progress';
-import { Edit } from 'lucide-react';
+import { Edit, GripVertical } from 'lucide-react';
 import { IPhaseWithPopulatedTasks } from '@/types/project.types';
 import {
   calculatePhaseProgress,
@@ -20,21 +20,25 @@ import { cn } from '@/lib/utils';
 import { EditPhaseDialog } from './EditPhaseDialog';
 import { DeletePhaseDialog } from './DeletePhaseDialog';
 import { TaskDisplayCard } from './TaskDisplayCard';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface PhaseDisplayCardProps {
+  id: string;
   phase: IPhaseWithPopulatedTasks;
-  phaseIndex: number;
   isChangingPhase: boolean;
   isCurrentPhase: boolean;
+  isReorderingPhase: boolean;
   projectId: string;
-  onSetCurrent: (phaseIndex: number) => void;
+  onSetCurrent: (phaseOrder: number) => void;
 }
 
 export function PhaseDisplayCard({
+  id,
   phase,
-  phaseIndex,
   isChangingPhase,
   isCurrentPhase,
+  isReorderingPhase,
   projectId,
   onSetCurrent,
 }: PhaseDisplayCardProps) {
@@ -43,11 +47,33 @@ export function PhaseDisplayCard({
   const isCompleted = phase.completed;
   const isPastDeadline = new Date(phase.deadline) < new Date() && !isCompleted;
 
+  const isLoading = isChangingPhase || isReorderingPhase;
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id, disabled: isLoading });
+
+  const style = {
+    transform: transform
+      ? `translate3d(0, ${transform.y}px, 0)` // Only allow vertical movement
+      : undefined,
+    transition,
+    zIndex: isDragging ? 20 : undefined, // Bring dragged element to front
+  };
+
   return (
     <div
+      ref={setNodeRef}
+      style={style}
       className={cn(
-        'border rounded-lg transition-all max-w-7xl w-full',
-        isCurrentPhase && 'border-primary border-2 shadow-md'
+        'border bg-background rounded-lg transition-all max-w-7xl w-full',
+        isCurrentPhase && 'border-primary border-2 shadow-md',
+        isLoading && 'opacity-80 dark:opacity-70 pointer-events-none'
       )}
     >
       <Accordion type="single" collapsible className="w-full">
@@ -65,6 +91,7 @@ export function PhaseDisplayCard({
                       <div className="size-3 bg-primary rounded-full" />
                     )}
                     <h3 className="font-semibold text-lg truncate">
+                      {`Phase ${phase.order + 1}:`}
                       {phase.title}
                     </h3>
                   </div>
@@ -108,12 +135,23 @@ export function PhaseDisplayCard({
                     <Button
                       variant="secondary"
                       size="sm"
-                      onClick={() => onSetCurrent(phaseIndex)}
+                      onClick={() => onSetCurrent(phase.order)}
                       disabled={isChangingPhase}
                     >
                       Set as Current Phase
                     </Button>
                   )}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    {...attributes}
+                    {...listeners}
+                    className="cursor-grab active:cursor-grabbing"
+                    aria-label="Drag to reorder phase"
+                  >
+                    <GripVertical className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+                  </Button>
                   <EditPhaseDialog
                     projectId={projectId}
                     phase={phase}

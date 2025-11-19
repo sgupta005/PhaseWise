@@ -84,11 +84,15 @@ export async function createPhaseAction(
 
     const taskIds = createdTasks.map((task) => task._id);
 
+    // Get current phase count to set order
+    const phaseCount = project.phases?.length || 0;
+
     // Create the phase
     const newPhase = await Phase.create({
       title: validatedFields.data.title,
       deadline: new Date(validatedFields.data.deadline),
       completed: false,
+      order: phaseCount,
       tasks: taskIds,
     });
 
@@ -203,6 +207,16 @@ export async function deletePhaseAction(
 
     await connectDb();
 
+    // Get the project
+    const project = await Project.findById(projectId).session(mongoSession);
+    if (!project) {
+      await mongoSession.abortTransaction();
+      return {
+        success: false,
+        message: 'Project not found',
+      };
+    }
+
     // Get the phase
     const phase = await Phase.findById(phaseId).session(mongoSession);
     if (!phase) {
@@ -228,6 +242,26 @@ export async function deletePhaseAction(
 
     // Delete the phase
     await Phase.findByIdAndDelete(phaseId).session(mongoSession);
+
+    // Reorder remaining phases to maintain sequential order
+    const remainingPhases = await Phase.find({
+      _id: {
+        $in: project.phases.filter((id: any) => id.toString() !== phaseId),
+      },
+    })
+      .sort({ order: 1 })
+      .session(mongoSession);
+
+    // Update order for remaining phases
+    for (let i = 0; i < remainingPhases.length; i++) {
+      if (remainingPhases[i].order !== i) {
+        await Phase.findByIdAndUpdate(
+          remainingPhases[i]._id,
+          { order: i },
+          { session: mongoSession }
+        );
+      }
+    }
 
     await mongoSession.commitTransaction();
 
@@ -284,7 +318,10 @@ export async function setCurrentPhaseAction(
     await connectDb();
 
     // Get the project
-    const project = await Project.findById(projectId).populate('phases');
+    const project = await Project.findById(projectId).populate({
+      path: 'phases',
+      options: { sort: { order: 1 } },
+    });
     if (!project) {
       return {
         success: false,
@@ -293,15 +330,15 @@ export async function setCurrentPhaseAction(
     }
 
     // Validate phase index
-    if (validatedFields.data.phaseIndex >= project.phases.length) {
+    if (validatedFields.data.phaseOrder >= project.phases.length) {
       return {
         success: false,
-        message: 'Invalid phase index',
+        message: 'Invalid phase order',
       };
     }
 
     // Update current phase (1-indexed in the model)
-    project.currentPhase = validatedFields.data.phaseIndex + 1;
+    project.currentPhase = validatedFields.data.phaseOrder;
     await project.save();
 
     revalidatePath(`/projects/${projectId}/phases`);
@@ -317,5 +354,84 @@ export async function setCurrentPhaseAction(
       success: false,
       message: 'Failed to set current phase',
     };
+  }
+}
+
+export async function reorderPhasesAction(
+  projectId: string,
+  phaseIds: string[]
+): Promise<PhaseActionResponse> {
+  const mongoSession = await mongoose.startSession();
+  mongoSession.startTransaction();
+
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      await mongoSession.abortTransaction();
+      return {
+        success: false,
+        message: 'Unauthorized: Please log in',
+      };
+    }
+
+    // Verify project access
+    const hasAccess = await verifyProjectAccess(projectId);
+    if (!hasAccess) {
+      await mongoSession.abortTransaction();
+      return {
+        success: false,
+        message: 'Unauthorized: You do not have access to this project',
+      };
+    }
+
+    await connectDb();
+
+    // Validate that all phases belong to the project
+    const project = await Project.findById(projectId).session(mongoSession);
+    if (!project) {
+      await mongoSession.abortTransaction();
+      return {
+        success: false,
+        message: 'Project not found',
+      };
+    }
+
+    const projectPhaseIds = project.phases.map((id: any) => id.toString());
+    const allPhasesValid = phaseIds.every((id) => projectPhaseIds.includes(id));
+
+    if (!allPhasesValid || phaseIds.length !== projectPhaseIds.length) {
+      await mongoSession.abortTransaction();
+      return {
+        success: false,
+        message: 'Invalid phase IDs provided',
+      };
+    }
+
+    // Update order for each phase
+    for (let i = 0; i < phaseIds.length; i++) {
+      await Phase.findByIdAndUpdate(
+        phaseIds[i],
+        { order: i },
+        { session: mongoSession }
+      );
+    }
+
+    await mongoSession.commitTransaction();
+
+    revalidatePath(`/projects/${projectId}/phases`);
+
+    return {
+      success: true,
+      message: 'Phases reordered successfully',
+    };
+  } catch (error) {
+    await mongoSession.abortTransaction();
+    console.error('Error reordering phases:', error);
+    return {
+      success: false,
+      message: 'Failed to reorder phases',
+    };
+  } finally {
+    mongoSession.endSession();
   }
 }

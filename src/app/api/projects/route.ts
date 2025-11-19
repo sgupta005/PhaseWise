@@ -113,13 +113,15 @@ export async function POST(req: Request) {
     // Begin saving (Phases + Tasks + Project)
     const phaseIds: string[] = [];
 
-    for (const phase of phases) {
+    for (let i = 0; i < phases.length; i++) {
+      const phase = phases[i];
       const savedTasks = await Task.insertMany(phase.tasks);
       const taskIds = savedTasks.map((task) => task._id);
 
       const newPhase = await Phase.create({
         title: phase.title,
         deadline: phase.deadline,
+        order: i,
         tasks: taskIds,
       });
 

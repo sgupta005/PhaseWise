@@ -33,3 +33,4 @@
 - [x] should router.refresh() be added
 - [ ] handle indexing of phases
 - [ ] handle phase number before title
+- [ ] In Create project form every phase requires atleast one task (make tasks optional)

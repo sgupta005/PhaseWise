@@ -70,7 +70,7 @@ const projectSchema = new Schema(
     ],
     currentPhase: {
       type: Number,
-      default: 1,
+      default: 0,
     },
     createdBy: {
       type: Schema.Types.ObjectId,

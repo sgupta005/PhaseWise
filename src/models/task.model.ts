@@ -69,9 +69,5 @@ export type TaskDocument = inferredTaskSchema & {
   updatedAt: Date;
 };
 
-if (mongoose.models['Task']) {
-  delete mongoose.models['Task']; // Remove the existing model
-}
-
-const Task = mongoose.model('Task', taskSchema);
+const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
 export default Task;
