@@ -17,11 +17,10 @@ import {
 } from '@/lib/phase/progress-calculator';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { EditPhaseDialog } from './EditPhaseDialog';
+import { EditPhaseForm } from './EditPhaseForm';
 import { DeletePhaseDialog } from './DeletePhaseDialog';
 import { TaskDisplayCard } from './TaskDisplayCard';
 import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 
 interface PhaseDisplayCardProps {
   id: string;
@@ -152,7 +151,7 @@ export function PhaseDisplayCard({
                   >
                     <GripVertical className="h-5 w-5 text-muted-foreground hover:text-foreground" />
                   </Button>
-                  <EditPhaseDialog
+                  <EditPhaseForm
                     projectId={projectId}
                     phase={phase}
                     trigger={

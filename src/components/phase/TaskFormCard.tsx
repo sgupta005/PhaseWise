@@ -1,6 +1,6 @@
 'use client';
 
-import { UseFormReturn } from 'react-hook-form';
+import { Controller, UseFormReturn } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -79,23 +79,25 @@ export function TaskFormCard({
 
       <Field>
         <FieldLabel htmlFor={`tasks.${index}.priority`}>Priority</FieldLabel>
-        <Select
-          value={watch(`tasks.${index}.priority`)}
-          onValueChange={(value) =>
-            setValue(`tasks.${index}.priority`, value as any)
-          }
-        >
-          <SelectTrigger id={`tasks.${index}.priority`}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {PRIORITIES.map((priority) => (
-              <SelectItem key={priority} value={priority}>
-                {priority}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Controller
+          name={`tasks.${index}.priority`}
+          control={form.control}
+          defaultValue="Medium Priority"
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger id={`tasks.${index}.priority`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {PRIORITIES.map((priority) => (
+                  <SelectItem key={priority} value={priority}>
+                    {priority}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
       </Field>
 
       <Field>

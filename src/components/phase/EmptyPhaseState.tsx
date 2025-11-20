@@ -1,5 +1,5 @@
 import { UserDocument } from '@/models/user.model';
-import { CreatePhaseDialog } from './CreatePhaseDialog';
+import { CreatePhaseForm } from './CreatePhaseForm';
 
 interface EmptyPhaseStateProps {
   projectId: string;
@@ -26,7 +26,7 @@ export function EmptyPhaseState({
             Get started by creating your first phase. Break down your project
             into manageable stages with specific tasks and deadlines.
           </p>
-          <CreatePhaseDialog projectId={projectId} teamMembers={teamMembers} />
+          <CreatePhaseForm projectId={projectId} teamMembers={teamMembers} />
         </div>
       </div>
     </div>

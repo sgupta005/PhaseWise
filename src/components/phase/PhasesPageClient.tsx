@@ -1,7 +1,7 @@
 'use client';
 
 import { PhaseDisplayCard } from '@/components/phase/PhaseDisplayCard';
-import { CreatePhaseDialog } from '@/components/phase/CreatePhaseDialog';
+import { CreatePhaseForm } from '@/components/phase/CreatePhaseForm';
 import {
   IPhaseWithPopulatedTasks,
   IProjectWithTeam,
@@ -119,7 +119,7 @@ export function PhasesPageClient({
   return (
     <div className="space-y-4 flex flex-col items-center">
       <div className="flex justify-end w-full max-w-7xl">
-        <CreatePhaseDialog
+        <CreatePhaseForm
           projectId={projectId}
           teamMembers={project.teamMember}
         />

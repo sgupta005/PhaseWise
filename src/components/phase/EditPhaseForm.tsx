@@ -22,7 +22,6 @@ import {
   editPhaseFormSchema,
   type EditPhaseFormData,
 } from '@/schemas/phase-form.schema';
-import { useRouter } from 'next/navigation';
 import {
   Field,
   FieldLabel,
@@ -36,12 +35,11 @@ interface EditPhaseDialogProps {
   trigger: React.ReactNode;
 }
 
-export function EditPhaseDialog({
+export function EditPhaseForm({
   projectId,
   phase,
   trigger,
 }: EditPhaseDialogProps) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 

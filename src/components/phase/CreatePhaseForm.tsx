@@ -29,7 +29,7 @@ interface CreatePhaseDialogProps {
   teamMembers: UserDocument[];
 }
 
-export function CreatePhaseDialog({
+export function CreatePhaseForm({
   projectId,
   teamMembers,
 }: CreatePhaseDialogProps) {
