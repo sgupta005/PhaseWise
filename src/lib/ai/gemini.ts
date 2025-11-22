@@ -24,7 +24,7 @@ export async function generateProjectPhases(
     Project Details:
     - Title: ${title}
     - Description: ${description || 'Not provided'}
-    - Tech Stack: ${techStack.join(', ')}
+    - Tech Stack: ${techStack}
 
     Output Requirements:
     - Follow Software Development Life Cycle (SDLC) stages — Requirements, Design, Development, Testing, Deployment, Maintenance.
@@ -63,7 +63,7 @@ export function parseRelativeDeadline(relativeDeadline: string): string {
   if (!match) {
     // Default to 1 week if format is invalid
     now.setDate(now.getDate() + 7);
-    return now.toISOString();
+    return now.toISOString().split('T')[0];
   }
 
   const amount = parseInt(match[1]);
@@ -83,5 +83,5 @@ export function parseRelativeDeadline(relativeDeadline: string): string {
       now.setDate(now.getDate() + 7); // Default to 1 week
   }
 
-  return now.toISOString();
+  return now.toISOString().split('T')[0];
 }

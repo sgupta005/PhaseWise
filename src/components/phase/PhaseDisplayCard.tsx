@@ -166,14 +166,20 @@ export function PhaseDisplayCard({
 
               <div className="mt-4">
                 <AccordionTrigger className="hover:no-underline py-2">
-                  <span className="text-sm font-medium">
-                    {total === 0 ? 'No tasks' : `View All Tasks (${total})`}
-                  </span>
+                  {total === 0 ? (
+                    <span className="text-sm text-muted-foreground">
+                      No tasks
+                    </span>
+                  ) : (
+                    <span className="text-sm font-medium">
+                      View All Tasks ({total})
+                    </span>
+                  )}
                 </AccordionTrigger>
                 <AccordionContent>
                   {total === 0 ? (
                     <p className="text-sm text-muted-foreground py-4">
-                      No tasks in this phase
+                      Tasks in this phase will appear here.
                     </p>
                   ) : (
                     <div className="space-y-2 pt-2">

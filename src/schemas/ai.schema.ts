@@ -21,7 +21,6 @@ const AIGeneratedPhaseSchema = z.object({
   deadline: z
     .string()
     .regex(/\+\d+\s*(day|week|month)s?/i, 'Invalid deadline format'),
-  order: z.number().int().min(0, 'Order must be a non-negative integer'),
   tasks: z
     .array(AIGeneratedTaskSchema)
     .min(1, 'At least one task is required per phase'),
@@ -52,11 +51,6 @@ export const geminiResponseSchema: Schema = {
             type: SchemaType.STRING,
             description:
               'Relative deadline in format: +N day|week|month (e.g., "+2 weeks")',
-          },
-          order: {
-            type: SchemaType.INTEGER,
-            description:
-              'Zero-based sequential order of the phase (0, 1, 2, etc.)',
           },
           tasks: {
             type: SchemaType.ARRAY,
@@ -90,7 +84,7 @@ export const geminiResponseSchema: Schema = {
             },
           },
         },
-        required: ['title', 'deadline', 'order', 'tasks'],
+        required: ['title', 'deadline', 'tasks'],
       },
     },
   },

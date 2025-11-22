@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/accordion';
 import { ProjectFormStepData, Phases } from '@/schemas/project-form.schema';
 import PhaseTaskForm from '@/components/phase/PhaseTaskForm';
+import AIPhaseGenerator from './AIPhaseGenerator';
 
 interface PhasesStepProps {
   errors: FieldErrors<Phases>;
@@ -42,6 +43,11 @@ export default function PhasesStep({
     defaultValue: [],
   });
 
+  const [title, description, techStack] = useWatch({
+    control,
+    name: ['title', 'description', 'techStack'],
+  });
+
   function handleAddPhase() {
     const currentPhases = phases || [];
     setValue('phases', [
@@ -51,12 +57,20 @@ export default function PhasesStep({
     form.clearErrors('phases');
   }
 
-  function handleRemovePhase(index: number) {
+  function handleRemovePhase(e: React.MouseEvent, index: number) {
+    e.stopPropagation(); // prevent opening accordion when delte button is clicked
     const currentPhases = phases || [];
     setValue(
       'phases',
       currentPhases.filter((_, i) => i !== index)
     );
+  }
+
+  function handlePhasesGenerated(generatedPhases: typeof phases) {
+    const currentPhases = phases || [];
+    // Merge AI-generated phases with existing manually created phases
+    setValue('phases', [...currentPhases, ...generatedPhases]);
+    form.clearErrors('phases');
   }
 
   return (
@@ -70,15 +84,18 @@ export default function PhasesStep({
             Break down your Project into Phases
           </p>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleAddPhase}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Phase
-        </Button>
+        <div className="flex items-center justify-self-end gap-2">
+          <Button type="button" variant="outline" onClick={handleAddPhase}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Phase
+          </Button>
+          <AIPhaseGenerator
+            title={title || ''}
+            description={description || ''}
+            techStack={techStack || ''}
+            onPhasesGenerated={handlePhasesGenerated}
+          />
+        </div>
       </div>
 
       {!phases || phases.length === 0 ? (
@@ -97,16 +114,18 @@ export default function PhasesStep({
             {phases.map((phase, index) => (
               <AccordionItem key={index} value={`phase-${index}`}>
                 <AccordionTrigger className="flex-1 text-base hover:no-underline py-4 font-semibold items-center">
-                  <span>{`Phase ${index + 1}${phase.title ? ':' : ''}  ${phase.title}`}</span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleRemovePhase(index)}
-                    className="text-destructive hover:text-destructive ml-auto"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center w-full">
+                    <span>{`Phase ${index + 1}${phase.title ? ':' : ''}  ${phase.title}`}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => handleRemovePhase(e, index)}
+                      className="text-destructive hover:text-destructive ml-auto"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-4 pb-4 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

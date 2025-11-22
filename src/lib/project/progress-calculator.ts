@@ -2,7 +2,7 @@ import {
   ProjectDetails,
   ProjectFormStepData,
 } from '@/schemas/project-form.schema';
-import { PhaseFormData } from '@/types/project.types';
+import { Phases } from '@/schemas/project-form.schema';
 
 export function calculateProjectProgress(
   formData: Partial<ProjectFormStepData>,
@@ -42,7 +42,7 @@ function calculateStep1Progress(formData: Partial<ProjectDetails>): number {
   return (filledFields / totalRequiredFields) * 100;
 }
 
-function calculateStep2Progress(phases: PhaseFormData[]): number {
+function calculateStep2Progress(phases: Phases['phases']): number {
   // Progress is 100% if there's at least one phase with title and deadline
   const hasCompletePhase = phases.some(
     (phase) => phase.title?.trim() !== '' && phase.deadline !== ''

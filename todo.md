@@ -41,6 +41,6 @@
 - [ ] fix styling of kanban board cards
 
 - [x] Styling
-- [ ] Ai generate button
+- [x] Ai generate button
 - [ ] Pass teamMembers to PhaseTaskForm
 - [ ] Go through FacultySelector and TeamMembers selector

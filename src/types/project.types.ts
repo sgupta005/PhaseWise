@@ -38,55 +38,6 @@ export interface IPhaseWithTasks extends Omit<PhaseDocument, 'tasks'> {
   tasks: TaskDocument[];
 }
 
-// Form Data Types
-
-export interface ProjectFormData {
-  title: string;
-  description: string;
-  githubLink: string;
-  projectUrl: string;
-  techStack: string; // Comma-separated string (converted to array before submission)
-  faculty: UserDocument | null; // Selected faculty object
-  teamMembers: UserDocument[]; // Selected team members
-}
-
-export interface TaskFormData {
-  id: string; // Temporary ID for form management (using Date.now() or uuid)
-  task: string;
-  assignedTo: string[]; // Array of selected user IDs from team
-  priority: 'Low Priority' | 'Medium Priority' | 'High Priority' | 'Urgent';
-  dueDate?: string; // ISO date string
-}
-
-export interface PhaseFormData {
-  id: string; // Temporary ID for form management
-  title: string;
-  deadline: string; // ISO date string
-  tasks: TaskFormData[];
-}
-
-export interface CreateProjectPayload {
-  title: string;
-  description?: string;
-  githubLink?: string;
-  projectUrl?: string;
-  techStack: string[];
-  isPublic: boolean;
-  teamMember: string[]; // User IDs
-  faculty: string; // User ID
-  createdBy: string; // Current user ID
-  phases: {
-    title: string;
-    deadline: string;
-    tasks: {
-      task: string;
-      assignedTo: string[];
-      priority: string;
-      dueDate?: string;
-    }[];
-  }[];
-}
-
 // API Response Types
 
 export interface ApiResponse<T> {
@@ -113,14 +64,13 @@ export interface AIGeneratedTask {
 export interface AIGeneratedPhase {
   title: string;
   deadline: string; // Relative deadline like "+7 days" or "+2 weeks"
-  order: number; // Zero-based sequential order
   tasks: AIGeneratedTask[];
 }
 
 export interface AIGenerateRequest {
   title: string;
   description: string;
-  techStack: string[];
+  techStack: string;
 }
 
 export interface AIGenerateResponse {
