@@ -25,7 +25,7 @@ export default async function ProjectPhasesPage({
   }
 
   return (
-    <div className="px-6 py-4">
+    <div className="px-6 py-4 mx-auto max-w-7xl">
       <PhasesPageClient
         projectId={projectId}
         phases={phases}

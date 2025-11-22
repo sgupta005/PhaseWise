@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
@@ -43,12 +43,7 @@ export function EditPhaseForm({
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<EditPhaseFormData>({
+  const { handleSubmit, reset, control } = useForm<EditPhaseFormData>({
     resolver: zodResolver(editPhaseFormSchema),
     defaultValues: {
       title: phase.title,
@@ -102,25 +97,56 @@ export function EditPhaseForm({
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-6 py-4">
-            <Field>
-              <FieldLabel htmlFor="title">
-                Phase Title <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                id="title"
-                placeholder="e.g., Planning & Design"
-                {...register('title')}
-              />
-              <FieldError errors={[errors.title]} />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="deadline">
-                Deadline <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input id="deadline" type="date" {...register('deadline')} />
-              <FieldError errors={[errors.deadline]} />
-            </Field>
+            {/* Phase Title */}
+            <Controller
+              name="title"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    Phase Title <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="e.g., Planning & Design"
+                    autoComplete="off"
+                  />
+                  <FieldDescription>
+                    Provide a concise title for your phase.
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            {/* Phase Deadline */}
+            <Controller
+              name="deadline"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    Deadline <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    type="date"
+                    autoComplete="off"
+                  />
+                  <FieldDescription>
+                    Set a deadline for your phase.
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
             <Field>
               <FieldDescription>

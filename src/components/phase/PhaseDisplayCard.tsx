@@ -70,7 +70,7 @@ export function PhaseDisplayCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'border bg-background rounded-lg transition-all max-w-7xl w-full',
+        'border bg-background rounded-lg transition-all  w-full',
         isCurrentPhase && 'border-primary border-2 shadow-md',
         isLoading && 'opacity-80 dark:opacity-70 pointer-events-none'
       )}

@@ -18,12 +18,12 @@ import {
   TaskFormAllFields,
 } from '@/schemas/task-form.schema';
 import { toast } from 'sonner';
-import { TaskFormStepper } from './TaskFormStepper';
+import { FormStepper } from '@/components/FormStepper';
 import TaskDetailsStep from './TaskDetailsStep';
 import SubtaskStep from './SubtaskStep';
 import { Spinner } from '@/components/ui/spinner';
 
-interface CreateTaskDialogProps {
+interface CreateTaskFormProps {
   projectId: string;
   phases: { _id: string; title: string }[];
   teamMembers: { _id: string; name: string; email: string }[];
@@ -41,7 +41,7 @@ export default function CreateTaskForm({
   onSuccess,
   initialValues,
   triggerButton,
-}: CreateTaskDialogProps) {
+}: CreateTaskFormProps) {
   const [open, setOpen] = useState(false);
   const {
     currentStep,
@@ -50,12 +50,10 @@ export default function CreateTaskForm({
     isFirstStep,
     isLastStep,
     isSubmitting,
-    steps,
     goToNextStep,
     goToPreviousStep,
     updateFormData,
     submitForm,
-    resetForm,
     getCurrentStepSchema,
   } = useTaskForm({
     projectId,
@@ -72,6 +70,11 @@ export default function CreateTaskForm({
       mode: 'onChange',
       defaultValues,
     });
+
+  useEffect(() => {
+    if (!open) return;
+    reset(defaultValues);
+  }, [open, reset, defaultValues]);
 
   useEffect(() => {
     reset(formData);
@@ -97,6 +100,10 @@ export default function CreateTaskForm({
   }
 
   function onPrevious() {
+    // Save current form data before going back
+    const currentFormData = getValues();
+    const updatedData = { ...formData, ...currentFormData };
+    updateFormData(updatedData);
     return goToPreviousStep();
   }
 
@@ -109,22 +116,27 @@ export default function CreateTaskForm({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogTitle className="sr-only">Create Task</DialogTitle>
-        <TaskFormStepper currentStep={currentStep} />
-        {currentStep === 0 && (
-          <TaskDetailsStep
-            getValues={getValues}
-            setValue={setValue}
-            control={control}
-            phases={phases}
-            teamMembers={teamMembers}
-            taskStatuses={taskStatuses}
+      <DialogContent className="max-w-3xl h-[90vh] overflow-y-auto flex flex-col justify-between">
+        <div className="flex flex-col gap-4">
+          <DialogTitle className="sr-only">Create Task</DialogTitle>
+          <FormStepper
+            currentStep={currentStep}
+            steps={['Task Details', 'Subtasks']}
           />
-        )}
-        {currentStep === 1 && (
-          <SubtaskStep setValue={setValue} control={control} />
-        )}
+          {currentStep === 0 && (
+            <TaskDetailsStep
+              getValues={getValues}
+              setValue={setValue}
+              control={control}
+              phases={phases}
+              teamMembers={teamMembers}
+              taskStatuses={taskStatuses}
+            />
+          )}
+          {currentStep === 1 && (
+            <SubtaskStep setValue={setValue} control={control} />
+          )}
+        </div>
         <div className="flex justify-between pt-4">
           <Button
             type="button"

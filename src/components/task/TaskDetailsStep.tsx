@@ -4,7 +4,13 @@ import {
   UseFormGetValues,
   UseFormSetValue,
 } from 'react-hook-form';
-import { Field, FieldGroup, FieldLabel, FieldError } from '../ui/field';
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldError,
+  FieldDescription,
+} from '../ui/field';
 import {
   Select,
   SelectContent,
@@ -66,6 +72,7 @@ export default function TaskDetailsStep({
                 </SelectContent>
               </Select>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              <FieldDescription>Select the phase for the task</FieldDescription>
             </Field>
           )}
         />
@@ -87,6 +94,7 @@ export default function TaskDetailsStep({
                 placeholder="Enter task description"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              <FieldDescription>Enter the task description</FieldDescription>
             </Field>
           )}
         />
@@ -120,6 +128,9 @@ export default function TaskDetailsStep({
                 )}
               </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              <FieldDescription>
+                Assign the task to team members
+              </FieldDescription>
             </Field>
           )}
         />
@@ -146,6 +157,9 @@ export default function TaskDetailsStep({
                 </SelectContent>
               </Select>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              <FieldDescription>
+                Select the status for the task
+              </FieldDescription>
             </Field>
           )}
         />
@@ -170,6 +184,9 @@ export default function TaskDetailsStep({
                 </SelectContent>
               </Select>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              <FieldDescription>
+                Select the priority for the task
+              </FieldDescription>
             </Field>
           )}
         />
@@ -188,6 +205,7 @@ export default function TaskDetailsStep({
                 aria-invalid={fieldState.invalid}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              <FieldDescription>Set the due date for the task</FieldDescription>
             </Field>
           )}
         />

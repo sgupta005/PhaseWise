@@ -21,8 +21,8 @@ import { Badge } from '@/components/ui/badge';
 import { UserDocument } from '@/models/user.model';
 
 interface TeamMemberSelectorProps {
-  value: UserDocument[];
-  onChange: (users: UserDocument[]) => void;
+  value: string[];
+  onChange: (userIds: string[]) => void;
   disabled?: boolean;
   placeholder?: string;
 }
@@ -83,20 +83,16 @@ export function TeamMemberSelector({
   }, [searchQuery]);
 
   const toggleStudent = (student: UserDocument) => {
-    const isSelected = value.some(
-      (s) => s._id.toString() === student._id.toString()
-    );
+    const isSelected = value.some((s) => s === student._id.toString());
     if (isSelected) {
-      onChange(
-        value.filter((s) => s._id.toString() !== student._id.toString())
-      );
+      onChange(value.filter((s) => s !== student._id.toString()));
     } else {
-      onChange([...value, student]);
+      onChange([...value, student._id.toString()]);
     }
   };
 
   const removeStudent = (studentId: string) => {
-    onChange(value.filter((s) => s._id.toString() !== studentId));
+    onChange(value.filter((s) => s !== studentId));
   };
 
   return (
@@ -110,7 +106,7 @@ export function TeamMemberSelector({
             className="w-full justify-between"
             disabled={disabled}
           >
-            {value.length > 0 ? (
+            {value?.length > 0 ? (
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-muted-foreground" />
                 <span className="truncate">
@@ -147,8 +143,8 @@ export function TeamMemberSelector({
                   <CommandEmpty>No students found.</CommandEmpty>
                   <CommandGroup>
                     {students.map((student) => {
-                      const isSelected = value.some(
-                        (s) => s._id.toString() === student._id.toString()
+                      const isSelected = value?.some(
+                        (s) => s === student._id.toString()
                       );
                       return (
                         <CommandItem
@@ -180,18 +176,20 @@ export function TeamMemberSelector({
       </Popover>
 
       {/* Selected Members Display */}
-      {value.length > 0 && (
+      {value?.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {value.map((member) => (
             <Badge
-              key={member._id.toString()}
+              key={member}
               variant="secondary"
               className="pl-3 pr-1 py-1.5"
             >
-              <span className="text-sm">{member.name}</span>
+              <span className="text-sm">
+                {students.find((s) => s._id.toString() === member)?.name}
+              </span>
               <button
                 type="button"
-                onClick={() => removeStudent(member._id.toString())}
+                onClick={() => removeStudent(member)}
                 disabled={disabled}
                 className="ml-2 rounded-full hover:bg-muted p-0.5 transition-colors"
               >

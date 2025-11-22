@@ -20,8 +20,8 @@ import {
 import { UserDocument } from '@/models/user.model';
 
 interface FacultySelectorProps {
-  value: UserDocument | null;
-  onChange: (user: UserDocument | null) => void;
+  value: string;
+  onChange: (userId: string) => void;
   disabled?: boolean;
 }
 
@@ -35,6 +35,8 @@ export function FacultySelector({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const selectedFaculty = faculty.find((f) => f._id.toString() === value);
 
   // Fetch faculty on mount
   useEffect(() => {
@@ -89,10 +91,10 @@ export function FacultySelector({
           className="w-full justify-between"
           disabled={disabled}
         >
-          {value ? (
+          {selectedFaculty ? (
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-muted-foreground" />
-              <span className="truncate">{value.name}</span>
+              <span className="truncate">{selectedFaculty?.name}</span>
             </div>
           ) : (
             <span className="text-muted-foreground">Select faculty...</span>
@@ -129,10 +131,9 @@ export function FacultySelector({
                       value={facultyMember._id.toString()}
                       onSelect={() => {
                         onChange(
-                          value?._id?.toString() ===
-                            facultyMember._id.toString()
-                            ? null
-                            : facultyMember
+                          value === facultyMember._id.toString()
+                            ? ''
+                            : facultyMember._id.toString()
                         );
                         setOpen(false);
                       }}
@@ -140,7 +141,7 @@ export function FacultySelector({
                       <Check
                         className={cn(
                           'mr-2 h-4 w-4',
-                          value?._id === facultyMember._id
+                          value === facultyMember._id.toString()
                             ? 'opacity-100'
                             : 'opacity-0'
                         )}

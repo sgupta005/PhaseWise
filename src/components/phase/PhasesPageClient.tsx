@@ -118,7 +118,7 @@ export function PhasesPageClient({
 
   return (
     <div className="space-y-4 flex flex-col items-center">
-      <div className="flex justify-end w-full max-w-7xl">
+      <div className="flex justify-end w-full">
         <CreatePhaseForm
           projectId={projectId}
           teamMembers={project.teamMember}

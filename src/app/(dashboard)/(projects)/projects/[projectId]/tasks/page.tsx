@@ -38,7 +38,7 @@ export default async function ProjectTasksPage({
   const { phases, teamMembers, taskStatuses } = dataForTaskForm.data;
 
   return (
-    <div className="px-6 py-4 flex flex-col">
+    <div className="py-4 px-6 flex flex-col max-w-7xl mx-auto">
       <TaskFilters project={project} />
       <Tabs defaultValue="table">
         <TabsList>

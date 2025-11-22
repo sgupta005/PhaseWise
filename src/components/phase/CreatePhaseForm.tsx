@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
@@ -11,6 +11,12 @@ import {
   DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Field,
+  FieldLabel,
+  FieldError,
+  FieldDescription,
+} from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Loader2 } from 'lucide-react';
@@ -21,8 +27,7 @@ import {
   createPhaseFormSchema,
   type CreatePhaseFormData,
 } from '@/schemas/phase-form.schema';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
-import { TaskFormCard } from './TaskFormCard';
+import PhaseTaskForm from './PhaseTaskForm';
 
 interface CreatePhaseDialogProps {
   projectId: string;
@@ -36,32 +41,19 @@ export function CreatePhaseForm({
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<CreatePhaseFormData>({
+  const {
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<CreatePhaseFormData>({
     resolver: zodResolver(createPhaseFormSchema),
     defaultValues: {
       title: '',
       deadline: '',
-      tasks: [
-        {
-          task: '',
-          assignedTo: [],
-          priority: 'Medium Priority',
-        },
-      ],
+      tasks: [],
     },
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    control,
-  } = form;
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'tasks',
   });
 
   async function onSubmit(data: CreatePhaseFormData) {
@@ -99,61 +91,66 @@ export function CreatePhaseForm({
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-6 py-4">
-            <Field>
-              <FieldLabel htmlFor="title">
-                Phase Title <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                id="title"
-                placeholder="e.g., Planning & Design"
-                {...register('title')}
-              />
-              <FieldError errors={[errors.title]} />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="deadline">
-                Deadline <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input id="deadline" type="date" {...register('deadline')} />
-              <FieldError errors={[errors.deadline]} />
-            </Field>
+            {/* Phase Title */}
+            <Controller
+              name="title"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    Phase Title <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="e.g., Planning & Design"
+                    autoComplete="off"
+                  />
+                  <FieldDescription>
+                    Provide a concise title for your phase.
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            {/* Phase Deadline */}
+            <Controller
+              name="deadline"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    Deadline <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    type="date"
+                    autoComplete="off"
+                  />
+                  <FieldDescription>
+                    Set a deadline for your phase.
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <FieldLabel>Tasks (optional)</FieldLabel>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    append({
-                      task: '',
-                      assignedTo: [],
-                      priority: 'Medium Priority',
-                    })
-                  }
-                  disabled={isSubmitting}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Task
-                </Button>
-              </div>
+              <PhaseTaskForm
+                control={control}
+                setValue={setValue}
+                teamMembers={teamMembers}
+                tasksFieldPath="tasks"
+              />
 
               {errors.tasks && <FieldError errors={[errors.tasks]} />}
-
-              <div className="space-y-4">
-                {fields.map((field, index) => (
-                  <TaskFormCard
-                    key={field.id}
-                    index={index}
-                    form={form}
-                    teamMembers={teamMembers}
-                    onRemove={remove}
-                    isSubmitting={isSubmitting}
-                  />
-                ))}
-              </div>
             </div>
           </div>
 

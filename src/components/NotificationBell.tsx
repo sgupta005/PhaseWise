@@ -20,7 +20,6 @@ import {
   markAllNotificationAsRead,
   markNotificationAsRead,
 } from '@/actions/notification.actions';
-import { cn } from '@/lib/utils';
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);

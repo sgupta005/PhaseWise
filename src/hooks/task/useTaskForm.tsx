@@ -4,7 +4,7 @@ import {
   TaskFormStepData,
   TaskFormAllFields,
 } from '@/schemas/task-form.schema';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { createTaskAction } from '@/actions/task.actions';
 import { toast } from 'sonner';
 
@@ -37,8 +37,8 @@ export function useTaskForm({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const defaultValues: Partial<TaskFormStepData> =
-    currentStep === 0
+  const defaultValues = useMemo(() => {
+    return currentStep === 0
       ? {
           phaseId: '',
           task: '',
@@ -51,6 +51,7 @@ export function useTaskForm({
       : {
           subtasks: [],
         };
+  }, [currentStep, initialValues]);
 
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;

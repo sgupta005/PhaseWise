@@ -31,6 +31,16 @@
 - [x] fix width of phase cards
 - [x] go through code phase.actions.ts
 - [x] should router.refresh() be added
-- [ ] handle indexing of phases
-- [ ] handle phase number before title
+- [x] handle indexing of phases
+- [x] handle phase number before title
 - [ ] In Create project form every phase requires atleast one task (make tasks optional)
+
+- [ ] create wrapper for server actions
+- [ ] clean up all server actions by using this wrapper.
+- [ ] whenever a task is assigned no matter from which part of the ui , notification logic should run from a central location.
+- [ ] fix styling of kanban board cards
+
+- [x] Styling
+- [ ] Ai generate button
+- [ ] Pass teamMembers to PhaseTaskForm
+- [ ] Go through FacultySelector and TeamMembers selector

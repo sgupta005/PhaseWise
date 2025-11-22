@@ -38,18 +38,24 @@ const taskSchema = new Schema(
       ref: User,
       required: true,
     },
-    subtasks: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: Subtask,
-      },
-    ],
-    comments: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: Comment,
-      },
-    ],
+    subtasks: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: Subtask,
+        },
+      ],
+      default: [],
+    },
+    comments: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: Comment,
+        },
+      ],
+      default: [],
+    },
     completed: {
       type: Boolean,
       default: false,
