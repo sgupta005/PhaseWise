@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const role = searchParams.get('role');
   const name = searchParams.get('name') || '';
+  const ids = searchParams.get('ids') || '';
   const page = parseInt(searchParams.get('page') || '1');
   const limit = parseInt(searchParams.get('limit') || '30');
 
@@ -23,6 +24,20 @@ export async function GET(request: NextRequest) {
 
   try {
     let results;
+
+    // If specific IDs are provided, fetch those users directly
+    if (ids) {
+      const idArray = ids.split(',').filter(Boolean);
+      results = await User.find({
+        _id: { $in: idArray },
+        role: role.toLowerCase(),
+      }).select('_id name email');
+
+      return NextResponse.json({
+        success: true,
+        data: results,
+      });
+    }
 
     if (name) {
       results = await User.aggregate([

@@ -39,12 +39,7 @@ export function TeamMemberSelector({
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch students on mount
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  const fetchStudents = async (search?: string) => {
+  async function fetchStudents(search?: string) {
     setLoading(true);
     setError(null);
     try {
@@ -67,7 +62,7 @@ export function TeamMemberSelector({
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   // Debounced search
   useEffect(() => {
@@ -82,14 +77,14 @@ export function TeamMemberSelector({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const toggleStudent = (student: UserDocument) => {
+  function toggleStudent(student: UserDocument) {
     const isSelected = value.some((s) => s === student._id.toString());
     if (isSelected) {
       onChange(value.filter((s) => s !== student._id.toString()));
     } else {
       onChange([...value, student._id.toString()]);
     }
-  };
+  }
 
   const removeStudent = (studentId: string) => {
     onChange(value.filter((s) => s !== studentId));

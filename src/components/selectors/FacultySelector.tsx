@@ -38,12 +38,7 @@ export function FacultySelector({
 
   const selectedFaculty = faculty.find((f) => f._id.toString() === value);
 
-  // Fetch faculty on mount
-  useEffect(() => {
-    fetchFaculty();
-  }, []);
-
-  const fetchFaculty = async (search?: string) => {
+  async function fetchFaculty(search?: string) {
     setLoading(true);
     setError(null);
     try {
@@ -66,7 +61,7 @@ export function FacultySelector({
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   // Debounced search
   useEffect(() => {

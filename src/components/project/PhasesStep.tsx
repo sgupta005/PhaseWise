@@ -6,6 +6,7 @@ import {
   UseFormReturn,
 } from 'react-hook-form';
 import { useWatch, UseFormSetValue } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Field,
@@ -23,6 +24,7 @@ import {
 import { ProjectFormStepData, Phases } from '@/schemas/project-form.schema';
 import PhaseTaskForm from '@/components/phase/PhaseTaskForm';
 import AIPhaseGenerator from './AIPhaseGenerator';
+import { UserDocument } from '@/models/user.model';
 
 interface PhasesStepProps {
   errors: FieldErrors<Phases>;
@@ -37,16 +39,53 @@ export default function PhasesStep({
   control,
   setValue,
 }: PhasesStepProps) {
+  const [selectedTeamMembers, setSelectedTeamMembers] = useState<
+    UserDocument[]
+  >([]);
+  const [isLoadingMembers, setIsLoadingMembers] = useState(false);
+
   const phases = useWatch({
     control,
     name: 'phases',
     defaultValue: [],
   });
 
-  const [title, description, techStack] = useWatch({
+  const [title, description, techStack, teamMemberIds] = useWatch({
     control,
-    name: ['title', 'description', 'techStack'],
+    name: ['title', 'description', 'techStack', 'teamMemberIds'],
   });
+
+  /*fetch name,email of team members selected in previous step
+  so they can be passed to PhaseTaskForm where they can be assigned to tasks */
+  useEffect(() => {
+    async function fetchTeamMembers() {
+      if (!teamMemberIds || teamMemberIds.length === 0) {
+        setSelectedTeamMembers([]);
+        return;
+      }
+
+      setIsLoadingMembers(true);
+      try {
+        // Fetch users by their specific IDs
+        const params = new URLSearchParams({
+          role: 'student',
+          ids: teamMemberIds.join(','),
+        });
+        const response = await fetch(`/api/users?${params.toString()}`);
+        const data = await response.json();
+
+        if (data.success) {
+          setSelectedTeamMembers(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching team members:', error);
+      } finally {
+        setIsLoadingMembers(false);
+      }
+    }
+
+    fetchTeamMembers();
+  }, [teamMemberIds]);
 
   function handleAddPhase() {
     const currentPhases = phases || [];
@@ -187,7 +226,8 @@ export default function PhasesStep({
                     <PhaseTaskForm
                       control={control}
                       setValue={setValue}
-                      teamMembers={[]} // TODO: Fetch team members
+                      teamMembers={selectedTeamMembers}
+                      isLoadingMembers={isLoadingMembers}
                       tasksFieldPath={`phases.${index}.tasks`}
                     />
                   </div>

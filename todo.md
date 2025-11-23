@@ -37,10 +37,11 @@
 
 - [ ] create wrapper for server actions
 - [ ] clean up all server actions by using this wrapper.
+- [ ] clean up route handlers
 - [ ] whenever a task is assigned no matter from which part of the ui , notification logic should run from a central location.
 - [ ] fix styling of kanban board cards
 
 - [x] Styling
 - [x] Ai generate button
-- [ ] Pass teamMembers to PhaseTaskForm
-- [ ] Go through FacultySelector and TeamMembers selector
+- [x] Pass teamMembers to PhaseTaskForm
+- [x] Go through FacultySelector and TeamMembers selector

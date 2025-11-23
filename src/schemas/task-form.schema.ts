@@ -11,11 +11,13 @@ export const taskDetailsSchema = z.object({
 });
 
 export const subtaskSchema = z.object({
-  subtasks: z.array(
-    z.object({
-      title: z.string().min(3, 'Subtask title must be at least 3 characters'),
-    })
-  ),
+  subtasks: z
+    .array(
+      z.object({
+        title: z.string().min(3, 'Subtask title must be at least 3 characters'),
+      })
+    )
+    .optional(),
 });
 
 export const taskFormSchema = z.object({

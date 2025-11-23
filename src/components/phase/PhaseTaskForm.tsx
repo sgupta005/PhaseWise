@@ -34,6 +34,7 @@ interface PhaseTaskFormProps<
   control: Control<TFormData>;
   setValue: UseFormSetValue<TFormData>;
   teamMembers: UserDocument[];
+  isLoadingMembers?: boolean;
   tasksFieldPath: TField;
 }
 
@@ -44,6 +45,7 @@ export default function PhaseTaskForm<
   control,
   setValue,
   teamMembers,
+  isLoadingMembers = false,
   tasksFieldPath,
 }: PhaseTaskFormProps<TFormData, TField>) {
   const watched = useWatch<TFormData, TField>({
@@ -174,28 +176,48 @@ export default function PhaseTaskForm<
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>Assigned To</FieldLabel>
-                  <div className="flex flex-wrap gap-2">
-                    {teamMembers.map((member) => (
-                      <Badge
-                        key={member._id.toString()}
-                        className="cursor-pointer"
-                        onClick={() =>
-                          field.onChange([
-                            ...(field.value || []),
-                            member._id.toString(),
-                          ])
-                        }
-                        variant={
-                          (field.value?.includes(member._id.toString()) ??
-                          false)
-                            ? 'default'
-                            : 'outline'
-                        }
-                      >
-                        {member.name}
-                      </Badge>
-                    ))}
-                  </div>
+                  {isLoadingMembers ? (
+                    <div className="text-sm text-muted-foreground py-2">
+                      Loading team members...
+                    </div>
+                  ) : teamMembers.length === 0 ? (
+                    <div className="text-sm text-muted-foreground py-2">
+                      No team members selected.
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {teamMembers.map((member) => {
+                        const isAssigned =
+                          field.value?.includes(member._id.toString()) ?? false;
+                        return (
+                          <Badge
+                            key={member._id.toString()}
+                            className="cursor-pointer"
+                            onClick={() => {
+                              const currentAssignees = field.value || [];
+                              if (isAssigned) {
+                                // Remove member
+                                field.onChange(
+                                  currentAssignees.filter(
+                                    (id: string) => id !== member._id.toString()
+                                  )
+                                );
+                              } else {
+                                // Add member
+                                field.onChange([
+                                  ...currentAssignees,
+                                  member._id.toString(),
+                                ]);
+                              }
+                            }}
+                            variant={isAssigned ? 'default' : 'outline'}
+                          >
+                            {member.name}
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                  )}
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
