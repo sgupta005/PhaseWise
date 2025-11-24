@@ -44,30 +44,32 @@ export default function KanbanCard({ task, id }: KanbanCardProps) {
       <Link href={`tasks/${task._id.toString()}`}>
         <Card
           className={cn(
-            'cursor-grab active:cursor-grabbing',
+            'cursor-grab active:cursor-grabbing h-[228px]',
             isDragging && 'opacity-50'
           )}
         >
-          <CardContent className="flex flex-col space-y-2">
-            <Badge variant="outline" className="w-full">
-              <span className="text-xs truncate">{task.phaseTitle}</span>
-            </Badge>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className={priorityInfo.color}>
-                {priorityInfo.text}
+          <CardContent className="flex flex-col space-y-2 h-full justify-between">
+            <div className="flex flex-col gap-2">
+              <Badge variant="outline" className="w-full">
+                <span className="text-xs truncate">{task.phaseTitle}</span>
               </Badge>
-              <Badge variant="outline" className={statusInfo.color}>
-                <statusInfo.icon className="size-4" />
-                {statusInfo.text}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              {task.dueDate && (
-                <Badge variant="outline" className="text-xs">
-                  <CalendarIcon className="size-4" />
-                  {formatDueDate(task.dueDate)}
+              <div className="flex items-center gap-1">
+                <Badge variant="outline" className={priorityInfo.color}>
+                  {priorityInfo.text}
                 </Badge>
-              )}
+                <Badge variant="outline" className={statusInfo.color}>
+                  <statusInfo.icon className="size-4" />
+                  {statusInfo.text}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-1">
+                {task.dueDate && (
+                  <Badge variant="outline" className="text-xs">
+                    <CalendarIcon className="size-4" />
+                    {formatDueDate(task.dueDate)}
+                  </Badge>
+                )}
+              </div>
             </div>
 
             <div className="text-sm font-medium line-clamp-3">
