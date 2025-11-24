@@ -21,11 +21,10 @@
 - [x] Add timestamps to models?
 - [ ] Fix console errors in kanban
 - [ ] Add postioning logic in kanban
-- [ ] Add colors to statuses, priorities and phases?
+- [x] Add colors to statuses, priorities and phases?
 - [x] Add create task button in both tables and kanban board
-- [ ] Add due Date filter in tasks page
 
-- [ ] Task form validation shows errors inconsistently
+- [x] Task form validation shows errors inconsistently
 
 - [x] set current phase otimistically
 - [x] fix width of phase cards
@@ -33,11 +32,9 @@
 - [x] should router.refresh() be added
 - [x] handle indexing of phases
 - [x] handle phase number before title
-- [ ] In Create project form every phase requires atleast one task (make tasks optional)
+- [x] In Create project form every phase requires atleast one task (make tasks optional)
 
-- [ ] create wrapper for server actions
-- [ ] clean up all server actions by using this wrapper.
-- [ ] clean up route handlers
+- [ ] fix notification sending logic
 - [ ] whenever a task is assigned no matter from which part of the ui , notification logic should run from a central location.
 - [ ] fix styling of kanban board cards
 

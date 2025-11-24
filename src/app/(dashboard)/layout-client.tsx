@@ -32,7 +32,7 @@ export default function DashboardLayoutClient({
     <>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex sticky top-0 pt-2 bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear">
+        <header className="flex sticky top-0 py-2 z-10 bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator

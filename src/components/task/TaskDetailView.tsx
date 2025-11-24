@@ -1,14 +1,13 @@
 import { ITaskDetailed } from '@/types/task.types';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { formatPriority } from '@/lib/task/formatters';
+import { formatPriority, formatStatus } from '@/lib/task/formatters';
 import TaskDetailHeader from './TaskDetailHeader';
 import TaskDetailSidebar from './TaskDetailSidebar';
 import SubtasksList from './SubtasksList';
 import CommentsList from './CommentsList';
 import { cn } from '@/lib/utils';
 import { getProjectDataForTaskForm } from '@/db/project.db';
-import { Check, CircleCheckBig } from 'lucide-react';
 
 export type FormattedComment = {
   _id: string;
@@ -62,6 +61,7 @@ export default async function TaskDetailView({
   };
 
   const priorityInfo = formatPriority(task.priority);
+  const statusInfo = formatStatus(task.status);
 
   const formattedComments: FormattedComment[] =
     task?.comments?.map((comment) => {
@@ -94,7 +94,6 @@ export default async function TaskDetailView({
     <div className="h-[calc(100vh-64px)] flex flex-col px-6 py-4">
       <div className="flex-shrink-0 mb-4">
         <TaskDetailHeader
-          isCompleted={task.completed}
           projectId={projectId}
           taskId={task._id.toString()}
           currentPhaseId={currentPhaseId}
@@ -118,21 +117,16 @@ export default async function TaskDetailView({
               >
                 {priorityInfo.text}
               </Badge>
-              <Badge variant="outline" className="text-sm">
-                {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+              <Badge
+                variant="outline"
+                className={cn(statusInfo.color, 'text-sm')}
+              >
+                <statusInfo.icon />
+                {statusInfo.text}
               </Badge>
               {phaseTitle && (
                 <Badge variant="outline" className="text-sm">
                   {phaseTitle}
-                </Badge>
-              )}
-              {task.completed && (
-                <Badge
-                  variant="outline"
-                  className="text-sm dark:bg-green-900 dark:text-green-300 bg-green-100 text-green-900 gap-2"
-                >
-                  <CircleCheckBig className="size-4" />
-                  Completed
                 </Badge>
               )}
             </div>

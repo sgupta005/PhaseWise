@@ -9,7 +9,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { getInitials } from '@/lib/utils/avatar';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { formatDueDate, formatPriority } from '@/lib/task/formatters';
+import {
+  formatDueDate,
+  formatPriority,
+  formatStatus,
+} from '@/lib/task/formatters';
 import { CalendarIcon, Check } from 'lucide-react';
 
 interface KanbanCardProps {
@@ -33,6 +37,7 @@ export default function KanbanCard({ task, id }: KanbanCardProps) {
   };
 
   const priorityInfo = formatPriority(task.priority);
+  const statusInfo = formatStatus(task.status);
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
@@ -51,8 +56,9 @@ export default function KanbanCard({ task, id }: KanbanCardProps) {
               <Badge variant="outline" className={priorityInfo.color}>
                 {priorityInfo.text}
               </Badge>
-              <Badge variant="outline" className="text-xs">
-                {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+              <Badge variant="outline" className={statusInfo.color}>
+                <statusInfo.icon className="size-4" />
+                {statusInfo.text}
               </Badge>
             </div>
             <div className="flex items-center gap-2">
@@ -60,11 +66,6 @@ export default function KanbanCard({ task, id }: KanbanCardProps) {
                 <Badge variant="outline" className="text-xs">
                   <CalendarIcon className="size-4" />
                   {formatDueDate(task.dueDate)}
-                </Badge>
-              )}
-              {task.completed && (
-                <Badge variant="outline" className="rounded-full p-1">
-                  <Check className="dark:text-green-200 text-green-500" />
                 </Badge>
               )}
             </div>

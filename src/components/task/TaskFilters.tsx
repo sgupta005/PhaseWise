@@ -61,7 +61,6 @@ export default function TaskFilters({
   const currentPriority = searchParams.get('priority') || 'all';
   const currentCreatedBy = searchParams.get('createdBy') || 'all';
   const currentStatus = searchParams.get('status') || 'all';
-  const currentCompleted = searchParams.get('completed') || 'all';
 
   return (
     <div className="flex gap-2 mb-4">
@@ -181,23 +180,6 @@ export default function TaskFilters({
                 {status.name}
               </SelectItem>
             ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <Select
-        value={currentCompleted}
-        onValueChange={(value) => updateSearchParam('completed', value)}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Completed" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Completed Status</SelectLabel>
-            <SelectItem value="all">Both Completed Statuses</SelectItem>
-            <SelectItem value="true">Completed</SelectItem>
-            <SelectItem value="false">Not Completed</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>

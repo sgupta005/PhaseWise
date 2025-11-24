@@ -29,14 +29,6 @@ export async function resolveFilters(
     typeof resolvedSearchParams.search === 'string'
       ? resolvedSearchParams.search.toLowerCase()
       : undefined;
-  const completedFilter =
-    typeof resolvedSearchParams.completed === 'string'
-      ? resolvedSearchParams.completed === 'true'
-        ? true
-        : resolvedSearchParams.completed === 'false'
-          ? false
-          : undefined
-      : undefined;
 
   return {
     phaseFilter,
@@ -45,7 +37,6 @@ export async function resolveFilters(
     createdByFilter,
     statusFilter,
     searchQuery,
-    completedFilter,
   };
 }
 

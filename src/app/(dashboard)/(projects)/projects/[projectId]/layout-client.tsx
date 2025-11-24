@@ -55,14 +55,14 @@ export default function ProjectLayoutClient({
       }
       if (secondLastSegment === 'tasks') fetchTask();
     },
-    [lastSegment]
+    [lastSegment, secondLastSegment]
   );
 
   return (
     <>
       <ProjectSidebar projectId={projectId ?? ''} />
       <SidebarInset>
-        <header className="flex sticky pt-2 z-10 top-0 bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear">
+        <header className="flex sticky py-2 z-10 top-0 bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator

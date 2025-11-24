@@ -6,7 +6,11 @@ import { getInitials } from '@/lib/utils/avatar';
 import { ITaskWithTeam } from '@/types/task.types';
 import { ArrowUpDown, Check, Minus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { formatDueDate, formatPriority } from '@/lib/task/formatters';
+import {
+  formatDueDate,
+  formatPriority,
+  formatStatus,
+} from '@/lib/task/formatters';
 
 export const columns: ColumnDef<ITaskWithTeam>[] = [
   {
@@ -74,27 +78,15 @@ export const columns: ColumnDef<ITaskWithTeam>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => (
-      <Badge variant="outline">
-        {row.original.status.charAt(0).toUpperCase() +
-          row.original.status.slice(1)}
-      </Badge>
-    ),
-  },
-  {
-    accessorKey: 'completed',
-    header: 'Completed',
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center w-full">
-        <Badge variant="outline" className="rounded-full p-1">
-          {row.original.completed ? (
-            <Check className="dark:text-green-200 text-green-500" />
-          ) : (
-            <Minus className="dark:text-red-200 text-red-500" />
-          )}
+    cell: ({ row }) => {
+      const statusInfo = formatStatus(row.original.status);
+      return (
+        <Badge variant="outline" className={statusInfo.color}>
+          <statusInfo.icon />
+          {statusInfo.text}
         </Badge>
-      </div>
-    ),
+      );
+    },
   },
   {
     accessorKey: 'phaseTitle',

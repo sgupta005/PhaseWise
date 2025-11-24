@@ -1,3 +1,45 @@
+import { CheckCircle, Circle, Loader2, LucideIcon } from 'lucide-react';
+
+export function formatStatus(status: string): {
+  text: string;
+  color: string;
+  icon: LucideIcon;
+} {
+  // Normalize status to handle both IDs and names
+  const normalizedStatus = status.toLowerCase().trim();
+
+  const statusMap: Record<
+    string,
+    { text: string; color: string; icon: LucideIcon }
+  > = {
+    done: {
+      text: 'Done',
+      color:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+      icon: CheckCircle,
+    },
+    todo: {
+      text: 'Todo',
+      color: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+      icon: Circle,
+    },
+    'in-progress': {
+      text: 'In Progress',
+      color:
+        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+      icon: Loader2,
+    },
+  };
+
+  return (
+    statusMap[normalizedStatus] || {
+      text: status,
+      color: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+      icon: Circle,
+    }
+  );
+}
+
 export function formatPriority(priority: string) {
   const priorityMap: Record<string, { text: string; color: string }> = {
     'Low Priority': {
@@ -27,7 +69,6 @@ export function formatPriority(priority: string) {
     }
   );
 }
-
 
 export function formatDueDate(
   date: Date | string | null | undefined

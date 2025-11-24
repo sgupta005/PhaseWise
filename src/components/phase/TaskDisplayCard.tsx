@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { IPopulatedTask } from '@/types/project.types';
-import { formatPriority } from '@/lib/task/formatters';
+import { formatPriority, formatStatus } from '@/lib/task/formatters';
 
 export function TaskDisplayCard({
   task,
@@ -13,6 +13,7 @@ export function TaskDisplayCard({
   projectId: string;
 }) {
   const priorityInfo = formatPriority(task.priority);
+  const statusInfor = formatStatus(task.status);
 
   return (
     <Link
@@ -25,7 +26,7 @@ export function TaskDisplayCard({
           <p
             className={cn(
               'text-sm font-medium',
-              task.completed && 'line-through text-muted-foreground'
+              task.status === 'done' && 'line-through text-muted-foreground'
             )}
           >
             {task.task}
@@ -41,14 +42,10 @@ export function TaskDisplayCard({
           <Badge variant="outline" className={priorityInfo.color}>
             {priorityInfo.text}
           </Badge>
-          {task.completed && (
-            <Badge
-              variant="default"
-              className="text-xs dark:bg-green-900 dark:text-green-300 bg-green-100 text-green-900"
-            >
-              ✓ Done
-            </Badge>
-          )}
+          <Badge variant="outline" className={statusInfor.color}>
+            <statusInfor.icon />
+            {statusInfor.text}
+          </Badge>
         </div>
       </div>
     </Link>
