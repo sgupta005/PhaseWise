@@ -92,7 +92,26 @@ export function ProjectCard({ project }: { project: IProjectWithTeam }) {
           </div>
         </CardContent>
 
-        <CardFooter className="pt-0">
+        <CardFooter className="pt-0 flex flex-col gap-3 w-full items-start">
+          {/* Faculty */}
+          {project.faculty && (
+            <div className="flex items-center gap-2">
+              <Avatar className="size-7 border-2 border-card">
+                <AvatarImage
+                  src={project.faculty?.image}
+                  alt={project.faculty?.name}
+                />
+                <AvatarFallback className="text-xs">
+                  {getInitials(project.faculty?.name)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-xs text-muted-foreground">
+                {project.faculty.name}{' '}
+                <span className="text-muted-foreground/70">(Faculty)</span>
+              </span>
+            </div>
+          )}
+
           {/* Team Members */}
           {project.teamMember && project.teamMember.length > 0 && (
             <div className="flex items-center gap-2">
@@ -102,10 +121,7 @@ export function ProjectCard({ project }: { project: IProjectWithTeam }) {
                     key={member._id.toString()}
                     className="size-7 border-2 border-card"
                   >
-                    <AvatarImage
-                      src={`/avatars/${member._id.toString()}.jpg`}
-                      alt={member.name}
-                    />
+                    <AvatarImage src={member?.image} alt={member?.name} />
                     <AvatarFallback className="text-xs">
                       {getInitials(member.name)}
                     </AvatarFallback>
