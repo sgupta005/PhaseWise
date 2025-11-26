@@ -94,20 +94,31 @@ export function ProjectCard({ project }: { project: IProjectWithTeam }) {
 
         <CardFooter className="pt-0 flex flex-col gap-3 w-full items-start">
           {/* Faculty */}
-          {project.faculty && (
+          {project.faculty && project.faculty.length > 0 && (
             <div className="flex items-center gap-2">
-              <Avatar className="size-7 border-2 border-card">
-                <AvatarImage
-                  src={project.faculty?.image}
-                  alt={project.faculty?.name}
-                />
-                <AvatarFallback className="text-xs">
-                  {getInitials(project.faculty?.name)}
-                </AvatarFallback>
-              </Avatar>
+              <div className="flex -space-x-2">
+                {project.faculty.slice(0, 2).map((faculty) => (
+                  <Avatar
+                    key={faculty._id.toString()}
+                    className="size-7 border-2 border-card"
+                  >
+                    <AvatarImage src={faculty?.image} alt={faculty?.name} />
+                    <AvatarFallback className="text-xs">
+                      {getInitials(faculty?.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                ))}
+                {project.faculty.length > 2 && (
+                  <Avatar className="size-7 border-2 border-card">
+                    <AvatarFallback className="text-xs bg-muted">
+                      +{project.faculty.length - 2}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+              </div>
               <span className="text-xs text-muted-foreground">
-                {project.faculty.name}{' '}
-                <span className="text-muted-foreground/70">(Faculty)</span>
+                {project.faculty.length}{' '}
+                {project.faculty.length === 1 ? 'mentor' : 'mentors'}
               </span>
             </div>
           )}

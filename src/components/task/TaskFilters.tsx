@@ -147,12 +147,14 @@ export default function TaskFilters({
           <SelectGroup>
             <SelectLabel>Created By</SelectLabel>
             <SelectItem value="all">All Creators</SelectItem>
-            <SelectItem
-              key={project.faculty._id.toString()}
-              value={project.faculty._id.toString()}
-            >
-              {project.faculty.name} (Faculty)
-            </SelectItem>
+            {project.faculty?.map((faculty) => (
+              <SelectItem
+                key={faculty._id.toString()}
+                value={faculty._id.toString()}
+              >
+                {faculty.name} (Faculty)
+              </SelectItem>
+            ))}
             {project.teamMember.map((member) => (
               <SelectItem
                 key={member._id.toString()}

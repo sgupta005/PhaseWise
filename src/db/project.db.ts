@@ -180,8 +180,11 @@ export async function getProjectDataForTaskForm(projectId: string) {
       title: phase.title,
     }));
 
-    // Extract team members
-    const teamMembers = [...(project.teamMember || []), project.faculty]
+    // Extract team members (students + faculty)
+    const teamMembers = [
+      ...(project.teamMember || []),
+      ...(project.faculty || []),
+    ]
       .filter(Boolean)
       .map((member) => ({
         _id: member._id.toString(),

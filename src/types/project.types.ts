@@ -8,7 +8,7 @@ import { PhaseDocument } from '@/models/phase.model';
 export interface IProjectWithTeam
   extends Omit<ProjectDocument, 'teamMember' | 'faculty' | 'createdBy'> {
   teamMember: UserDocument[];
-  faculty: UserDocument;
+  faculty: UserDocument[];
   createdBy: UserDocument;
 }
 
@@ -18,7 +18,7 @@ export interface IProjectPopulated
     'teamMember' | 'faculty' | 'createdBy' | 'phases'
   > {
   teamMember: UserDocument[];
-  faculty: UserDocument;
+  faculty: UserDocument[];
   createdBy: UserDocument;
   phases: IPhaseWithPopulatedTasks[];
 }

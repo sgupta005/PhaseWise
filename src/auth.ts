@@ -25,16 +25,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     async jwt({ token, user }) {
-      // Add user id to token when user is available (on sign in)
+      // Add user id and role to token when user is available (on sign in)
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     session({ session, token }) {
-      // Add user id from token to session
+      // Add user id and role from token to session
       if (token.id && session.user) {
         session.user.id = token.id as string;
+        session.user.role = token.role;
       }
       return session;
     },

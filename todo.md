@@ -42,3 +42,9 @@
 - [x] Ai generate button
 - [x] Pass teamMembers to PhaseTaskForm
 - [x] Go through FacultySelector and TeamMembers selector
+
+- [ ] show pending invitations on teams page
+- [x] what to show when user clicks on invite?
+- [ ] automatically add project creator to team member or faculty list when creating project
+- [ ] AddMemberModal closes immediately on button click, it should close after action is completed
+- [ ] invitationHandled is not working as expected

@@ -8,7 +8,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { FacultySelector } from '../selectors/FacultySelector';
+import { MultiFacultySelector } from '../selectors/MultiFacultySelector';
 import { TeamMemberSelector } from '../selectors/TeamMemberSelector';
 import { Textarea } from '../ui/textarea';
 
@@ -137,18 +137,17 @@ export default function ProjectDetailsStep({
         />
         {/* Faculty Selector */}
         <Controller
-          name="facultyId"
+          name="facultyIds"
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>
-                Faculty Mentor
-                <span className="text-destructive">*</span>
+                Faculty Mentors
               </FieldLabel>
-              <FacultySelector value={field.value} onChange={field.onChange} />
+              <MultiFacultySelector value={field.value || []} onChange={field.onChange} />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               <FieldDescription>
-                Provide a detailed description for your project.
+                Optionally select faculty mentors to oversee the project.
               </FieldDescription>
             </Field>
           )}

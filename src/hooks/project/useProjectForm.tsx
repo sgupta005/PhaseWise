@@ -34,7 +34,7 @@ export function useProjectForm() {
           techStack: '',
           githubLink: undefined,
           projectUrl: undefined,
-          facultyId: '',
+          facultyIds: [],
           teamMemberIds: [],
         }
       : {
@@ -67,7 +67,7 @@ export function useProjectForm() {
         techStack: data.techStack,
         githubLink: data.githubLink,
         projectUrl: data.projectUrl,
-        facultyId: data.facultyId,
+        facultyIds: data.facultyIds,
         teamMemberIds: data.teamMemberIds,
         phases: data.phases,
       };

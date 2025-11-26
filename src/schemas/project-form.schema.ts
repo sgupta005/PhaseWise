@@ -11,7 +11,7 @@ export const projectDetailsSchema = z.object({
     .min(1, 'Please add at least one technology to the tech stack.'),
   githubLink: z.url('Please enter a valid URL').optional(),
   projectUrl: z.url('Please enter a valid URL').optional(),
-  facultyId: z.string().min(1, 'Please select a faculty member.'),
+  facultyIds: z.array(z.string()).default([]),
   teamMemberIds: z
     .array(z.string())
     .min(1, 'Please select at least one team member.'),

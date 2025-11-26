@@ -20,14 +20,24 @@ import {
   markAllNotificationAsRead,
   markNotificationAsRead,
 } from '@/actions/notification.actions';
+import { ProjectInviteNotification } from './notifications/ProjectInviteNotification';
+
+export interface NotificationWithMetadata extends NotificationDocument {
+  metadata?: {
+    invitationId?: string;
+    invitedBy?: string;
+    projectId?: string;
+    role?: 'faculty' | 'student';
+  };
+}
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [notifications, setNotifications] = useState<NotificationDocument[]>(
-    []
-  );
+  const [notifications, setNotifications] = useState<
+    NotificationWithMetadata[]
+  >([]);
 
   useEffect(() => {
     fetchUnreadCount();
@@ -56,12 +66,33 @@ export function NotificationBell() {
     try {
       const response = await fetch('/api/notifications');
       const result = await response.json();
-      setNotifications(result.data);
+      setNotifications(result.data || []);
+      console.log('Notifications fetched:', result.data);
     } catch (error) {
       console.error('Failed to fetch notifications:', error);
     } finally {
       setIsLoading(false);
     }
+  }
+
+  async function handleRegularNotificationClick(
+    notification: NotificationWithMetadata
+  ) {
+    if (!notification.read) {
+      const result = await markNotificationAsRead(notification._id.toString());
+      if (result.success) {
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n._id === notification._id ? { ...n, read: true } : n
+          )
+        );
+        setUnreadCount((prev) => Math.max(prev - 1, 0));
+      }
+    }
+  }
+
+  function isProjectInvite(notification: NotificationWithMetadata): boolean {
+    return notification.type === 'PROJECT_INVITE';
   }
 
   return (
@@ -118,45 +149,47 @@ export function NotificationBell() {
           ) : (
             <div className="divide-y">
               {notifications.map((notification) => (
-                <Link
-                  className="block"
-                  onClick={async () => {
-                    if (!notification.read) {
-                      const result = await markNotificationAsRead(
-                        notification._id.toString()
-                      );
-                      if (result.success) {
-                        setNotifications((prev) =>
-                          prev.map((n) =>
-                            n._id === notification._id
-                              ? { ...n, read: true }
-                              : n
-                          )
-                        );
-                        setUnreadCount(Math.max(unreadCount - 1, 0));
+                <div key={notification._id.toString()}>
+                  {isProjectInvite(notification) ? (
+                    // Render ProjectInviteNotification for PROJECT_INVITE type
+                    <ProjectInviteNotification
+                      key={notification._id.toString()}
+                      notifications={notifications}
+                      setNotifications={setNotifications}
+                      setUnreadCount={setUnreadCount}
+                      notification={notification}
+                    />
+                  ) : (
+                    // Render regular notification with Link
+                    <Link
+                      className="block"
+                      onClick={() =>
+                        handleRegularNotificationClick(notification)
                       }
-                    }
-                  }}
-                  href={notification.link || '/'}
-                  key={notification._id.toString()}
-                >
-                  <div className="flex flex-col items-start justify-between gap-2 px-2 my-1 relative">
-                    {!notification.read && (
-                      <div className="absolute top-0 left-0 w-2 h-2 rounded-full bg-blue-500" />
-                    )}
-                    <p className={'font-medium text-sm'}>
-                      {notification.title}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {notification.message}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(new Date(notification.createdAt), {
-                        addSuffix: true,
-                      })}
-                    </p>
-                  </div>
-                </Link>
+                      href={notification.link || '/'}
+                    >
+                      <div className="flex flex-col items-start justify-between gap-2 px-2 py-2 relative hover:bg-accent transition-colors">
+                        {!notification.read && (
+                          <div className="absolute top-2 left-0 w-2 h-2 rounded-full bg-blue-500" />
+                        )}
+                        <p className="font-medium text-sm pl-3">
+                          {notification.title}
+                        </p>
+                        <p className="text-sm text-muted-foreground pl-3">
+                          {notification.message}
+                        </p>
+                        <p className="text-xs text-muted-foreground pl-3">
+                          {formatDistanceToNow(
+                            new Date(notification.createdAt),
+                            {
+                              addSuffix: true,
+                            }
+                          )}
+                        </p>
+                      </div>
+                    </Link>
+                  )}
+                </div>
               ))}
             </div>
           )}

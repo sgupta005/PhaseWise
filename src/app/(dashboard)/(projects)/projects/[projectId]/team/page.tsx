@@ -1,7 +1,18 @@
-export default function ProjectTeamPage() {
-  return (
-    <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-      <h1 className="text-2xl font-semibold">Team</h1>
-    </div>
-  );
+import { notFound } from 'next/navigation';
+import { getProjectByIdWithTeamAndFaculty } from '@/db/project.db';
+import { TeamPageClient } from '@/components/team/TeamPageClient';
+
+export default async function ProjectTeamPage({
+  params,
+}: {
+  params: Promise<{ projectId: string }>;
+}) {
+  const { projectId } = await params;
+  const project = await getProjectByIdWithTeamAndFaculty(projectId);
+
+  if (!project) {
+    notFound();
+  }
+
+  return <TeamPageClient project={project} />;
 }

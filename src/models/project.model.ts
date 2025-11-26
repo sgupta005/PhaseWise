@@ -48,18 +48,22 @@ const projectSchema = new Schema(
       },
     ],
     faculty: {
-      type: Schema.Types.ObjectId,
-      ref: User,
-      required: [true, 'Please enter faculty'],
-      validate: {
-        validator: async function (
-          facultyId: Types.ObjectId
-        ): Promise<boolean> {
-          const user = await User.findById(facultyId);
-          return Boolean(user && user.role === 'faculty');
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: User,
+          validate: {
+            validator: async function (
+              facultyId: Types.ObjectId
+            ): Promise<boolean> {
+              const user = await User.findById(facultyId);
+              return Boolean(user && user.role === 'faculty');
+            },
+            message: 'Selected user must have faculty role',
+          },
         },
-        message: 'Selected user must have faculty role',
-      },
+      ],
+      default: [],
     },
     phases: [
       {
