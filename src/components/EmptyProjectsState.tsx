@@ -12,8 +12,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { Badge } from './ui/badge';
-import { formatPriority, formatStatus } from '@/lib/task/formatters';
 
 const MOCK_CARDS = [
   { id: 1, members: 3 },
@@ -29,7 +27,7 @@ export default function EmptyProjectsState() {
       setActiveIndex((prev) => (prev + 1) % MOCK_CARDS.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, [MOCK_CARDS.length]);
+  }, []);
 
   function getCardStyle(index: number) {
     const position =

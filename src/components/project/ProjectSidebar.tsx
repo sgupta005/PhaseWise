@@ -8,6 +8,7 @@ import {
   ListTodo,
   ArrowLeft,
   ListOrdered,
+  MessageSquareMore,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -48,6 +49,11 @@ function getProjectNavItems(projectId: string) {
       title: 'Team',
       url: `/projects/${projectId}/team`,
       icon: Users,
+    },
+    {
+      title: 'Chat',
+      url: `/projects/${projectId}/chat`,
+      icon: MessageSquareMore,
     },
     {
       title: 'Settings',
