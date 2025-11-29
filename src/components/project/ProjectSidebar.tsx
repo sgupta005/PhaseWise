@@ -2,7 +2,6 @@
 
 import type * as React from 'react';
 import {
-  Settings,
   LayoutDashboard,
   Users,
   ListTodo,
@@ -54,11 +53,6 @@ function getProjectNavItems(projectId: string) {
       title: 'Chat',
       url: `/projects/${projectId}/chat`,
       icon: MessageSquareMore,
-    },
-    {
-      title: 'Settings',
-      url: `/projects/${projectId}/settings`,
-      icon: Settings,
     },
   ];
 }

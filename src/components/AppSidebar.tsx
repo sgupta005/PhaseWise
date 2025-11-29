@@ -1,7 +1,7 @@
 'use client';
 
 import type * as React from 'react';
-import { Home, Settings, FolderOpen } from 'lucide-react';
+import { Home, FolderOpen } from 'lucide-react';
 import Link from 'next/link';
 
 import { NavUser } from '@/components/NavUser';
@@ -30,11 +30,6 @@ const data = {
       title: 'Projects',
       url: '/projects',
       icon: FolderOpen,
-    },
-    {
-      title: 'Settings',
-      url: '/settings',
-      icon: Settings,
     },
   ],
 };
