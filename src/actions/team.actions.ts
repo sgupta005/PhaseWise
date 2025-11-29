@@ -7,6 +7,7 @@ import User from '@/models/user.model';
 import { addMemberToProject } from '@/lib/invitations/invitation.service';
 import { revalidatePath } from 'next/cache';
 import mongoose from 'mongoose';
+import { sendProjectRemovedNotification } from '@/lib/notifications/notification.service';
 
 interface ActionResult {
   success: boolean;
@@ -154,6 +155,15 @@ export async function removeTeamMemberAction(
     }
 
     await project.save();
+
+    await sendProjectRemovedNotification({
+      projectId,
+      projectName: project.title,
+      userId: userToRemove._id.toString(),
+      removedById: session.user.id,
+      removedByName: session.user.name || '',
+      removedByrole: session.user.role as 'faculty' | 'student',
+    });
 
     revalidatePath(`/projects/${projectId}`);
     revalidatePath(`/projects/${projectId}/team`);

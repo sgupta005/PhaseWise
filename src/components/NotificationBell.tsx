@@ -166,7 +166,7 @@ export function NotificationBell() {
                       onClick={() =>
                         handleRegularNotificationClick(notification)
                       }
-                      href={notification.link || '/'}
+                      href={notification.link || '/projects'}
                     >
                       <div className="flex flex-col items-start justify-between gap-2 px-2 py-2 relative hover:bg-accent transition-colors">
                         {!notification.read && (

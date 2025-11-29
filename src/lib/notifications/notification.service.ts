@@ -45,6 +45,15 @@ interface ProjectAddedData {
   role: 'faculty' | 'student';
 }
 
+interface ProjectRemovedData {
+  projectId: string;
+  projectName: string;
+  userId: string;
+  removedById: string;
+  removedByName: string;
+  removedByrole: 'faculty' | 'student';
+}
+
 export async function sendTaskAssignmentNotification(data: TaskAssignmentData) {
   try {
     await connectDb();
@@ -157,6 +166,27 @@ export async function sendProjectAddedNotification(data: ProjectAddedData) {
     });
   } catch (error) {
     console.error('Error sending project added notification:', error);
+    throw error;
+  }
+}
+
+export async function sendProjectRemovedNotification(data: ProjectRemovedData) {
+  try {
+    await connectDb();
+    await Notification.create<NotificationDocument>({
+      triggeredBy: data.removedById,
+      userId: data.userId,
+      type: 'PROJECT_REMOVED',
+      title: 'Removed from Project',
+      message: `${data.removedByName} removed you from "${data.projectName}"`,
+      metadata: {
+        projectId: data.projectId,
+        removedBy: data.removedById,
+        removedByrole: data.removedByrole,
+      },
+    });
+  } catch (error) {
+    console.error('Error sending project removed notification:', error);
     throw error;
   }
 }

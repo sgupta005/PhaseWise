@@ -8,11 +8,10 @@ const notificationSchema = new Schema({
     required: true,
     enum: [
       'TASK_ASSIGNED',
-      'TASK_COMPLETED',
-      'TASK_UPDATED',
       'PROJECT_INVITE',
       'PROJECT_ADDED',
-    ],
+      'PROJECT_REMOVED',
+    ] as const,
   },
   link: { type: String, required: false },
   title: { type: String, required: true },

@@ -16,7 +16,7 @@ import {
 } from '@/schemas/task.schema';
 import { auth } from '@/auth';
 import { taskFormSchema, TaskFormAllFields } from '@/schemas/task-form.schema';
-import { sendTaskAssignmentNotification } from '@/lib/notifications/notification';
+import { sendTaskAssignmentNotification } from '@/lib/notifications/notification.service';
 import User from '@/models/user.model';
 
 export async function createTaskAction(
