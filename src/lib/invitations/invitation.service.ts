@@ -2,16 +2,15 @@ import { connectDb } from '@/dbConfig/dbConfig';
 import ProjectInvitation, {
   ProjectInvitationDocument,
 } from '@/models/project-invitation.model';
-import Notification, {
-  NotificationDocument,
-} from '@/models/notification.model';
 import Project from '@/models/project.model';
 import User from '@/models/user.model';
-import { sendProjectInvitationEmail } from '@/lib/emails/projectInvitationMail';
-import { sendProjectAddedEmail } from '@/lib/emails/projectAddedMail';
+import {
+  sendProjectInviteNotification,
+  sendProjectAddedNotification,
+} from '@/lib/notifications/notification.service';
+import Notification from '@/models/notification.model';
 import mongoose from 'mongoose';
-
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+import { BASE_URL } from '@/constants';
 
 export interface AddMemberParams {
   projectId: string;
@@ -97,7 +96,7 @@ export async function addMemberToProject(
     };
   }
 
-  const projectUrl = `${baseUrl}/projects/${projectId}`;
+  const projectUrl = `${BASE_URL}/projects/${projectId}`;
 
   // Faculty adding students -> direct add
   if (inviter.role === 'faculty' && role === 'student') {
@@ -143,31 +142,16 @@ async function directlyAddMember(
     }
     await project.save();
 
-    // Create in-app notification
-    await Notification.create<NotificationDocument>({
-      triggeredBy: inviter._id.toString(),
-      userId: invitedUser._id.toString(),
-      type: 'PROJECT_ADDED',
-      link: projectUrl,
-      title: 'Added to Project',
-      message: `${inviter.name} added you to "${project.title}" as a ${role === 'faculty' ? 'Faculty Mentor' : 'Team Member'}`,
-      metadata: {
-        projectId: project._id.toString(),
-        addedBy: inviter._id.toString(),
-        role,
-      },
-    });
-
-    // Send email notification (non-blocking)
-    sendProjectAddedEmail({
-      to: invitedUser.email,
-      userName: invitedUser.name,
-      addedByName: inviter.name,
+    // Send notification (in-app + email)
+    await sendProjectAddedNotification({
+      projectId: project._id.toString(),
       projectName: project.title,
+      userId: invitedUser._id.toString(),
+      userName: invitedUser.name,
+      userEmail: invitedUser.email,
+      addedById: inviter._id.toString(),
+      addedByName: inviter.name,
       role,
-      projectUrl,
-    }).catch((error) => {
-      console.error('Failed to send project added email:', error);
     });
 
     return {
@@ -206,32 +190,17 @@ async function sendInvitation(
       status: 'pending',
     });
 
-    // Create in-app notification with invitation ID in metadata
-    await Notification.create<NotificationDocument>({
-      triggeredBy: inviter._id.toString(),
-      userId: invitedUser._id.toString(),
-      type: 'PROJECT_INVITE',
-      link: projectUrl,
-      title: 'Project Invitation',
-      message: `${inviter.name} invited you to join "${projectName}" as a ${role === 'faculty' ? 'Faculty Mentor' : 'Team Member'}`,
-      metadata: {
-        projectId,
-        invitationId: invitation._id.toString(),
-        invitedBy: inviter._id.toString(),
-        role,
-      },
-    });
-
-    // Send email notification (non-blocking)
-    sendProjectInvitationEmail({
-      to: invitedUser.email,
-      inviteeName: invitedUser.name,
-      inviterName: inviter.name,
+    // Send notification (in-app + email)
+    await sendProjectInviteNotification({
+      projectId,
       projectName,
+      inviteeId: invitedUser._id.toString(),
+      inviteeName: invitedUser.name,
+      inviteeEmail: invitedUser.email,
+      inviterId: inviter._id.toString(),
+      inviterName: inviter.name,
       role,
-      projectUrl,
-    }).catch((error) => {
-      console.error('Failed to send project invitation email:', error);
+      invitationId: invitation._id.toString(),
     });
 
     return {

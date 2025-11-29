@@ -10,11 +10,12 @@ import Project from '@/models/project.model';
 import Phase from '@/models/phase.model';
 import Task from '@/models/task.model';
 import User from '@/models/user.model';
-import Notification from '@/models/notification.model';
 import ProjectInvitation from '@/models/project-invitation.model';
 import mongoose from 'mongoose';
-import { sendProjectInvitationEmail } from '@/lib/emails/projectInvitationMail';
-import { sendProjectAddedEmail } from '@/lib/emails/projectAddedMail';
+import {
+  sendProjectInviteNotification,
+  sendProjectAddedNotification,
+} from '@/lib/notifications/notification.service';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
@@ -179,25 +180,17 @@ export async function createProjectAction(payload: ProjectFormAllFields) {
       if (!student) continue;
 
       notificationPromises.push(
-        Notification.create({
-          triggeredBy: creatorId,
+        sendProjectAddedNotification({
+          projectId,
+          projectName: title,
           userId: studentId,
-          type: 'PROJECT_ADDED',
-          link: projectUrl2,
-          title: 'Added to Project',
-          message: `${creator.name} added you to "${title}" as a Team Member`,
-          metadata: { projectId, addedBy: creatorId, role: 'student' },
+          userName: student.name,
+          userEmail: student.email,
+          addedById: creatorId,
+          addedByName: creator.name,
+          role: 'student',
         })
       );
-
-      sendProjectAddedEmail({
-        to: student.email,
-        userName: student.name,
-        addedByName: creator.name,
-        projectName: title,
-        role: 'student',
-        projectUrl: projectUrl2,
-      }).catch(console.error);
     }
 
     // Send invitations to students who need them
@@ -214,30 +207,18 @@ export async function createProjectAction(payload: ProjectFormAllFields) {
       });
 
       notificationPromises.push(
-        Notification.create({
-          triggeredBy: creatorId,
-          userId: studentId,
-          type: 'PROJECT_INVITE',
-          link: projectUrl2,
-          title: 'Project Invitation',
-          message: `${creator.name} invited you to join "${title}" as a Team Member`,
-          metadata: {
-            projectId,
-            invitationId: invitation._id.toString(),
-            invitedBy: creatorId,
-            role: 'student',
-          },
+        sendProjectInviteNotification({
+          projectId,
+          projectName: title,
+          inviteeId: studentId,
+          inviteeName: student.name,
+          inviteeEmail: student.email,
+          inviterId: creatorId,
+          inviterName: creator.name,
+          role: 'student',
+          invitationId: invitation._id.toString(),
         })
       );
-
-      sendProjectInvitationEmail({
-        to: student.email,
-        inviteeName: student.name,
-        inviterName: creator.name,
-        projectName: title,
-        role: 'student',
-        projectUrl: projectUrl2,
-      }).catch(console.error);
     }
 
     // Send invitations to faculty
@@ -254,30 +235,18 @@ export async function createProjectAction(payload: ProjectFormAllFields) {
       });
 
       notificationPromises.push(
-        Notification.create({
-          triggeredBy: creatorId,
-          userId: facultyId,
-          type: 'PROJECT_INVITE',
-          link: projectUrl2,
-          title: 'Project Invitation',
-          message: `${creator.name} invited you to join "${title}" as a Faculty Mentor`,
-          metadata: {
-            projectId,
-            invitationId: invitation._id.toString(),
-            invitedBy: creatorId,
-            role: 'faculty',
-          },
+        sendProjectInviteNotification({
+          projectId,
+          projectName: title,
+          inviteeId: facultyId,
+          inviteeName: faculty.name,
+          inviteeEmail: faculty.email,
+          inviterId: creatorId,
+          inviterName: creator.name,
+          role: 'faculty',
+          invitationId: invitation._id.toString(),
         })
       );
-
-      sendProjectInvitationEmail({
-        to: faculty.email,
-        inviteeName: faculty.name,
-        inviterName: creator.name,
-        projectName: title,
-        role: 'faculty',
-        projectUrl: projectUrl2,
-      }).catch(console.error);
     }
 
     // Wait for notifications but don't block on email
