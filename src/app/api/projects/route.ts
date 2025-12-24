@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getUserProjectsWithTeamAndFaculty } from '@/db/project.db';
+import { getUserProjects } from '@/db/project.db';
 
 export async function GET() {
   try {
-    const projects = await getUserProjectsWithTeamAndFaculty();
+    const projects = await getUserProjects();
     return NextResponse.json(
       {
         success: true,

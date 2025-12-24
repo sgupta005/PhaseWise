@@ -1,9 +1,9 @@
-import { IProjectWithTeam } from '@/types/project.types';
+import { IProjectWithTeamAndPhaseTitles } from '@/types/project.types';
 
 export function filterProjects(
-  projects: IProjectWithTeam[],
+  projects: IProjectWithTeamAndPhaseTitles[],
   searchQuery: string
-): IProjectWithTeam[] {
+): IProjectWithTeamAndPhaseTitles[] {
   if (!searchQuery.trim()) {
     return projects;
   }
@@ -31,7 +31,11 @@ export function filterProjects(
       return true;
     }
 
-    if (project.faculty?.name?.toLowerCase().includes(query)) {
+    if (
+      project.faculty?.some((faculty) =>
+        faculty?.name?.toLowerCase().includes(query)
+      )
+    ) {
       return true;
     }
 

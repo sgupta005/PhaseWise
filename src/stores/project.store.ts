@@ -1,14 +1,14 @@
 import { create } from 'zustand';
-import { IProjectWithTeam } from '@/types/project.types';
+import { IProjectWithTeamAndPhaseTitles } from '@/types/project.types';
 
 interface ProjectStore {
-  activeProject: IProjectWithTeam | null;
-  projects: IProjectWithTeam[];
+  activeProject: IProjectWithTeamAndPhaseTitles | null;
+  projects: IProjectWithTeamAndPhaseTitles[];
   isLoading: boolean;
-  setActiveProject: (project: IProjectWithTeam | null) => void;
-  setProjects: (projects: IProjectWithTeam[]) => void;
+  setActiveProject: (project: IProjectWithTeamAndPhaseTitles | null) => void;
+  setProjects: (projects: IProjectWithTeamAndPhaseTitles[]) => void;
   setIsLoading: (isLoading: boolean) => void;
-  getProjectById: (id: string) => IProjectWithTeam | undefined;
+  getProjectById: (id: string) => IProjectWithTeamAndPhaseTitles | undefined;
 }
 
 export const useProjectStore = create<ProjectStore>((set, get) => ({

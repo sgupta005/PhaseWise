@@ -5,6 +5,17 @@ import { PhaseDocument } from '@/models/phase.model';
 
 //  Populated Types (for displaying data)
 
+export interface IProjectWithTeamAndPhaseTitles
+  extends Omit<
+    ProjectDocument,
+    'teamMember' | 'faculty' | 'createdBy' | 'phases'
+  > {
+  teamMember: UserDocument[];
+  faculty: UserDocument[];
+  createdBy: UserDocument;
+  phases: PhaseDocument[];
+}
+
 export interface IProjectWithTeam
   extends Omit<ProjectDocument, 'teamMember' | 'faculty' | 'createdBy'> {
   teamMember: UserDocument[];

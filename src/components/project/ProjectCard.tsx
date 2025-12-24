@@ -1,72 +1,39 @@
 'use client';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Github, ExternalLink, Lock, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useProjectStore } from '@/stores/project.store';
+import { Card } from '../ui/card';
+import { IProjectWithTeamAndPhaseTitles } from '@/types/project.types';
+import { Globe, Lock, Github, ExternalLink, Calendar } from 'lucide-react';
+import { formatDate, isPast } from 'date-fns';
 import { getInitials } from '@/lib/utils/avatar';
-import { IProjectWithTeam } from '@/types/project.types';
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+import { Badge } from '../ui/badge';
+import { cn } from '@/lib/utils';
 
-export function ProjectCard({ project }: { project: IProjectWithTeam }) {
+function ProjectCard({ project }: { project: IProjectWithTeamAndPhaseTitles }) {
   const { setActiveProject } = useProjectStore();
 
+  const visibleFaculty = project.faculty.slice(0, 3);
+  const remainingFaculty = Math.max(0, project.faculty.length - 3);
+
+  const visibleTeamMembers = project.teamMember.slice(0, 3);
+  const remainingTeamMembers = Math.max(0, project.teamMember.length - 3);
+
+  const visibleTechStack = project.techStack.slice(0, 3);
+  const remainingTechStack = Math.max(0, project.techStack.length - 3);
+
+  const currentPhase = project.phases.find(
+    (phase) => phase.order === project.currentPhase
+  );
+
   return (
-    <Link
-      href={`/projects/${project._id}`}
-      className="block h-auto w-auto"
-      onClick={() => setActiveProject(project)}
-    >
-      <Card className="group h-full w-full transition-all duration-300 hover:shadow-md">
-        <CardHeader>
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <CardTitle className="text-lg mb-1.5 truncate">
-                {project.title}
-              </CardTitle>
-              {project.description && (
-                <CardDescription className="line-clamp-2">
-                  {project.description}
-                </CardDescription>
-              )}
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              {project.isPublic ? (
-                <Globe className="size-4 text-muted-foreground" />
-              ) : (
-                <Lock className="size-4 text-muted-foreground" />
-              )}
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
-          {/* Tech Stack */}
-          {project.techStack && project.techStack.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {project.techStack.slice(0, 4).map((tech) => (
-                <Badge key={tech} variant="secondary" className="text-xs">
-                  {tech}
-                </Badge>
-              ))}
-              {project.techStack.length > 4 && (
-                <Badge variant="outline" className="text-xs">
-                  +{project.techStack.length - 4}
-                </Badge>
-              )}
-            </div>
-          )}
-
-          {/* Links */}
-          <div className="flex items-center gap-3">
+    <div className="flex flex-col">
+      <Card className="flex flex-col p-6 min-h-[360px]">
+        {/* Header */}
+        <div className="w-full flex justify-between items-center">
+          {/* Github and Live links */}
+          <div className="flex items-center gap-4">
             {project.githubLink && (
               <Link
                 href={project.githubLink}
@@ -90,70 +57,138 @@ export function ProjectCard({ project }: { project: IProjectWithTeam }) {
               </Link>
             )}
           </div>
-        </CardContent>
+          {project.isPublic ? (
+            <Globe className="size-4 text-muted-foreground" />
+          ) : (
+            <Lock className="size-4 text-muted-foreground" />
+          )}
+        </div>
 
-        <CardFooter className="pt-0 flex flex-col gap-3 w-full items-start">
+        {/* Title */}
+        <Link
+          href={`/projects/${project._id}`}
+          onClick={() => setActiveProject(project)}
+        >
+          <h2 className="text-xl font-semibold tracking-tight leading-tight line-clamp-2">
+            {project.title}
+          </h2>
+        </Link>
+
+        {/* Current Phase */}
+        <div className="flex items-center gap-2 rounded-lg bg-muted/30 dark:bg-muted py-2 px-4 justify-between ">
+          <div className="flex items-center gap-2">
+            <div className="size-2 bg-blue-500 rounded-full" />
+            <Link
+              href={`/projects/${project._id}/phases`}
+              onClick={() => setActiveProject(project)}
+            >
+              <h3 className="hover:underline truncate max-w-[250px]">
+                Phase {project.currentPhase + 1}: {currentPhase?.title}
+              </h3>
+            </Link>
+          </div>
+          <div className="flex items-center gap-1">
+            <Calendar className="size-4 text-muted-foreground" />
+            <span
+              className={cn(
+                'text-xs text-muted-foreground',
+                currentPhase?.deadline &&
+                  isPast(new Date(currentPhase?.deadline)) &&
+                  'text-destructive'
+              )}
+            >
+              {currentPhase?.deadline &&
+                formatDate(new Date(currentPhase?.deadline), 'dd MMM, yyyy')}
+            </span>
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="flex-1">
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {project.description}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 justify-between mb-4">
           {/* Faculty */}
-          {project.faculty && project.faculty.length > 0 && (
-            <div className="flex items-center gap-2">
-              <div className="flex -space-x-2">
-                {project.faculty.slice(0, 2).map((faculty) => (
-                  <Avatar
-                    key={faculty._id.toString()}
-                    className="size-7 border-2 border-card"
-                  >
-                    <AvatarImage src={faculty?.image} alt={faculty?.name} />
-                    <AvatarFallback className="text-xs">
-                      {getInitials(faculty?.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                ))}
-                {project.faculty.length > 2 && (
-                  <Avatar className="size-7 border-2 border-card">
-                    <AvatarFallback className="text-xs bg-muted">
-                      +{project.faculty.length - 2}
-                    </AvatarFallback>
-                  </Avatar>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Faculty:</span>
+            {visibleFaculty.length > 0 && (
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {visibleFaculty.map((faculty) => (
+                    <Avatar
+                      key={faculty._id.toString()}
+                      className="size-7 border-2 border-card"
+                    >
+                      <AvatarImage src={faculty?.image} alt={faculty?.name} />
+                      <AvatarFallback className="text-xs">
+                        {getInitials(faculty?.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                </div>
+                {remainingFaculty > 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    +{remainingFaculty} more
+                  </span>
                 )}
               </div>
-              <span className="text-xs text-muted-foreground">
-                {project.faculty.length}{' '}
-                {project.faculty.length === 1 ? 'mentor' : 'mentors'}
-              </span>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Team Members */}
-          {project.teamMember && project.teamMember.length > 0 && (
-            <div className="flex items-center gap-2">
-              <div className="flex -space-x-2">
-                {project.teamMember.slice(0, 3).map((member) => (
-                  <Avatar
-                    key={member._id.toString()}
-                    className="size-7 border-2 border-card"
-                  >
-                    <AvatarImage src={member?.image} alt={member?.name} />
-                    <AvatarFallback className="text-xs">
-                      {getInitials(member.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                ))}
-                {project.teamMember.length > 3 && (
-                  <Avatar className="size-7 border-2 border-card">
-                    <AvatarFallback className="text-xs bg-muted">
-                      +{project.teamMember.length - 3}
-                    </AvatarFallback>
-                  </Avatar>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Team Members:</span>
+            {visibleTeamMembers.length > 0 && (
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {visibleTeamMembers.map((teamMember) => (
+                    <Avatar
+                      key={teamMember._id.toString()}
+                      className="size-7 border-2 border-card"
+                    >
+                      <AvatarImage
+                        src={teamMember?.image}
+                        alt={teamMember?.name}
+                      />
+                      <AvatarFallback className="text-xs">
+                        {getInitials(teamMember?.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                </div>
+                {remainingTeamMembers > 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    +{remainingTeamMembers} more
+                  </span>
                 )}
               </div>
-              <span className="text-xs text-muted-foreground">
-                {project.teamMember.length}{' '}
-                {project.teamMember.length === 1 ? 'member' : 'members'}
-              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Tech Stack */}
+        <div className="flex items-center bg-background/80 border-t rounded-b-xl border-border/60 py-2 px-4 -m-6 ">
+          {visibleTechStack.length > 0 && (
+            <div className="flex items-center gap-2">
+              {visibleTechStack.map((tech) => (
+                <Badge key={tech} variant="secondary" className="text-xs">
+                  {tech}
+                </Badge>
+              ))}
+              {remainingTechStack > 0 && (
+                <span className="text-xs text-muted-foreground">
+                  +{remainingTechStack} more
+                </span>
+              )}
             </div>
           )}
-        </CardFooter>
+        </div>
       </Card>
-    </Link>
+    </div>
   );
 }
+
+export { ProjectCard };

@@ -2,14 +2,15 @@ import { auth } from '@/auth';
 import { connectDb } from '@/dbConfig/dbConfig';
 import Project, { ProjectDocument } from '@/models/project.model';
 import {
+  IProjectWithTeamAndPhaseTitles,
   IProjectWithTeam,
   IProjectWithTasks,
   IProjectPopulated,
 } from '@/types/project.types';
 import { ITaskStatus } from '@/types/task.types';
 
-export async function getUserProjectsWithTeamAndFaculty(): Promise<
-  IProjectWithTeam[]
+export async function getUserProjects(): Promise<
+  IProjectWithTeamAndPhaseTitles[]
 > {
   try {
     const session = await auth();
@@ -28,11 +29,14 @@ export async function getUserProjectsWithTeamAndFaculty(): Promise<
       .populate('faculty', 'name email')
       .populate('teamMember', 'name email')
       .populate('createdBy', 'name email')
+      .populate('phases', 'title order deadline')
       .sort({ createdAt: -1 })
       .lean();
 
     // Serialize the data properly for Next.js
-    return JSON.parse(JSON.stringify(projects)) as IProjectWithTeam[];
+    return JSON.parse(
+      JSON.stringify(projects)
+    ) as IProjectWithTeamAndPhaseTitles[];
   } catch (error) {
     console.error('Error fetching projects:', error);
     return [];

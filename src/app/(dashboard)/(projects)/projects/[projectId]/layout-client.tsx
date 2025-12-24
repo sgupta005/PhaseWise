@@ -84,7 +84,7 @@ export default function ProjectLayoutClient({
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className="hidden md:block" />
 
-                    <BreadcrumbPage className="truncate">
+                    <BreadcrumbPage className="truncate max-w-[200px]">
                       {task?.task}
                     </BreadcrumbPage>
                   </>
