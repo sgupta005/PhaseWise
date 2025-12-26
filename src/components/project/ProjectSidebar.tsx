@@ -29,11 +29,11 @@ import { ProjectSwitcher } from './ProjectSwitcher';
 
 function getProjectNavItems(projectId: string) {
   return [
-    {
-      title: 'Overview',
-      url: `/projects/${projectId}/overview`,
-      icon: LayoutDashboard,
-    },
+    // {
+    //   title: 'Overview',
+    //   url: `/projects/${projectId}/overview`,
+    //   icon: LayoutDashboard,
+    // },
     {
       title: 'Phases',
       url: `/projects/${projectId}/phases`,
@@ -79,9 +79,9 @@ export function ProjectSidebar({
             className="w-max text-muted-foreground hover:text-foreground hover:bg-transparent bg-transparetn shadow-none"
             asChild
           >
-            <Link href="/dashboard">
+            <Link href="/projects">
               <ArrowLeft />
-              <span className="text-xs tracking-tight">DASHBOARD</span>
+              <span className="text-xs tracking-tight">PROJECTS</span>
             </Link>
           </Button>
         </SidebarMenu>

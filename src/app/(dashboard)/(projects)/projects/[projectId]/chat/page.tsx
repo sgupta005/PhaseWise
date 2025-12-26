@@ -17,7 +17,7 @@ export default async function ChatPage({
 
   const hasAccess = await verifyProjectAccess(projectId);
   if (!hasAccess) {
-    redirect('/dashboard');
+    redirect('/projects');
   }
 
   return (

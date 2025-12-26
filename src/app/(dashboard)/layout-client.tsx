@@ -26,13 +26,13 @@ export default function DashboardLayoutClient({
   const lastSegment = pathname.split('/').filter(Boolean).pop();
   const pageName = lastSegment
     ? lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1)
-    : 'Dashboard';
+    : 'Projects';
 
   return (
     <>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex sticky top-0 py-2 z-10 bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear">
+        <header className="flex sticky top-0 py-2 z-20 bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
@@ -41,7 +41,7 @@ export default function DashboardLayoutClient({
             />
             <span className="text-sm">{pageName}</span>
           </div>
-          <div className="ml-auto mr-3 flex items-center gap-3">
+          <div className="ml-auto mr-3 flex items-center gap-2">
             <NotificationBell />
             <ThemeToggle />
           </div>

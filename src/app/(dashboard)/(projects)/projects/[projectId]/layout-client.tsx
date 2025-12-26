@@ -41,7 +41,7 @@ export default function ProjectLayoutClient({
   const lastSegment = segments[segments.length - 1];
   const pageName =
     lastSegment === projectId
-      ? 'Overview'
+      ? 'Phases'
       : lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1);
 
   useEffect(
@@ -99,9 +99,9 @@ export default function ProjectLayoutClient({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <div className="ml-auto mr-3 flex items-center gap-3">
-            <NotificationBell />
+          <div className="ml-auto mr-3 flex items-center gap-2">
             <ThemeToggle />
+            <NotificationBell />
           </div>
         </header>
         <div className="">{children}</div>

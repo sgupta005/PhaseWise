@@ -10,7 +10,7 @@ export function ProgressIndicator({
   step2Progress,
 }: ProgressIndicatorProps) {
   return (
-    <div className="flex items-center gap-2 px-2">
+    <div className="flex items-center gap-2 px-4 lg:px-2">
       {/* Step 1 Progress */}
       <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
         <div

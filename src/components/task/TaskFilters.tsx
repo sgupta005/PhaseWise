@@ -63,7 +63,7 @@ export default function TaskFilters({
   const currentStatus = searchParams.get('status') || 'all';
 
   return (
-    <div className="flex gap-2 mb-4">
+    <div className="flex gap-2 mb-4 flex-wrap">
       <div className="relative max-w-[180px]">
         <Input
           placeholder="Search tasks..."

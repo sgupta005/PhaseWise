@@ -33,7 +33,7 @@ export default async function Projects({
           </Link>
         </Button>
       </div>
-      <div className={cn('mt-8 grid gap-6', 'grid-cols-1', 'md:grid-cols-2')}>
+      <div className={cn('mt-8 grid gap-6', 'grid-cols-1', 'lg:grid-cols-2')}>
         {filteredProjects.map((project) => (
           <ProjectCard key={project._id.toString()} project={project} />
         ))}

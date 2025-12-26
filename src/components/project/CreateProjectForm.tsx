@@ -97,7 +97,7 @@ export default function CreateProjectForm() {
         step1Progress={step1Progress}
         step2Progress={step2Progress}
       />
-      <div className="flex flex-col gap-8 border p-6 rounded-lg">
+      <div className="flex flex-col gap-8 lg:border px-6 md:p-6 rounded-lg">
         {currentStep === 0 ? (
           <ProjectDetailsStep control={control} />
         ) : (

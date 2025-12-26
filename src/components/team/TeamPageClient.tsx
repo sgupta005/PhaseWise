@@ -123,7 +123,13 @@ export function TeamPageClient({ project }: TeamPageClientProps) {
             Manage the team for {project.title}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col lg:flex-row items-center gap-3">
+          {canManage && (
+            <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
+              <UserPlus className="h-4 w-4" />
+              Add Member
+            </Button>
+          )}
           {isMember && (
             <AlertDialog>
               <AlertDialogTrigger
@@ -154,12 +160,6 @@ export function TeamPageClient({ project }: TeamPageClientProps) {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          )}
-          {canManage && (
-            <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
-              <UserPlus className="h-4 w-4" />
-              Add Member
-            </Button>
           )}
         </div>
       </div>

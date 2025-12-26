@@ -21,11 +21,11 @@ import { cn } from '@/lib/utils';
 
 const data = {
   navMain: [
-    {
-      title: 'Dashboard',
-      url: '/dashboard',
-      icon: Home,
-    },
+    // {
+    //   title: 'Dashboard',
+    //   url: '/dashboard',
+    //   icon: Home,
+    // },
     {
       title: 'Projects',
       url: '/projects',
@@ -42,7 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props} className="dark:shadow-sm">
       <SidebarHeader>
-        <div className="flex items-center gap-2 group-data-[state=expanded]:p-2  transition-all ">
+        <div className="flex items-center gap-2 p-2 md:p-0 group-data-[state=expanded]:p-2  transition-all ">
           <Image src="/logo.svg" alt="PhaseWise" width={32} height={32} />
           <span className="text-sm font-semibold group-data-[collapsible=icon]:hidden">
             PhaseWise

@@ -123,17 +123,22 @@ export default function PhasesStep({
             Break down your Project into Phases
           </p>
         </div>
-        <div className="flex items-center justify-self-end gap-2">
-          <Button type="button" variant="outline" onClick={handleAddPhase}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Phase
-          </Button>
+        <div className="flex flex-col md:flex-row items-center justify-self-end gap-2">
           <AIPhaseGenerator
             title={title || ''}
             description={description || ''}
             techStack={techStack || ''}
             onPhasesGenerated={handlePhasesGenerated}
           />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleAddPhase}
+            className="w-full md:w-auto"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Phase
+          </Button>
         </div>
       </div>
 

@@ -70,7 +70,7 @@ export function PhaseDisplayCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'border bg-background rounded-lg transition-all  w-full',
+        'border bg-background rounded-lg transition-all w-full',
         isCurrentPhase && 'border-primary border-2 shadow-md',
         isLoading && 'opacity-80 dark:opacity-70 pointer-events-none'
       )}
@@ -83,13 +83,13 @@ export function PhaseDisplayCard({
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col lg:flex-row items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     {isCurrentPhase && (
                       <div className="size-3 bg-primary rounded-full" />
                     )}
-                    <h3 className="font-semibold text-lg truncate">
+                    <h3 className="font-semibold text-lg">
                       {`Phase ${phase.order + 1}:`}
                       {phase.title}
                     </h3>
@@ -107,7 +107,9 @@ export function PhaseDisplayCard({
                         {format(new Date(phase.deadline), 'MMM dd, yyyy')}
                       </span>
                     </span>
-                    <span className="text-muted-foreground">•</span>
+                    <span className="hidden lg:inline text-muted-foreground">
+                      •
+                    </span>
                     <span>
                       Tasks: {completed}/{total} completed
                     </span>

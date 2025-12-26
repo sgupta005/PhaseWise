@@ -29,7 +29,7 @@ function ProjectCard({ project }: { project: IProjectWithTeamAndPhaseTitles }) {
 
   return (
     <div className="flex flex-col">
-      <Card className="flex flex-col p-6 min-h-[360px]">
+      <Card className="relative flex flex-col p-6 min-h-[360px] z-10">
         {/* Header */}
         <div className="w-full flex justify-between items-center">
           {/* Github and Live links */}
@@ -39,6 +39,7 @@ function ProjectCard({ project }: { project: IProjectWithTeamAndPhaseTitles }) {
                 href={project.githubLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Github className="size-4" />
@@ -50,6 +51,7 @@ function ProjectCard({ project }: { project: IProjectWithTeamAndPhaseTitles }) {
                 href={project.projectUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ExternalLink className="size-4" />
@@ -68,6 +70,7 @@ function ProjectCard({ project }: { project: IProjectWithTeamAndPhaseTitles }) {
         <Link
           href={`/projects/${project._id}`}
           onClick={() => setActiveProject(project)}
+          className="after:absolute after:inset-0 after:z-0"
         >
           <h2 className="text-xl font-semibold tracking-tight leading-tight line-clamp-2">
             {project.title}
@@ -81,8 +84,9 @@ function ProjectCard({ project }: { project: IProjectWithTeamAndPhaseTitles }) {
             <Link
               href={`/projects/${project._id}/phases`}
               onClick={() => setActiveProject(project)}
+              className="z-10"
             >
-              <h3 className="hover:underline truncate max-w-[250px]">
+              <h3 className="hover:underline truncate max-w-[150px] md:max-w-[250px]">
                 Phase {project.currentPhase + 1}: {currentPhase?.title}
               </h3>
             </Link>
