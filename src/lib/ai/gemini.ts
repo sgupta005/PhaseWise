@@ -6,13 +6,13 @@ import { AIGeneratedPhase, AIGenerateRequest } from '@/types/project.types';
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 export async function generateProjectPhases(
-  projectInfo: AIGenerateRequest
+  projectInfo: AIGenerateRequest,
 ): Promise<AIGeneratedPhase[]> {
   try {
     const { title, description, techStack } = projectInfo;
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-pro',
+      model: 'gemini-2.5-flash',
       generationConfig: {
         responseMimeType: 'application/json',
         responseSchema: geminiResponseSchema,
@@ -51,7 +51,7 @@ export async function generateProjectPhases(
   } catch (error) {
     console.error('Error generating phases with Gemini:', error);
     throw new Error(
-      `Failed to generate phases: ${error instanceof Error ? error.message : 'Unknown error'}`
+      `Failed to generate phases: ${error instanceof Error ? error.message : 'Unknown error'}`,
     );
   }
 }

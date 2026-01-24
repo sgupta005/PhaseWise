@@ -58,3 +58,4 @@
 
 - [x] login user automatically after they sign up
 - [ ] automatically add user in team members when they create a project.
+- [x] fix gemini api error

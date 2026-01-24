@@ -7,14 +7,14 @@ import { Phases } from '@/schemas/project-form.schema';
 export function calculateProjectProgress(
   formData: Partial<ProjectFormStepData>,
   watchedValues: Partial<ProjectFormStepData>,
-  currentStep: number
+  currentStep: number,
 ) {
   let step1Progress = 0;
   let step2Progress = 0;
 
   if (currentStep === 0) {
     step1Progress = calculateStep1Progress(
-      watchedValues as Partial<ProjectDetails>
+      watchedValues as Partial<ProjectDetails>,
     );
     if ('phases' in formData && formData.phases) {
       step2Progress = calculateStep2Progress(formData.phases as any);
@@ -30,12 +30,11 @@ export function calculateProjectProgress(
 
 function calculateStep1Progress(formData: Partial<ProjectDetails>): number {
   let filledFields = 0;
-  const totalRequiredFields = 5;
+  const totalRequiredFields = 4;
 
   if (formData?.title?.trim()) filledFields++;
   if (formData?.description?.trim()) filledFields++;
   if (formData?.techStack?.trim()) filledFields++;
-  if (formData?.facultyId) filledFields++;
   if (formData?.teamMemberIds?.length && formData.teamMemberIds.length > 0)
     filledFields++;
 
@@ -45,7 +44,7 @@ function calculateStep1Progress(formData: Partial<ProjectDetails>): number {
 function calculateStep2Progress(phases: Phases['phases']): number {
   // Progress is 100% if there's at least one phase with title and deadline
   const hasCompletePhase = phases.some(
-    (phase) => phase.title?.trim() !== '' && phase.deadline !== ''
+    (phase) => phase.title?.trim() !== '' && phase.deadline !== '',
   );
   return hasCompletePhase ? 100 : 0;
 }
