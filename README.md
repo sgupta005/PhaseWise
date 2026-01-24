@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PhaseWise
 
-## Getting Started
+A full-stack project management platform designed for academic teams to organize projects into phases, manage tasks, and collaborate in real-time.
 
-First, run the development server:
+🔗 **Live Demo:** [https://phase-wise-seven.vercel.app](https://phase-wise-seven.vercel.app)
+
+---
+
+## 🖼️ Screenshots
+> Quick visual overview of the application
+
+### Authentication
+| Login | Signup |
+|-------|--------|
+| ![Login](./screenshots/login.png) | ![Signup](./screenshots/signup.png) |
+
+### Projects
+| Projects Overview | Create Project (Step 1) | Create Project (Step 2) |
+|-------------------|-------------------------|-------------------------|
+| ![Projects](./screenshots/projects.png) | ![Create Project 1](./screenshots/create-project1.png) | ![Create Project 2](./screenshots/create-project2.png) |
+
+### Phases & Tasks
+| Phases | Tasks (Table View) | Tasks (Kanban Board) |
+|--------|--------------------|-----------------------|
+| ![Phases](./screenshots/phases.png) | ![Tasks Table](./screenshots/tasks.png) | ![Kanban](./screenshots/kanban.png) |
+
+### Collaboration
+| Team | Chat | Notifications |
+|------|------|---------------|
+| ![Team](./screenshots/team.png) | ![Chat](./screenshots/chat.png) | ![Notifications](./screenshots/notifications.png) |
+
+📌 Screenshots are stored in the `/screenshots` folder at the root.
+
+---
+
+## 🚀 Features
+- **AI-Powered Phase Generation** – Automatically generate project phases and tasks using Google Gemini AI based on SDLC best practices
+- **Role-Based Access Control** – Distinct roles for Students and Faculty with permission-based actions
+- **Phase-Based Project Organization** – Structure projects into ordered phases with deadlines and progress tracking
+- **Kanban & Table Task Views** – Manage tasks with drag-and-drop Kanban board or sortable table view
+- **Real-Time Team Chat** – Project-level chat for team collaboration with polling-based updates
+- **Project Invitations & Notifications** – Invite team members with email notifications and in-app notification system
+- **Microsoft Entra ID Integration** – Enterprise SSO authentication alongside credentials-based login
+
+---
+
+## 🧠 What It Does
+
+PhaseWise helps academic teams (students and faculty) plan, track, and collaborate on projects. Users create projects with defined phases (following SDLC methodology), assign tasks to team members, track progress with visual indicators, and communicate through integrated team chat. The AI assistant can generate an entire project plan with phases and tasks from just a title and description.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 15, React 19, Tailwind CSS, Radix UI, Shadcn/ui, Motion (Framer Motion)
+- **Backend:** Next.js Server Actions, Next.js API Routes
+- **Database:** MongoDB with Mongoose ODM
+- **Auth:** NextAuth.js v5 (Auth.js) with MongoDB Adapter, Microsoft Entra ID, Credentials Provider
+- **AI:** Google Generative AI (Gemini 2.5 Flash)
+- **State Management:** Zustand, React Hook Form, TanStack Table
+- **Email:** Resend for transactional emails
+- **Drag & Drop:** dnd-kit for Kanban board and phase reordering
+- **Validation:** Zod for schema validation
+- **Deployment:** Vercel
+
+---
+
+## ⚙️ Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/phasewise.git
+cd phasewise
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Fill in your environment variables (see below)
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env.local` file with the following:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# Database
+MONGODB_URI=your_mongodb_connection_string
+DB_NAME=phasewise
 
-## Learn More
+# NextAuth
+AUTH_SECRET=your_auth_secret
+NEXTAUTH_URL=http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+# Microsoft Entra ID (Azure AD)
+AUTH_MICROSOFT_ENTRA_ID_ID=your_client_id
+AUTH_MICROSOFT_ENTRA_ID_SECRET=your_client_secret
+AUTH_MICROSOFT_ENTRA_ID_ISSUER=https://login.microsoftonline.com/your_tenant_id/v2.0
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Google Gemini AI
+GEMINI_API_KEY=your_gemini_api_key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Resend Email
+RESEND_API_KEY=your_resend_api_key
 
-## Deploy on Vercel
+# App URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📁 Project Structure
+
+```
+src/
+├── actions/          # Server actions for data mutations
+├── app/              # Next.js App Router pages
+│   ├── (auth)/       # Authentication pages (login, signup)
+│   ├── (dashboard)/  # Protected dashboard routes
+│   └── api/          # API routes
+├── components/       # React components
+│   ├── auth/         # Authentication forms
+│   ├── chat/         # Team chat components
+│   ├── phase/        # Phase management components
+│   ├── project/      # Project components
+│   ├── task/         # Task management components
+│   ├── team/         # Team management components
+│   └── ui/           # Shadcn/ui components
+├── db/               # Database query functions
+├── lib/              # Utility functions and helpers
+├── models/           # Mongoose models
+├── schemas/          # Zod validation schemas
+├── stores/           # Zustand state stores
+└── types/            # TypeScript type definitions
+```
+
+---
+
+##  License
+
+MIT License

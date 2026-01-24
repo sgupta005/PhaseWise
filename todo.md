@@ -58,4 +58,6 @@
 
 - [x] login user automatically after they sign up
 - [ ] automatically add user in team members when they create a project.
+- [ ] user profile not loading on first load.
 - [x] fix gemini api error
+- [ ] add loading indicator for server pages
