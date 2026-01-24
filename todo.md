@@ -48,3 +48,6 @@
 - [ ] automatically add project creator to team member or faculty list when creating project
 - [ ] AddMemberModal closes immediately on button click, it should close after action is completed
 - [ ] invitationHandled is not working as expected
+
+- [ ] Make password input in auth pages of type password
+- [ ] Instead of regex check let user choose whether they are student or faculty on auth pages

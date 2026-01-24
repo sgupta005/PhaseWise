@@ -133,7 +133,7 @@ export function SignupForm({
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled={isPending} />
+                      <Input {...field} disabled={isPending} type="password" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
