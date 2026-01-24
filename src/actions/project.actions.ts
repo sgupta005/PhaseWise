@@ -50,7 +50,7 @@ export async function createProjectAction(payload: ProjectFormAllFields) {
       techStack,
       githubLink,
       projectUrl,
-      facultyIds,
+      facultyIds = [],
       teamMemberIds,
       phases,
     } = validatedPayload.data;
@@ -86,7 +86,7 @@ export async function createProjectAction(payload: ProjectFormAllFields) {
     if (creatorRole === 'faculty') {
       // Faculty can add students directly
       directAddStudentIds.push(
-        ...teamMemberIds.filter((id) => id !== creatorId)
+        ...teamMemberIds.filter((id) => id !== creatorId),
       );
       // Faculty members other than self need invitations
       inviteFacultyIds.push(...facultyIds.filter((id) => id !== creatorId));
@@ -189,7 +189,7 @@ export async function createProjectAction(payload: ProjectFormAllFields) {
           addedById: creatorId,
           addedByName: creator.name,
           role: 'student',
-        })
+        }),
       );
     }
 
@@ -217,7 +217,7 @@ export async function createProjectAction(payload: ProjectFormAllFields) {
           inviterName: creator.name,
           role: 'student',
           invitationId: invitation._id.toString(),
-        })
+        }),
       );
     }
 
@@ -245,7 +245,7 @@ export async function createProjectAction(payload: ProjectFormAllFields) {
           inviterName: creator.name,
           role: 'faculty',
           invitationId: invitation._id.toString(),
-        })
+        }),
       );
     }
 

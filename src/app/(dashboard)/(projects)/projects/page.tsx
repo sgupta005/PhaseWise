@@ -8,6 +8,9 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
+// Force dynamic rendering since we use auth()
+export const dynamic = 'force-dynamic';
+
 export default async function Projects({
   searchParams,
 }: {
