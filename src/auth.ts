@@ -5,10 +5,10 @@ import MicrosoftEntraID, {
 import Credentials from 'next-auth/providers/credentials';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import client from '@/lib/mongodb';
-import { loginSchema } from './schemas/auth.schema';
-import { getUserByEmail } from './db/auth.db';
+import { loginSchema, roleSchema } from './schemas/auth.schema';
+import { getUserByEmail, updateUserRole } from './db/auth.db';
 import { verifyPassword } from './lib/password';
-import { isStudentEmail } from './lib/utils';
+import { cookies } from 'next/headers';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: MongoDBAdapter(client, {
@@ -24,11 +24,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // when email verification is implemented, return false if not verified
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       // Add user id and role to token when user is available (on sign in)
       if (user) {
         token.id = user.id;
         token.role = user.role;
+
+        // For OAuth sign-ins, check if there's a role cookie from signup
+        if (account?.provider === 'microsoft-entra-id') {
+          const cookieStore = await cookies();
+          const signupRoleCookie = cookieStore.get('signup_role');
+
+          if (signupRoleCookie?.value) {
+            const parsedRole = roleSchema.safeParse(signupRoleCookie.value);
+            if (parsedRole.success && user.id) {
+              // Update the user's role in the database
+              await updateUserRole(user.id, parsedRole.data);
+              token.role = parsedRole.data;
+
+              // Delete the cookie after use
+              cookieStore.delete('signup_role');
+            }
+          }
+        }
       }
       return token;
     },
@@ -72,18 +90,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
       issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
       profile(profile: MicrosoftEntraIDProfile) {
-        const isStudentId = isStudentEmail(profile.email);
-
-        // This sets 'student' when it looks like a student ID, otherwise 'faculty'.
-        // Consider defaulting to 'student' for safety, and elevate via Entra later.
-        const role = isStudentId ? 'student' : 'faculty';
+        // Default role - will be overwritten by the jwt callback if signup_role cookie exists
         return {
           id: profile.sub,
           name: profile.name,
           email: profile.email,
           image: null,
           emailVerified: null,
-          role,
+          role: 'student', // Default role, will be updated from cookie in jwt callback
           phoneNo: null,
           password: null,
         };

@@ -1,5 +1,11 @@
 import z from 'zod';
 
+export const roleSchema = z.enum(['student', 'faculty'], {
+  message: 'Please select a role',
+});
+
+export type Role = z.infer<typeof roleSchema>;
+
 export const loginSchema = z.object({
   email: z
     .string('Email is required')
@@ -26,6 +32,9 @@ export const signupSchema = z.object({
     .min(1, 'Password is required')
     .min(8, 'Password must be more than 8 characters')
     .max(32, 'Password must be less than 32 characters'),
+  role: z.enum(['student', 'faculty'], {
+    message: 'Please select a role',
+  }),
 });
 
 export type LoginSchema = z.infer<typeof loginSchema>;

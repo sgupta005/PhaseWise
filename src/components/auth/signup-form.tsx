@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { MicrosoftLogin } from './microsoft-login';
+import { RoleSelector } from './role-selector';
 import {
   Form,
   FormControl,
@@ -38,8 +39,11 @@ export function SignupForm({
       name: '',
       email: '',
       password: '',
+      role: undefined,
     },
   });
+
+  const selectedRole = form.watch('role');
 
   function onSubmit(data: SignupSchema) {
     startTransition(() => {
@@ -84,10 +88,27 @@ export function SignupForm({
               </div>
             </div>
 
-            <MicrosoftLogin />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RoleSelector
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <MicrosoftLogin role={selectedRole} disabled={!selectedRole} />
             <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
               <span className="bg-background text-muted-foreground relative z-10 px-2">
-                Or
+                Or continue with email
               </span>
             </div>
             <FormField

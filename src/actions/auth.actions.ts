@@ -9,7 +9,6 @@ import {
 } from '@/schemas/auth.schema';
 import { createUser as createUserDb, getUserByEmail } from '@/db/auth.db';
 import { signIn } from '@/auth';
-import { isStudentEmail } from '@/lib/utils';
 import { AuthError } from 'next-auth';
 
 export async function login(data: LoginSchema) {
@@ -79,9 +78,7 @@ export async function createAccount(data: SignupSchema) {
       };
     }
 
-    const { name, email, password } = validatedFields.data;
-
-    const isStudent = isStudentEmail(email);
+    const { name, email, password, role } = validatedFields.data;
 
     const hashedPassword = await saltAndHashPassword(password);
 
@@ -89,7 +86,7 @@ export async function createAccount(data: SignupSchema) {
       name,
       email,
       password: hashedPassword,
-      role: isStudent ? 'student' : 'faculty',
+      role,
     });
 
     // const verificationToken = await createVerificationToken(email);

@@ -1,6 +1,8 @@
 import client from '@/lib/mongodb';
 import { type User, type UserResponse } from '@/types/auth.types';
 import { v4 as uuidv4 } from 'uuid';
+import { ObjectId } from 'mongodb';
+import type { Role } from '@/schemas/auth.schema';
 
 export async function getUserByEmail(email: string) {
   try {
@@ -74,6 +76,32 @@ export async function createUser(userData: {
   } catch (error) {
     console.error('Error creating user:', error);
     throw new Error('Error creating user');
+  }
+}
+
+export async function updateUserRole(
+  userId: string,
+  role: Role
+): Promise<boolean> {
+  try {
+    await client.connect();
+    const db = client.db(process.env.DB_NAME);
+    const users = db.collection<User>('users');
+
+    const result = await users.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $set: {
+          role,
+          updatedAt: new Date(),
+        },
+      }
+    );
+
+    return result.modifiedCount > 0;
+  } catch (error) {
+    console.error('Error updating user role:', error);
+    return false;
   }
 }
 

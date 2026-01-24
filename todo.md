@@ -51,3 +51,10 @@
 
 - [ ] Make password input in auth pages of type password
 - [ ] Instead of regex check let user choose whether they are student or faculty on auth pages
+
+- [ ] fix role in auth
+- [ ] deploy
+- [ ] readme
+
+- [ ] login user automatically after they sign up
+- [ ] if user tries to login with microsoft without signing up first they should see an error , currently their account is created with role faculty.
