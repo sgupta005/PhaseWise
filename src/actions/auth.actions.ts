@@ -92,11 +92,26 @@ export async function createAccount(data: SignupSchema) {
     // const verificationToken = await createVerificationToken(email);
     // sendVerificationEmail(verificationToken.email, verificationToken.token);
 
+    // Automatically sign in the user after successful account creation
+    await signIn('credentials', { email, password, redirect: false });
+
     return { success: 'Account Created Successfully.' };
   } catch (error) {
     console.error('Create account error:', error);
+
+    // Handle specific AuthJS errors
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return {
+            error:
+              'Account created but login failed. Please try logging in manually.',
+          };
+      }
+    }
+
     return {
-      error: 'Something went wrong.',
+      error: 'Something went wrong while creating your account.',
     };
   }
 }
