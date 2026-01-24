@@ -1,39 +1,90 @@
-# PhaseWise
+<p align="center">
+  <img src="./public/logo.svg" alt="PhaseWise Logo" width="80" height="80">
+</p>
 
-A full-stack project management platform designed for academic teams to organize projects into phases, manage tasks, and collaborate in real-time.
+<h1 align="center">PhaseWise</h1>
+
+<p align="center">
+  A full-stack project management platform designed for academic teams to organize projects into phases, manage tasks, and collaborate in real-time.
+</p>
 
 🔗 **Live Demo:** [https://phase-wise-seven.vercel.app](https://phase-wise-seven.vercel.app)
 
 ---
 
 ## 🖼️ Screenshots
+
 > Quick visual overview of the application
 
 ### Authentication
-| Login | Signup |
-|-------|--------|
-| ![Login](./screenshots/login.png) | ![Signup](./screenshots/signup.png) |
+
+<details open>
+<summary><strong>Login</strong></summary>
+<img src="./screenshots/login.png" alt="Login" width="100%">
+</details>
+
+<details open>
+<summary><strong>Signup</strong></summary>
+<img src="./screenshots/signup.png" alt="Signup" width="100%">
+</details>
 
 ### Projects
-| Projects Overview | Create Project (Step 1) | Create Project (Step 2) |
-|-------------------|-------------------------|-------------------------|
-| ![Projects](./screenshots/projects.png) | ![Create Project 1](./screenshots/create-project1.png) | ![Create Project 2](./screenshots/create-project2.png) |
+
+<details open>
+<summary><strong>Projects Overview</strong></summary>
+<img src="./screenshots/projects.png" alt="Projects" width="100%">
+</details>
+
+<details open>
+<summary><strong>Create Project (Step 1)</strong></summary>
+<img src="./screenshots/create-project1.png" alt="Create Project Step 1" width="100%">
+</details>
+
+<details open>
+<summary><strong>Create Project (Step 2)</strong></summary>
+<img src="./screenshots/create-project2.png" alt="Create Project Step 2" width="100%">
+</details>
 
 ### Phases & Tasks
-| Phases | Tasks (Table View) | Tasks (Kanban Board) |
-|--------|--------------------|-----------------------|
-| ![Phases](./screenshots/phases.png) | ![Tasks Table](./screenshots/tasks.png) | ![Kanban](./screenshots/kanban.png) |
+
+<details open>
+<summary><strong>Phases</strong></summary>
+<img src="./screenshots/phases.png" alt="Phases" width="100%">
+</details>
+
+<details open>
+<summary><strong>Tasks (Table View)</strong></summary>
+<img src="./screenshots/tasks.png" alt="Tasks Table" width="100%">
+</details>
+
+<details open>
+<summary><strong>Tasks (Kanban Board)</strong></summary>
+<img src="./screenshots/kanban.png" alt="Kanban" width="100%">
+</details>
 
 ### Collaboration
-| Team | Chat | Notifications |
-|------|------|---------------|
-| ![Team](./screenshots/team.png) | ![Chat](./screenshots/chat.png) | ![Notifications](./screenshots/notifications.png) |
+
+<details open>
+<summary><strong>Team</strong></summary>
+<img src="./screenshots/team.png" alt="Team" width="100%">
+</details>
+
+<details open>
+<summary><strong>Chat</strong></summary>
+<img src="./screenshots/chat.png" alt="Chat" width="100%">
+</details>
+
+<details open>
+<summary><strong>Notifications</strong></summary>
+<img src="./screenshots/notifications.png" alt="Notifications" width="100%">
+</details>
 
 📌 Screenshots are stored in the `/screenshots` folder at the root.
 
 ---
 
 ## 🚀 Features
+
 - **AI-Powered Phase Generation** – Automatically generate project phases and tasks using Google Gemini AI based on SDLC best practices
 - **Role-Based Access Control** – Distinct roles for Students and Faculty with permission-based actions
 - **Phase-Based Project Organization** – Structure projects into ordered phases with deadlines and progress tracking
@@ -140,6 +191,6 @@ src/
 
 ---
 
-##  License
+## License
 
 MIT License
