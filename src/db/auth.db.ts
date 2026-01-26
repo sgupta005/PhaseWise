@@ -1,4 +1,4 @@
-import client from '@/lib/mongodb';
+import { getDatabase } from '@/lib/mongodb';
 import { type User, type UserResponse } from '@/types/auth.types';
 import { v4 as uuidv4 } from 'uuid';
 import { ObjectId } from 'mongodb';
@@ -6,8 +6,7 @@ import type { Role } from '@/schemas/auth.schema';
 
 export async function getUserByEmail(email: string) {
   try {
-    await client.connect();
-    const db = client.db(process.env.DB_NAME);
+    const db = await getDatabase();
     const users = db.collection<User>('users');
 
     const user = await users.findOne({ email: email.toLowerCase() });
@@ -30,8 +29,7 @@ export async function createUser(userData: {
   role?: 'student' | 'faculty' | 'admin';
 }): Promise<UserResponse | null> {
   try {
-    await client.connect();
-    const db = client.db(process.env.DB_NAME);
+    const db = await getDatabase();
     const users = db.collection<User>('users');
 
     // Check if user already exists
@@ -81,11 +79,10 @@ export async function createUser(userData: {
 
 export async function updateUserRole(
   userId: string,
-  role: Role
+  role: Role,
 ): Promise<boolean> {
   try {
-    await client.connect();
-    const db = client.db(process.env.DB_NAME);
+    const db = await getDatabase();
     const users = db.collection<User>('users');
 
     const result = await users.updateOne(
@@ -95,7 +92,7 @@ export async function updateUserRole(
           role,
           updatedAt: new Date(),
         },
-      }
+      },
     );
 
     return result.modifiedCount > 0;
@@ -107,8 +104,7 @@ export async function updateUserRole(
 
 export async function getVerificationTokenByEmail(email: string) {
   try {
-    await client.connect();
-    const db = client.db(process.env.DB_NAME);
+    const db = await getDatabase();
     const tokens = db.collection('verificationTokens');
 
     const token = await tokens.findOne({
@@ -128,8 +124,7 @@ export async function getVerificationTokenByEmail(email: string) {
 
 export async function createVerificationToken(email: string) {
   try {
-    await client.connect();
-    const db = client.db(process.env.DB_NAME);
+    const db = await getDatabase();
     const tokens = db.collection('verificationTokens');
 
     const token = uuidv4();
