@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { columns } from '@/components/task/TableColumns';
 import { filterTasks, resolveFilters } from '@/lib/task/filters';
 import { getProjectByIdPopulated } from '@/db/project.db';
-import { getProjectDataForTaskForm } from '@/db/project.db';
 
 import TaskFilters from '@/components/task/TaskFilters';
 import TaskBoard from '@/components/task/TaskBoard';
@@ -17,8 +16,36 @@ export default async function ProjectTasksPage({
   params: Promise<{ projectId: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { projectId } = await params;
+  // Fetch project data and resolve filters in parallel
+  const [{ projectId }, filters] = await Promise.all([
+    params,
+    resolveFilters(searchParams),
+  ]);
+
   const project = await getProjectByIdPopulated(projectId);
+
+  if (!project) {
+    return notFound();
+  }
+
+  // Extract phases, team members, and statuses from the already-fetched project
+  const phases = project.phases.map((phase) => ({
+    _id: phase._id.toString(),
+    title: phase.title,
+  }));
+
+  const teamMembers = [
+    ...(project.teamMember || []),
+    ...(project.faculty || []),
+  ]
+    .filter(Boolean)
+    .map((member) => ({
+      _id: member._id.toString(),
+      name: member.name,
+      email: member.email,
+    }));
+
+  const taskStatuses = project.taskStatuses || [];
 
   // Flatten all tasks from all phases
   const allTasks = project.phases.flatMap((phase) =>
@@ -26,16 +53,10 @@ export default async function ProjectTasksPage({
       ...task,
       phaseId: phase._id.toString(),
       phaseTitle: phase.title,
-    }))
+    })),
   );
-  const filters = await resolveFilters(searchParams);
-  const filteredTasks = filterTasks(allTasks, filters);
 
-  const dataForTaskForm = await getProjectDataForTaskForm(projectId);
-  if (!dataForTaskForm.success || !dataForTaskForm.data) {
-    return notFound();
-  }
-  const { phases, teamMembers, taskStatuses } = dataForTaskForm.data;
+  const filteredTasks = filterTasks(allTasks, filters);
 
   return (
     <div className="py-4 px-6 flex flex-col max-w-7xl mx-auto">
