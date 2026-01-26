@@ -68,6 +68,11 @@ const taskSchema = new Schema(
   { timestamps: true }
 );
 
+// Add indexes for faster queries
+taskSchema.index({ assignedTo: 1 });
+taskSchema.index({ createdBy: 1 });
+taskSchema.index({ status: 1 });
+
 type inferredTaskSchema = InferSchemaType<typeof taskSchema>;
 export type TaskDocument = inferredTaskSchema & {
   _id: Types.ObjectId;

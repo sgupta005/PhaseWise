@@ -45,6 +45,9 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+// Add index on role field for faster queries
+userSchema.index({ role: 1 });
+
 type inferredUserSchema = InferSchemaType<typeof userSchema>;
 export type UserDocument = inferredUserSchema & {
   _id: Types.ObjectId;

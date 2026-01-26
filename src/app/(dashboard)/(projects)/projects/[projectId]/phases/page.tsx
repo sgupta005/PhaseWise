@@ -11,8 +11,10 @@ export default async function ProjectPhasesPage({
 }) {
   const { projectId } = await params;
 
-  const phases = await getProjectPhases(projectId);
-  const project = await getProjectByIdWithTeamAndFaculty(projectId);
+  const [phases, project] = await Promise.all([
+    getProjectPhases(projectId),
+    getProjectByIdWithTeamAndFaculty(projectId),
+  ]);
 
   if (!phases || !project) {
     notFound();

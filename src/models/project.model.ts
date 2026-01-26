@@ -123,6 +123,11 @@ const projectSchema = new Schema(
   { timestamps: true }
 );
 
+// Add indexes for faster queries
+projectSchema.index({ teamMember: 1 });
+projectSchema.index({ faculty: 1 });
+projectSchema.index({ teamMember: 1, faculty: 1 });
+
 type inferredProjectSchema = InferSchemaType<typeof projectSchema>;
 export type ProjectDocument = inferredProjectSchema & {
   _id: Types.ObjectId;

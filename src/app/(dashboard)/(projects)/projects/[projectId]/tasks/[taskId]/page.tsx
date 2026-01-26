@@ -17,13 +17,12 @@ export default async function TaskDetailPage({
     notFound();
   }
 
-  const hasAccess = await verifyProjectAccess(projectId);
-  const task = await getTaskByIdPopulated(taskId);
-  const taskBelongsToProject = await verifyTaskBelongsToProject(
-    taskId,
-    projectId
-  );
-  const project = await getProjectByIdPopulated(projectId);
+  const [hasAccess, task, taskBelongsToProject, project] = await Promise.all([
+    verifyProjectAccess(projectId),
+    getTaskByIdPopulated(taskId),
+    verifyTaskBelongsToProject(taskId, projectId),
+    getProjectByIdPopulated(projectId),
+  ]);
   if (!hasAccess || !task || !taskBelongsToProject || !project) {
     notFound();
   }
