@@ -1,9 +1,18 @@
+import dynamic from 'next/dynamic';
+import { Spinner } from '@/components/ui/spinner';
+import { Suspense } from 'react';
+import { Types } from 'mongoose';
 import { notFound } from 'next/navigation';
 import { getTaskByIdPopulated, verifyTaskBelongsToProject } from '@/db/task.db';
-import { verifyProjectAccess, getProjectByIdPopulated } from '@/db/project.db';
-import TaskDetailView from '@/components/task/TaskDetailView';
-import { getProjectDataForTaskForm } from '@/db/project.db';
-import { Types } from 'mongoose';
+import {
+  verifyProjectAccess,
+  getProjectByIdPopulated,
+  getProjectDataForTaskForm,
+} from '@/db/project.db';
+
+const TaskDetailView = dynamic(
+  () => import('@/components/task/TaskDetailView'),
+);
 
 export default async function TaskDetailPage({
   params,
@@ -45,12 +54,18 @@ export default async function TaskDetailPage({
   const teamMembers = projectData.data?.teamMembers || [];
 
   return (
-    <TaskDetailView
-      task={task}
-      projectId={projectId}
-      phaseTitle={phaseTitle}
-      currentPhaseId={currentPhaseId}
-      teamMembers={teamMembers}
-    />
+    <Suspense
+      fallback={
+        <Spinner className="flex items-center mx-auto size-10 h-full" />
+      }
+    >
+      <TaskDetailView
+        task={task}
+        projectId={projectId}
+        phaseTitle={phaseTitle}
+        currentPhaseId={currentPhaseId}
+        teamMembers={teamMembers}
+      />
+    </Suspense>
   );
 }

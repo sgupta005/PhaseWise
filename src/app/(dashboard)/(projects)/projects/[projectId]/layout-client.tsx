@@ -55,7 +55,7 @@ export default function ProjectLayoutClient({
       }
       if (secondLastSegment === 'tasks') fetchTask();
     },
-    [lastSegment, secondLastSegment]
+    [lastSegment, secondLastSegment],
   );
 
   return (
@@ -104,7 +104,7 @@ export default function ProjectLayoutClient({
             <NotificationBell />
           </div>
         </header>
-        <div className="">{children}</div>
+        <div className="h-full">{children}</div>
       </SidebarInset>
     </>
   );
