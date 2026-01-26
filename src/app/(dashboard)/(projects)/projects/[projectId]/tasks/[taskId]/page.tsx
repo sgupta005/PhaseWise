@@ -26,12 +26,14 @@ export default async function TaskDetailPage({
     notFound();
   }
 
-  const [hasAccess, task, taskBelongsToProject, project] = await Promise.all([
-    verifyProjectAccess(projectId),
-    getTaskByIdPopulated(taskId),
-    verifyTaskBelongsToProject(taskId, projectId),
-    getProjectByIdPopulated(projectId),
-  ]);
+  const [hasAccess, task, taskBelongsToProject, project, projectData] =
+    await Promise.all([
+      verifyProjectAccess(projectId),
+      getTaskByIdPopulated(taskId),
+      verifyTaskBelongsToProject(taskId, projectId),
+      getProjectByIdPopulated(projectId),
+      getProjectDataForTaskForm(projectId),
+    ]);
   if (!hasAccess || !task || !taskBelongsToProject || !project) {
     notFound();
   }
@@ -49,9 +51,9 @@ export default async function TaskDetailPage({
     }
   }
 
-  // Fetch team members for subtask assignment
-  const projectData = await getProjectDataForTaskForm(projectId);
   const teamMembers = projectData.data?.teamMembers || [];
+  const phases = projectData.data?.phases || [];
+  const taskStatuses = projectData.data?.taskStatuses || [];
 
   return (
     <Suspense
@@ -65,6 +67,8 @@ export default async function TaskDetailPage({
         phaseTitle={phaseTitle}
         currentPhaseId={currentPhaseId}
         teamMembers={teamMembers}
+        phases={phases}
+        taskStatuses={taskStatuses}
       />
     </Suspense>
   );

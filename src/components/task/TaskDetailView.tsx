@@ -1,4 +1,4 @@
-import { ITaskDetailed } from '@/types/task.types';
+import { ITaskDetailed, ITaskStatus } from '@/types/task.types';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { formatPriority, formatStatus } from '@/lib/task/formatters';
@@ -7,7 +7,6 @@ import TaskDetailSidebar from './TaskDetailSidebar';
 import SubtasksList from './SubtasksList';
 import CommentsList from './CommentsList';
 import { cn } from '@/lib/utils';
-import { getProjectDataForTaskForm } from '@/db/project.db';
 
 export type FormattedComment = {
   _id: string;
@@ -35,20 +34,19 @@ interface TaskDetailViewProps {
   phaseTitle?: string | null;
   currentPhaseId: string;
   teamMembers: { _id: string; name: string; email: string }[];
+  phases: { _id: string; title: string }[];
+  taskStatuses: ITaskStatus[];
 }
 
-export default async function TaskDetailView({
+export default function TaskDetailView({
   task,
   projectId,
   phaseTitle,
   currentPhaseId,
   teamMembers,
+  phases,
+  taskStatuses,
 }: TaskDetailViewProps) {
-  // Fetch project data for the edit form
-  const projectData = await getProjectDataForTaskForm(projectId);
-  const phases = projectData.data?.phases || [];
-  const taskStatuses = projectData.data?.taskStatuses || [];
-
   // Prepare task data for editing
   const taskData = {
     task: task.task || '',
