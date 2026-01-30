@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
 import ProjectDetailsStep from './ProjectDetailsStep';
 import { Button } from '../ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -32,6 +33,7 @@ export default function CreateProjectForm() {
     submitForm,
     getCurrentStepSchema,
   } = useProjectForm();
+  const { data: session } = useSession();
 
   const form = useForm<ProjectFormStepData>({
     resolver: zodResolver(getCurrentStepSchema()),
@@ -51,6 +53,24 @@ export default function CreateProjectForm() {
   useEffect(() => {
     reset(formData);
   }, [currentStep, formData, reset]);
+
+  // Auto-add current user to faculty (if faculty) or team members (if student) when creating a project
+  useEffect(() => {
+    if (!session?.user?.id || currentStep !== 0) return;
+    const { id, role } = session.user;
+
+    if (role === 'faculty') {
+      const current = getValues('facultyIds') ?? [];
+      if (!current.includes(id)) {
+        setValue('facultyIds', [id, ...current], { shouldValidate: true });
+      }
+    } else if (role === 'student') {
+      const current = getValues('teamMemberIds') ?? [];
+      if (!current.includes(id)) {
+        setValue('teamMemberIds', [id, ...current], { shouldValidate: true });
+      }
+    }
+  }, [session?.user?.id, session?.user?.role, currentStep, getValues, setValue]);
 
   async function onNext() {
     const isValid = await trigger();

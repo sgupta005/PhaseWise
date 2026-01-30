@@ -1,3 +1,5 @@
+'use client';
+
 import { createProjectAction } from '@/actions/project.actions';
 import {
   phaseSchema,
@@ -8,6 +10,7 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const stepSchemas = [projectDetailsSchema, phaseSchema];
 
@@ -26,6 +29,23 @@ export function useProjectForm() {
   const [formData, setFormData] = useState<Partial<ProjectFormStepData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
+
+  function getSessionBasedDefaults() {
+    const base = {
+      facultyIds: [] as string[],
+      teamMemberIds: [] as string[],
+    };
+    if (session?.user?.id) {
+      if (session.user.role === 'faculty') {
+        base.facultyIds = [session.user.id];
+      } else if (session.user.role === 'student') {
+        base.teamMemberIds = [session.user.id];
+      }
+    }
+    return base;
+  }
+
   const defaultValues: Partial<ProjectFormStepData> =
     currentStep === 0
       ? {
@@ -34,8 +54,7 @@ export function useProjectForm() {
           techStack: '',
           githubLink: undefined,
           projectUrl: undefined,
-          facultyIds: [],
-          teamMemberIds: [],
+          ...getSessionBasedDefaults(),
         }
       : {
           phases: [],

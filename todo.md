@@ -1,23 +1,28 @@
 # Bugs:
+
 ## Priority 1:
-- [ ] automatically add user in team members when they create a project.
+
 - [ ] Kanban board dosen't work on mobile
+- [x] automatically add user in team members when they create a project.
 - [x] Change scrollbar in chrome to look like that in firefox
 - [x] Make responsive
 - [x] phase completion circle does not work
 - [x] Notification and Theme toggle switches places on project page and phase page.
 
 ## Priority 2
+
 - [ ] project search bar only works with minimum 3 chars it should work with one too
 - [ ] task assignment notification is sent two times
 - [ ] Fix console errors in kanban
 - [ ] Add postioning logic in kanban
 
-# Features: 
+# Features:
+
 - [ ] show pending invitations on teams page
 - [ ] In tech stack use predefined items instead of letting users add random shit
 
 # Miscellaneous:
+
 - [ ] What if someone assigns me a task and instead of doing it I assign it back to them?
 - [ ] whenever a task is assigned no matter from which part of the ui , notification logic should run from a central location.
 - [ ] invitationHandled is not working as expected
@@ -25,6 +30,7 @@
 - [ ] fix notification sending logic
 
 # Done:
+
 - [x] Add Profile Icon at the bottom of sidebar
 - [x] why is the theme always dark on auth pages
 - [x] improve phase creation loading
