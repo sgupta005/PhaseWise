@@ -1,10 +1,10 @@
 # Bugs:
 ## Priority 1:
-- [ ] Change scrollbar in chrome to look like that in firefox
+- [x] Change scrollbar in chrome to look like that in firefox
 - [ ] Make responsive
 - [ ] automatically add user in team members when they create a project.
-- [ ] phase completion circle does not work
-- [ ] Notification and Theme toggle switches places on project page and phase page.
+- [x] phase completion circle does not work
+- [x] Notification and Theme toggle switches places on project page and phase page.
 
 ## Priority 2
 - [ ] project search bar only works with minimum 3 chars it should work with one too

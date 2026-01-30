@@ -7,7 +7,7 @@ export function calculatePhaseProgress(
     return 0;
   }
 
-  const completedTasks = phase.tasks.filter((task) => task.completed).length;
+  const completedTasks = phase.tasks.filter((task) => task.status === 'done').length;
   const totalTasks = phase.tasks.length;
 
   return Math.round((completedTasks / totalTasks) * 100);

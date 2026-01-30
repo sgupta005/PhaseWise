@@ -100,8 +100,8 @@ export default function ProjectLayoutClient({
             </Breadcrumb>
           </div>
           <div className="ml-auto mr-3 flex items-center gap-2">
-            <ThemeToggle />
             <NotificationBell />
+            <ThemeToggle />
           </div>
         </header>
         <div className="h-full">{children}</div>
