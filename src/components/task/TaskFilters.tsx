@@ -64,7 +64,7 @@ export default function TaskFilters({
 
   return (
     <div className="flex gap-2 mb-4 flex-wrap">
-      <div className="relative max-w-[180px]">
+      <div className="relative md:w-[200px] w-[150px]">
         <Input
           placeholder="Search tasks..."
           className="pr-8"
@@ -77,7 +77,7 @@ export default function TaskFilters({
         value={currentPhase}
         onValueChange={(value) => updateSearchParam('phase', value)}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="md:w-[180px] w-[150px]">
           <SelectValue placeholder="Select a phase" />
         </SelectTrigger>
         <SelectContent>
@@ -99,7 +99,7 @@ export default function TaskFilters({
         value={currentAssignee}
         onValueChange={(value) => updateSearchParam('assignee', value)}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="md:w-[180px] w-[150px]">
           <SelectValue placeholder="Select Assigned To" />
         </SelectTrigger>
         <SelectContent>
@@ -122,7 +122,7 @@ export default function TaskFilters({
         value={currentPriority}
         onValueChange={(value) => updateSearchParam('priority', value)}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="md:w-[180px] w-[150px]">
           <SelectValue placeholder="Select Priority" />
         </SelectTrigger>
         <SelectContent>
@@ -140,7 +140,7 @@ export default function TaskFilters({
         value={currentCreatedBy}
         onValueChange={(value) => updateSearchParam('createdBy', value)}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="md:w-[180px] w-[150px]">
           <SelectValue placeholder="Select Created By" />
         </SelectTrigger>
         <SelectContent>
@@ -170,7 +170,7 @@ export default function TaskFilters({
         value={currentStatus}
         onValueChange={(value) => updateSearchParam('status', value)}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="md:w-[180px] w-[150px]">
           <SelectValue placeholder="Select Status" />
         </SelectTrigger>
         <SelectContent>

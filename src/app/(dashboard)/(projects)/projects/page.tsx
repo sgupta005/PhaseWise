@@ -28,9 +28,9 @@ export default async function Projects({
 
   return (
     <div className="flex flex-col gap-4 px-8 py-4 max-w-5xl mx-auto w-full">
-      <div className="flex justify-between">
+      <div className="flex flex-wrap justify-between gap-4">
         <SearchProjects />
-        <Button className="w-max ml-auto mr-0">
+        <Button className="w-max">
           <Link href="/create-project" className="flex items-center gap-2">
             <Plus /> New Project
           </Link>

@@ -152,7 +152,7 @@ export default function TaskDetailView({
           />
         </div>
 
-        <div className="order-3 md:w-80 md:flex-shrink-0">
+        <div className="order-3 md:w-80 md:flex-shrink-0 pb-4">
           <TaskDetailSidebar task={task} />
         </div>
       </div>

@@ -1,8 +1,9 @@
 # Bugs:
 ## Priority 1:
-- [x] Change scrollbar in chrome to look like that in firefox
-- [ ] Make responsive
 - [ ] automatically add user in team members when they create a project.
+- [ ] Kanban board dosen't work on mobile
+- [x] Change scrollbar in chrome to look like that in firefox
+- [x] Make responsive
 - [x] phase completion circle does not work
 - [x] Notification and Theme toggle switches places on project page and phase page.
 

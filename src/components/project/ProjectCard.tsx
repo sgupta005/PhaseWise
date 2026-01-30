@@ -78,7 +78,7 @@ function ProjectCard({ project }: { project: IProjectWithTeamAndPhaseTitles }) {
         </Link>
 
         {/* Current Phase */}
-        <div className="flex items-center gap-2 rounded-lg bg-muted/30 dark:bg-muted py-2 px-4 justify-between ">
+        <div className="flex flex-wrap items-center gap-2 rounded-lg bg-muted/30 dark:bg-muted py-2 px-4 justify-between ">
           <div className="flex items-center gap-2">
             <div className="size-2 bg-blue-500 rounded-full" />
             <Link
@@ -176,7 +176,7 @@ function ProjectCard({ project }: { project: IProjectWithTeamAndPhaseTitles }) {
         {/* Tech Stack */}
         <div className="flex items-center bg-background/80 border-t rounded-b-xl border-border/60 py-2 px-4 -m-6 ">
           {visibleTechStack.length > 0 && (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {visibleTechStack.map((tech) => (
                 <Badge key={tech} variant="secondary" className="text-xs">
                   {tech}

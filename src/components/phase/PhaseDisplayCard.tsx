@@ -131,7 +131,7 @@ export function PhaseDisplayCard({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {!isCurrentPhase && !isCompleted && (
                     <Button
                       variant="secondary"
@@ -153,7 +153,8 @@ export function PhaseDisplayCard({
                   >
                     <GripVertical className="h-5 w-5 text-muted-foreground hover:text-foreground" />
                   </Button>
-                  <EditPhaseForm
+                  <div>
+                    <EditPhaseForm
                     projectId={projectId}
                     phase={phase}
                     trigger={
@@ -161,8 +162,9 @@ export function PhaseDisplayCard({
                         <Edit className="h-4 w-4" />
                       </Button>
                     }
-                  />
-                  <DeletePhaseDialog projectId={projectId} phase={phase} />
+                    />
+                    <DeletePhaseDialog projectId={projectId} phase={phase} />
+                  </div>
                 </div>
               </div>
 
