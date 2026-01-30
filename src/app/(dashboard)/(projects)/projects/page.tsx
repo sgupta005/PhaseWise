@@ -27,7 +27,7 @@ export default async function Projects({
   }
 
   return (
-    <div className="flex flex-col gap-4 px-8 py-4 max-w-5xl mx-auto w-full">
+    <div className="flex flex-col gap-8 px-8 py-4 max-w-5xl mx-auto w-full">
       <div className="flex flex-wrap justify-between gap-4">
         <SearchProjects />
         <Button className="w-max">
@@ -36,7 +36,7 @@ export default async function Projects({
           </Link>
         </Button>
       </div>
-      <div className={cn('mt-8 grid gap-6', 'grid-cols-1', 'lg:grid-cols-2')}>
+      <div className={cn('grid gap-6', 'grid-cols-1', 'lg:grid-cols-2')}>
         {filteredProjects.map((project) => (
           <ProjectCard key={project._id.toString()} project={project} />
         ))}

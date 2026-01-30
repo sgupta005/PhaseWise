@@ -21,7 +21,7 @@ export function getPhaseTaskCounts(phase: IPhaseWithPopulatedTasks): {
     return { completed: 0, total: 0 };
   }
 
-  const completed = phase.tasks.filter((task) => task.completed).length;
+  const completed = phase.tasks.filter((task) => task.status==='done').length;
   const total = phase.tasks.length;
 
   return { completed, total };

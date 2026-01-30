@@ -43,7 +43,7 @@ export function PhaseDisplayCard({
 }: PhaseDisplayCardProps) {
   const progress = calculatePhaseProgress(phase);
   const { completed, total } = getPhaseTaskCounts(phase);
-  const isCompleted = phase.completed;
+  const isCompleted = (completed === total && total > 0) || phase.completed;
   const isPastDeadline = new Date(phase.deadline) < new Date() && !isCompleted;
 
   const isLoading = isChangingPhase || isReorderingPhase;
