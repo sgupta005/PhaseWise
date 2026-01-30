@@ -5,7 +5,7 @@
 <h1 align="center">PhaseWise</h1>
 
 <p align="center">
-  A full-stack project management platform designed for academic teams to organize projects into phases, manage tasks, and collaborate in real-time.
+  AI powered platform designed for academic teams to organize projects into phases using AI, manage tasks, and collaborate in real-time. 
 </p>
 
 🔗 **Live Demo:** [https://phase-wise-seven.vercel.app](https://phase-wise-seven.vercel.app)
