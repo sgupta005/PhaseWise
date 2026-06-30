@@ -7,6 +7,7 @@ import {
   DragStartEvent,
   PointerSensor,
   KeyboardSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -59,7 +60,13 @@ export default function TaskBoard({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Require 8px movement before drag starts
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor)
@@ -156,8 +163,8 @@ export default function TaskBoard({
           </Tabs>
         </div>
 
-        <div className="flex-1 overflow-x-auto">
-          <div className="flex gap-4 h-full min-h-0">
+        <div className="flex-1 overflow-x-auto snap-x snap-mandatory sm:snap-none pb-2">
+          <div className="flex gap-3 sm:gap-4 h-full min-h-0">
             {columns.map((column) => {
               const columnTasks = groupedTasksMap.get(column.key) || [];
               return (
