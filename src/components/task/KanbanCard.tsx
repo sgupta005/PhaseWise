@@ -44,7 +44,7 @@ export default function KanbanCard({ task, id }: KanbanCardProps) {
       <Link href={`tasks/${task._id.toString()}`}>
         <Card
           className={cn(
-            'cursor-grab active:cursor-grabbing h-[228px]',
+            'cursor-grab active:cursor-grabbing h-auto sm:h-57',
             isDragging && 'opacity-50'
           )}
         >

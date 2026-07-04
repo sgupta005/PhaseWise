@@ -42,7 +42,7 @@ export default function KanbanColumn({
   });
 
   return (
-    <div className="flex flex-col h-full min-w-[280px] max-w-[280px]">
+    <div className="flex flex-col h-full min-w-[calc(100vw-3rem)] max-w-[calc(100vw-3rem)] sm:min-w-70 sm:max-w-70 snap-start sm:snap-align-none">
       <div className="flex items-center justify-between mb-4 px-1">
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-sm">{title}</h3>
