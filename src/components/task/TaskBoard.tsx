@@ -1,3 +1,4 @@
+```typescript
 'use client';
 
 import { useState, useOptimistic } from 'react';
@@ -7,6 +8,7 @@ import {
   DragStartEvent,
   PointerSensor,
   KeyboardSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -62,7 +64,8 @@ export default function TaskBoard({
         distance: 8, // Require 8px movement before drag starts
       },
     }),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor),
+    useSensor(TouchSensor)
   );
 
   const groupedTasks = groupTasks(optimisticTasks, groupByMode);
@@ -198,3 +201,4 @@ export default function TaskBoard({
     </DndContext>
   );
 }
+```
